@@ -114,43 +114,45 @@ mkdir package/small
 pushd package/small
 
 
-#adguardhome
-git clone -b 2023.10 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
+## adguardhome
+# git clone -b 2023.10 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
 
-#lucky
+## lucky
 # git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-lucky.git
 
-# #smartdns
+## smartdns
 # git clone -b lede --depth 1 https://github.com/pymumu/luci-app-smartdns.git
 # git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
 
-# #ssrp
+## ssrp
 # git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 
-# #passwall
+## passwall
 # git clone -b main --depth 1 https://github.com/xiaorouji/openwrt-passwall.git
 
-#passwall2
+## passwall2
 # git clone -b main --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git
 
-# #mosdns
+## #mosdns
+find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+find ./ | grep Makefile | grep mosdns | xargs rm -f
 git clone -b v5 https://github.com/sbwml/luci-app-mosdns.git
 git clone -b master https://github.com/sbwml/v2ray-geodata 
 
-# #openclash
+## openclash
 # git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
 
 ## poweroff
 git clone -b master https://github.com/esirplayground/luci-app-poweroff.git
 
 ## iStore
-# git clone -b main https://github.com/linkease/istore.git
-
+git clone -b main https://github.com/linkease/istore.git
+./scripts/feeds install -d y -p istore luci-app-store
 
 ## netspeedtest
 git clone -b master https://github.com/sirpdboy/netspeedtest.git
 
-
+git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 
 popd
 
@@ -180,6 +182,7 @@ echo "
 #
 # CONFIG_TARGET_KERNEL_PARTSIZE=512
 # CONFIG_TARGET_ROOTFS_PARTSIZE=1024
+CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
 
 # # Themes
 CONFIG_PACKAGE_luci-app-argon-config=y
@@ -192,10 +195,6 @@ CONFIG_PACKAGE_luci-app-autoreboot=y
 
 # 关机
 CONFIG_PACKAGE_luci-app-poweroff=y
-
-
-# openclash
-# CONFIG_PACKAGE_luci-app-openclash=y
 
 
 # adguardhome
@@ -213,8 +212,6 @@ CONFIG_PACKAGE_luci-app-netspeedtest=y
 # passwall
 CONFIG_PACKAGE_luci-app-passwall=y
 
-
-# CONFIG_PACKAGE_luci-app-passwall2=y
 
 # ssr-plus
 CONFIG_PACKAGE_luci-app-ssr-plus=y

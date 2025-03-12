@@ -13,6 +13,7 @@
 # 修改openwrt登陆地址,把下面的 10.0.0.1 修改成你想要的就可以了
 sed -i 's/192.168.1.1/192.168.89.1/g' package/base-files/files/bin/config_generate
 
+
 # 修改 子网掩码
 # sed -i 's/255.255.255.0/255.255.0.0/g' package/base-files/files/bin/config_generate
 
@@ -95,66 +96,6 @@ sed -i 's/192.168.1.1/192.168.89.1/g' package/base-files/files/bin/config_genera
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/mosdns package/mosdns
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
 
-#!/bin/bash
-
-#删除feeds中的插件
-# rm -rf ./feeds/packages/net/mosdns
-# rm -rf ./feeds/packages/net/v2ray-geodata
-# rm -rf ./feeds/packages/net/geoview
-# rm -rf ./feeds/packages/net/shadowsocks-libev
-# rm -rf ./feeds/packages/net/chinadns-ng
-
-
-#克隆依赖插件
-# git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwpage
-
-
-#克隆的源码放在small文件夹
-mkdir package/small
-pushd package/small
-
-
-#adguardhome
-git clone -b 2023.10 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
-
-#lucky
-# git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-lucky.git
-
-# #smartdns
-# git clone -b lede --depth 1 https://github.com/pymumu/luci-app-smartdns.git
-# git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
-
-# #ssrp
-# git clone -b master --depth 1 https://github.com/fw876/helloworld.git
-
-# #passwall
-# git clone -b main --depth 1 https://github.com/xiaorouji/openwrt-passwall.git
-
-#passwall2
-# git clone -b main --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git
-
-# #mosdns
-git clone -b v5 https://github.com/sbwml/luci-app-mosdns.git
-git clone -b master https://github.com/sbwml/v2ray-geodata 
-
-# #openclash
-# git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
-
-## poweroff
-git clone -b master https://github.com/esirplayground/luci-app-poweroff.git
-
-## iStore
-# git clone -b main https://github.com/linkease/istore.git
-
-
-## netspeedtest
-git clone -b master https://github.com/sirpdboy/netspeedtest.git
-
-
-
-popd
-
-echo "packages executed successfully!"
 
 # 添加自定义软件包
 
@@ -203,7 +144,7 @@ CONFIG_PACKAGE_luci-app-adguardhome=y
 
 
 # mosdns
-CONFIG_PACKAGE_luci-app-mosdns=y
+# CONFIG_PACKAGE_luci-app-mosdns=y
 
 
 # netspeedtest chmod +x /etc/init.d/netspeedtest
@@ -220,10 +161,10 @@ CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=y
+# CONFIG_PACKAGE_luci-app-quickstart=y
 
 # store
-CONFIG_PACKAGE_luci-app-store=y
+# CONFIG_PACKAGE_luci-app-store=y
 
 # luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-ttyd=y
@@ -231,7 +172,7 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 # turboacc
 CONFIG_PACKAGE_luci-app-turboacc=y
 
-# luci-app-uugamebooster=y
+luci-app-uugamebooster=y
 
 
 # luci-app-webadmin=y

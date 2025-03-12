@@ -10,7 +10,7 @@ name: Banana Pi BPI-R4
 
 on:
   schedule:
-    - cron: 0 22 * * *
+    - cron: 0 23 * * *
 
   release:
     types: [published]
@@ -40,8 +40,8 @@ env:
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/immortalwrt-mt798x-Banana-Pi-BPI-R4.info
   Firmware_Name: immortalwrt-mt798x-Banana-Pi-BPI-R4
-  DIY_P1_SH: smpackage/Banana-Pi-BPI-R4-1.sh
-  DIY_P2_SH: smpackage/Banana-Pi-BPI-R4-2.sh
+  DIY_P1_SH: smpackage/bllw3002-immortalwrt-1.sh
+  DIY_P2_SH: smpackage/Banana-Pi-BPI-R4-2-1.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -178,14 +178,14 @@ jobs:
         run: |
           cd openwrt
           make defconfig
-          make download -j$(($(nproc)+1))
+          make download -j8
 
       - name: 编译固件
         id: compile
         run: |
           cd openwrt
           echo -e "$(nproc) thread compile"
-          make -j$(nproc) || make -j1 || make -j1 V=s
+          make -j$(nproc) || make -j1 V=s
           # echo "======================="
           # echo "Space usage:"
           # echo "======================="
