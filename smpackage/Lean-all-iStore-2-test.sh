@@ -209,7 +209,7 @@ CONFIG_PACKAGE_luci-i18n-openclash-zh-cn=y
 
 # adguardhome
 CONFIG_PACKAGE_luci-app-adguardhome=y
-CONFIG_PACKAGE_luci-i18n-adguardhome-zh-cn=y
+CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y
 
 # mosdns
 CONFIG_PACKAGE_luci-app-mosdns=y
@@ -246,7 +246,7 @@ CONFIG_PACKAGE_luci-app-webadmin=y
 CONFIG_PACKAGE_luci-i18n-webadmin-zh-cn=y
 
 
-CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_autosamba=n
 CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
