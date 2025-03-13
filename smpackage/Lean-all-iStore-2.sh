@@ -172,6 +172,17 @@ CONFIG_PACKAGE_luci-app-webadmin=y
 CONFIG_PACKAGE_luci-i18n-webadmin-zh-cn=y
 
 
+CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-arpbind=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-nlbwmon=n
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-upnp=n
+
+
+
+
 " >> .config
 
 # 移除 ddns 和 ddnsto
