@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: Lean-all-iStore-text
+name: JB-Lean-all-iStore
 
 on:
   schedule:
@@ -57,7 +57,7 @@ jobs:
   build_openwrt:
 
 
-    name: Lean-all-iStore-text
+    name: JB-Lean-all-iStore
     
     runs-on: Ubuntu-22.04
     
