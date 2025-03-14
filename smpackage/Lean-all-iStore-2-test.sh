@@ -145,6 +145,8 @@ mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/lucky package/lucky
 # mv package/kz8-small/luci-app-lucky package/luci-app-lucky
 # mv package/kz8-small/smartdns package/smartdns
+mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 rm -rf package/kz8-small
 
 # git clone --depth 1 -b lua https://github.com/sbwml/luci-app-alist package/alist
