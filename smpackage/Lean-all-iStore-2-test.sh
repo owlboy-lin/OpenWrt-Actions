@@ -142,9 +142,9 @@ rm -rf feeds/luci/applications/{luci-app-alist,luci-app-lucky}
 git clone --depth 1 https://github.com/kenzok8/small-package.git package/kz8-small
 mv package/kz8-small/adguardhome package/adguardhome
 mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
-# mv package/kz8-small/lucky package/lucky
-# mv package/kz8-small/luci-app-lucky package/luci-app-lucky
-# mv package/kz8-small/smartdns package/smartdns
+mv package/kz8-small/lucky package/lucky
+mv package/kz8-small/luci-app-lucky package/luci-app-lucky
+mv package/kz8-small/smartdns package/smartdns
 mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 rm -rf package/kz8-small
