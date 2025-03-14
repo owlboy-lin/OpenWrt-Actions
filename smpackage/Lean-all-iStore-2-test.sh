@@ -179,7 +179,7 @@ CONFIG_TARGET_EXT4_BLOCKSIZE=4096
 
 
 # 固件大小
-CONFIG_TARGET_KERNEL_PARTSIZE=512
+CONFIG_TARGET_KERNEL_PARTSIZE=1024
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
 
@@ -201,7 +201,7 @@ CONFIG_PACKAGE_luci-app-openclash=y
 
 # adguardhome
 CONFIG_PACKAGE_luci-app-adguardhome=y
-
+CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y
 
 # mosdns
 CONFIG_PACKAGE_luci-app-mosdns=y
@@ -229,13 +229,13 @@ CONFIG_PACKAGE_luci-app-store=y
 # luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 
-
-# luci-app-uugamebooster=y
+# luci-app-uugamebooster
+luci-app-uugamebooster=y
 
 
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
-CONFIG_PACKAGE_luci-i18n-webadmin-zh-cn=y
+
 
 
 CONFIG_PACKAGE_autosamba=n
