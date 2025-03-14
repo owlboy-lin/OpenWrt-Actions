@@ -229,7 +229,7 @@ CONFIG_PACKAGE_luci-app-store=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 
 # luci-app-uugamebooster
-luci-app-uugamebooster=y
+luci-app-uugamebooster=n
 
 
 # luci-app-webadmin=y
@@ -244,7 +244,6 @@ CONFIG_PACKAGE_luci-app-ddns=n
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-upnp=n
-CONFIG_PACKAGE_luci-app-uugamebooster=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wol=n
 
