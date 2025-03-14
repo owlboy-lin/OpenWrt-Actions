@@ -32,7 +32,7 @@ env:
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/OpenWrt-CI.info
-  Firmware_Name: OpenWrt-CI.info
+  Firmware_Name: OpenWrt-CI
   DIY_P1_SH: smpackage/smpackage-1.sh
   DIY_P2_SH: smpackage/smpackage-2.sh
   GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
