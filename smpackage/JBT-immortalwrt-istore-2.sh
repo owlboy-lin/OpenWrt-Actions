@@ -142,7 +142,7 @@ git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 git clone -b master --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 
 
-#rm -rf feeds/packages/net/adguardhome
+# rm -rf feeds/packages/net/adguardhome
 # #adguardhome
 # git clone -b 2023.10 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
 # git clone https://github.com/rufengsuixing/luci-app-adguardhome package/luci-app-adguardhome
