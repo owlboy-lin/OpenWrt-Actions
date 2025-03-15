@@ -38,7 +38,7 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/immortalwrt.info
+  CONFIG_FILE: config/immortalwrt-openwrt-4.10.info
   Firmware_Name: jbt-immortalwrt-istore
   DIY_P1_SH: smpackage/JBT-immortalwrt-istore-1.sh
   DIY_P2_SH: smpackage/JBT-immortalwrt-istore-2.sh
