@@ -324,7 +324,7 @@ CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-upnp=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wol=n
-
+CONFIG_PACKAGE_swconfig=y
 
 
 
