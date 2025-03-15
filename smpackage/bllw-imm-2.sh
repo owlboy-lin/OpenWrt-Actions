@@ -94,9 +94,9 @@
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/mosdns package/mosdns
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
 
-sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
-sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
-sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
+# sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
+# sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
+# sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/base-files/files/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/base-files/luci2/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
@@ -130,16 +130,12 @@ git clone --depth 1 -b main https://github.com/linkease/istore.git package/istor
 #sed -i 's/\"network\"/\"modem\"/g' package/5g-modem/luci-app-modem/luasrc/controller/modem.lua
 
 # # #mosdns
-# find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
-# find ./ | grep Makefile | grep mosdns | xargs rm -f
+find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+find ./ | grep Makefile | grep mosdns | xargs rm -f
 
-# git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-# git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
-
-# rm -rf feeds/packages/net/{adguardhome,mosdns,xray*,v2ray*,v2ray*,sing*,smartdns,lucky}
-# rm -rf feeds/packages/utils/v2dat
-# rm -rf feeds/luci/applications/{luci-app-alist,luci-app-lucky}
 rm -rf feeds/packages/net/adguardhome
 # #adguardhome
 # git clone -b 2023.10 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
@@ -149,9 +145,6 @@ rm -rf feeds/packages/net/adguardhome
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 mv package/kz8-small/adguardhome package/adguardhome
 mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
-mv package/kz8-small/lucky package/lucky
-mv package/kz8-small/luci-app-lucky package/luci-app-lucky
-mv package/kz8-small/smartdns package/smartdns
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 # mv package/kz8-small/luci-app-partexp package/luci-app-partexp
 # mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
@@ -176,14 +169,14 @@ rm -rf package/kz8-small
 # 添加自定义软件包
 
 # 自定义定制选项
-# NET="package/base-files/files/bin/config_generate"
-# ZZZ="package/emortal/default-settings/files/99-default-settings"
+NET="package/base-files/files/bin/config_generate"
+ZZZ="package/emortal/default-settings/files/99-default-settings"
 
 #
-# sed -i "s#192.168.1.1#192.168.89.249#g" $NET                                                     # 定制默认IP
+sed -i "s#192.168.1.1#192.168.89.249#g" $NET                                                     # 定制默认IP
 # sed -i "s#ImmortalWrt#ImmortalWrt-X86#g" $NET                                          # 修改默认名称为 ImmortalWrt-X86
 # sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                          # 取消系统默认密码
-# echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                      # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
+echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                      # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
 
@@ -283,8 +276,6 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 # netspeedtest chmod +x /etc/init.d/netspeedtest
 CONFIG_PACKAGE_luci-app-netspeedtest=y
 
-# 宽带监控
-CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 # passwall
 CONFIG_PACKAGE_luci-app-passwall=y
@@ -312,10 +303,8 @@ luci-app-uugamebooster=n
 CONFIG_PACKAGE_luci-app-webadmin=y
 
 
-CONFIG_DEFAULT_autosamba=n
+
 CONFIG_PACKAGE_autosamba=n
-CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
-CONFIG_PACKAGE_luci-app-ksmbd=n
 CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
@@ -324,7 +313,7 @@ CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-upnp=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wol=n
-CONFIG_PACKAGE_swconfig=y
+
 
 
 

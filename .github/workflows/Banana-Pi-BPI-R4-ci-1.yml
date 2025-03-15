@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 #
 
-name: immortalwrt-mt798x-Banana-Pi-BPI-R4-CI-1
+name: imm-mt798x-Banana-Pi-BPI-R4-CI-1
 
 on:
   schedule:
@@ -57,7 +57,7 @@ jobs:
   build_openwrt:
 
 
-    name: immortalwrt-mt798x-Banana-Pi-BPI-R4-CI-1
+    name: imm-mt798x-Banana-Pi-BPI-R4-CI-1
 
     runs-on: Ubuntu-22.04
     
@@ -128,8 +128,7 @@ jobs:
         run: |
           cd openwrt 
           ./scripts/feeds install -a 
-          # ./scripts/feeds update istore
-          # ./scripts/feeds install -d y -p istore luci-app-store
+
            
 
       - name: patch2补丁和自定义设置

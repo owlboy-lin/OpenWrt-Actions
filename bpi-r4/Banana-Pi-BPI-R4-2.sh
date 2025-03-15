@@ -11,7 +11,7 @@
 #
 
 # 修改openwrt登陆地址,把下面的 10.0.0.1 修改成你想要的就可以了
-sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
+# sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
 # 修改 子网掩码
 # sed -i 's/255.255.255.0/255.255.0.0/g' package/base-files/files/bin/config_generate
 
@@ -94,86 +94,256 @@ sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_genera
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/mosdns package/mosdns
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
 
+# sed -i 's/192.168.1.1/192.168.23.1/g' package/base-files/files/bin/config_generate
+# sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.23.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
+# sed -i 's/ImmortalWrt/OpenWrt/g' package/base-files/files/bin/config_generate
+# sed -i 's#mirrors.vsean.net/openwrt#mirrors.pku.edu.cn/immortalwrt#g' package/emortal/default-settings/files/99-default-settings-chinese
+# mv $GITHUB_WORKSPACE/patch/banner $OPENWRT_PATH/package/base-files/files/etc/banner
+# mv $GITHUB_WORKSPACE/patch/immortalwrt-24.10/199-diy.sh package/base-files/files/etc/uci-defaults/199-diy.sh
+
+#完全删除luci版本
+# sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+#添加编译日期
+# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/usr/lib/os-release
+# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/etc/openwrt_release
+
+# git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+# git clone --depth 1 https://github.com/vernesong/OpenClash.git  package/openclash
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/luci-app-passwall
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/luci-app-passwall2
+#rm -rf feeds/packages/lang/golang
+#git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+
+# iStore
+git clone --depth 1 -b main https://github.com/linkease/istore.git package/istore
+# git clone --depth 1 -b master https://github.com/linkease/nas-packages.git package/nas-packages
+# git clone --depth 1 -b main https://github.com/linkease/nas-packages-luci.git package/nas-luci
+# mv package/nas-packages/network/services/* package/nas-packages/
+# rm -rf package/nas-packages/network
+
+#下载5g模块
+#git clone --depth 1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
+#sed -i 's/移动通信模组/通信模组/g' package/5g-modem/luci-app-modem/po/zh-cn/modem.po
+#sed -i 's/移动通信模组/通信模组/g' package/5g-modem/luci-app-modem/po/zh_Hans/modem.po
+#sed -i 's/\"network\"/\"modem\"/g' package/5g-modem/luci-app-modem/luasrc/controller/modem.lua
+
+# # #mosdns
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
+find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+
+
+
+# # #ssrp
+# git clone -b master --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+
+
+# rm -rf feeds/packages/net/adguardhome
+# #adguardhome
+# git clone -b 2023.10 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
+# git clone https://github.com/rufengsuixing/luci-app-adguardhome package/luci-app-adguardhome
+# git clone --depth 1 https://github.com/kenzok78/luci-app-adguardhome package/luci-app-adguardhome
+
+rm -rf feeds/packages/net/adguardhome
+git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+mv package/kz8-small/adguardhome package/adguardhome
+mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
+mv package/kz8-small/luci-app-partexp package/luci-app-partexp
+mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
+mv package/kz8-small/wrtbwmon package/wrtbwmon
+mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+mv package/kz8-small/homebox package/homebox
+mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+rm -rf package/kz8-small
+
+
+# git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
+# mv package/imm23luci/applications/luci-app-adbyby-plus package/luci-app-adbyby-plus
+# rm -rf package/imm23luci
+# git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/packages package/imm23packages
+# mv package/imm23packages/net/adbyby package/adbyby
+# rm -rf package/imm23packages
+
+# git clone --depth 1 -b lua https://github.com/sbwml/luci-app-alist package/alist
+# rm -rf package/alist/alist
+# rm -rf feeds/luci/themes/luci-theme-argon
+# git clone -b 18.06 --depth 1 https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
+
+#UA2F校园网
+# git clone --depth 1 https://github.com/lucikap/luci-app-ua2f.git package/luci-app-ua2f
+# git clone --depth 1 https://github.com/Zxilly/UA2F.git package/UA2F
+#git clone https://github.com/EOYOHOO/UA2F.git package/UA2F
+#git clone https://github.com/EOYOHOO/rkp-ipid.git package/rkp-ipid
+#rm -rf feeds/packages/net/ua2f
 
 # 添加自定义软件包
+
+# 自定义定制选项
+NET="package/base-files/files/bin/config_generate"
+ZZZ="package/emortal/default-settings/files/99-default-settings"
+
+#
+sed -i "s#192.168.1.1#192.168.89.249#g" $NET                                                     # 定制默认IP
+# sed -i "s#ImmortalWrt#ImmortalWrt-X86#g" $NET                                          # 修改默认名称为 ImmortalWrt-X86
+# sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                          # 取消系统默认密码
+echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                      # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
+
+# ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
+
+BUILDTIME=$(TZ=UTC-8 date "+%Y.%m.%d") && sed -i "s/\(_('Firmware Version'), *\)/\1 ('ONE build $BUILDTIME @ ') + /" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js              # 增加自己个性名称
+# sed -i "s@list listen_https@# list listen_https@g" package/network/services/uhttpd/files/uhttpd.config               # 停止监听443端口
+# sed -i '/exit 0/i\ethtool -s eth0 speed 2500 duplex full' package/base-files/files//etc/rc.local               # 强制显示2500M和全双工（默认PVE下VirtIO不识别） ImmortalWrt固件内不显示端口状态，可以关闭
+
+# ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
+
+# ========================性能跑分========================
+echo "rm -f /etc/uci-defaults/xxx-coremark" >> "$ZZZ"
+cat >> $ZZZ <<EOF
+cat /dev/null > /etc/bench.log
+echo " (CpuMark : 191219.823122" >> /etc/bench.log
+echo " Scores)" >> /etc/bench.log
+EOF
+
+# ================ 网络设置 =======================================
+
+cat >> $ZZZ <<-EOF
+# 设置网络-旁路由模式
+uci set network.lan.gateway='192.168.89.248'                     # 旁路由设置 IPv4 网关
+uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
+uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
+uci delete network.lan.type                                  # 旁路由桥接模式-禁用
+uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
+uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
+
+# 设置防火墙-旁路由模式
+uci set firewall.@defaults[0].syn_flood='0'                  # 禁用 SYN-flood 防御
+uci set firewall.@defaults[0].flow_offloading='0'           # 禁用基于软件的NAT分载
+uci set firewall.@defaults[0].flow_offloading_hw='0'       # 禁用基于硬件的NAT分载
+uci set firewall.@defaults[0].fullcone='0'                   # 禁用 FullCone NAT
+uci set firewall.@defaults[0].fullcone6='0'                  # 禁用 FullCone NAT6
+uci set firewall.@zone[0].masq='1'                             # 启用LAN口 IP 动态伪装
+
+# 旁路IPV6需要全部禁用
+uci del network.lan.ip6assign                                 # IPV6分配长度-禁用
+uci del dhcp.lan.ra                                             # 路由通告服务-禁用
+uci del dhcp.lan.dhcpv6                                        # DHCPv6 服务-禁用
+uci del dhcp.lan.ra_management                               # DHCPv6 模式-禁用
+
+# 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
+uci set network.ipv6=interface
+uci set network.ipv6.proto='dhcpv6'
+uci set network.ipv6.ifname='@lan'
+uci set network.ipv6.reqaddress='try'
+uci set network.ipv6.reqprefix='auto'
+uci set firewall.@zone[0].network='lan ipv6'
+
+uci commit dhcp
+uci commit network
+uci commit firewall
+
+EOF
+
+
 
 echo "
 
 # 额外组件
-CONFIG_GRUB_IMAGES=y
-CONFIG_VMDK_IMAGES=y
+# CONFIG_GRUB_IMAGES=y
+# CONFIG_VMDK_IMAGES=y
+
+# CONFIG_TARGET_ROOTFS_EXT4FS=y
+# CONFIG_TARGET_EXT4_RESERVED_PCT=0
+# CONFIG_TARGET_EXT4_BLOCKSIZE_4K=y
+# # CONFIG_TARGET_EXT4_BLOCKSIZE_2K is not set
+# # CONFIG_TARGET_EXT4_BLOCKSIZE_1K is not set
+# CONFIG_TARGET_EXT4_BLOCKSIZE=4096
+# # CONFIG_TARGET_EXT4_JOURNAL is not set
+
 
 # 固件大小
+# CONFIG_TARGET_KERNEL_PARTSIZE=1024
+# CONFIG_TARGET_ROOTFS_PARTSIZE=1024
+
+CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
 
 
-# ipv6
-CONFIG_PACKAGE_ipv6helper=y
+
+# # Themes
+CONFIG_PACKAGE_luci-theme-argon=y
+
 
 # 自动重启
 CONFIG_PACKAGE_luci-app-autoreboot=y
-CONFIG_PACKAGE_luci-i18n-autoreboot-zh-cn=y
 
 
 # 关机
 CONFIG_PACKAGE_luci-app-poweroff=y
-CONFIG_PACKAGE_luci-i18n-poweroff-zh-cn=y
+
 
 # openclash
 CONFIG_PACKAGE_luci-app-openclash=y
-CONFIG_PACKAGE_luci-i18n-openclash-zh-cn=y
+
 
 # adguardhome
 CONFIG_PACKAGE_luci-app-adguardhome=y
-CONFIG_PACKAGE_luci-i18n-adguardhome-zh-cn=y
+CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y
 
 # mosdns
 CONFIG_PACKAGE_luci-app-mosdns=y
-CONFIG_PACKAGE_luci-i18n-mosdns-zh-cn=y
+
 
 # netspeedtest chmod +x /etc/init.d/netspeedtest
 CONFIG_PACKAGE_luci-app-netspeedtest=y
-CONFIG_PACKAGE_luci-i18n-netspeedtest-zh-cn=y
+
+# 宽带监控
+CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 # passwall
 CONFIG_PACKAGE_luci-app-passwall=y
-CONFIG_PACKAGE_luci-i18n-passwall-zh-cn=y
+
 
 CONFIG_PACKAGE_luci-app-passwall2=y
-CONFIG_PACKAGE_luci-i18n-passwall2-zh-cn=y
+
 
 
 # quickstart
 CONFIG_PACKAGE_luci-app-quickstart=y
-CONFIG_PACKAGE_luci-i18n-quickstart-zh-cn=y
+
 
 # store
 CONFIG_PACKAGE_luci-app-store=y
 
 # luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-ttyd=y
-CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y
 
-# luci-app-uugamebooster=y
-CONFIG_PACKAGE_luci-app-uugamebooster=y
-CONFIG_PACKAGE_luci-i18n-uugamebooster-zh-cn=y
+# luci-app-uugamebooster
+luci-app-uugamebooster=n
+
 
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
-CONFIG_PACKAGE_luci-i18n-webadmin-zh-cn=y
 
 
-# 删除不用的插件
-# # CONFIG_PACKAGE_autosamba is not set
-# # CONFIG_PACKAGE_luci-app-accesscontrol is not set
-# # CONFIG_PACKAGE_luci-i18n-accesscontrol-zh-cn is not set
-# # CONFIG_PACKAGE_luci-app-upnp is not set
-# # CONFIG_PACKAGE_luci-i18n-upnp-zh-cn is not set
-# # CONFIG_PACKAGE_luci-app-vlmcsd is not set
-# # CONFIG_PACKAGE_luci-i18n-vlmcsd-zh-cn is not set
-# # CONFIG_PACKAGE_luci-app-vsftpd is not set
-# # CONFIG_PACKAGE_luci-i18n-vsftpd-zh-cn is not set
-# # CONFIG_PACKAGE_luci-app-samba4 is not set
-# # CONFIG_PACKAGE_luci-i18n-samba4-zh-cn is not set
+CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-arpbind=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-nlbwmon=y
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-vsftpd=n
+CONFIG_PACKAGE_luci-app-wol=n
+
+
+
+
 
 " >> .config
 

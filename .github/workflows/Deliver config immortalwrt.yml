@@ -37,12 +37,12 @@
           
     env:
       REPO_URL: https://github.com/immortalwrt/immortalwrt
-      REPO_BRANCH: master
+      REPO_BRANCH: openwrt-24.10
       FEEDS_CONF: feeds.conf.default
-      CONFIG_FILE: config/immortalwrt.info
+      CONFIG_FILE: 
       Firmware_Name: immortalwrt
-      DIY_P1_SH: smpackage/immortalwrt-1.sh
-      DIY_P2_SH: smpackage/immortalwrt-2.sh
+      DIY_P1_SH: 
+      DIY_P2_SH: 
       UPLOAD_BIN_DIR: false
       UPLOAD_FIRMWARE: true
       UPLOAD_BUILDINFO: true
@@ -71,20 +71,21 @@
           env:
             DEBIAN_FRONTEND: noninteractive
           run: |
-            docker rmi `docker images -q`
-            sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d /usr/local/lib/android
-            sudo -E apt-mark hold grub-efi-amd64-signed
-            sudo -E apt update
-            sudo -E apt -y purge azure-cli* docker* ghc* zulu* llvm* firefox google* dotnet* powershell* openjdk* mysql* php* mongodb* dotnet* snap*
-            sudo -E apt -y full-upgrade
-            sudo -E apt -y install ack antlr3 aria2 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python3 python3-pip libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
-            sudo -E apt -y install rename
-            sudo -E systemctl daemon-reload
-            sudo -E apt -y autoremove --purge
-            sudo -E apt clean
-            sudo -E timedatectl set-timezone "Asia/Shanghai"
+            sudo -E apt-get -qq update
+            sudo apt install -y \
+            build-essential clang flex bison g++ gawk \
+            gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev \
+            python3-setuptools rsync swig unzip zlib1g-dev rename \
+            file wget curl zstd bash coreutils
+            sudo apt full-upgrade -y
+            sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.eu.org/init_build_environment.sh)'
+            sudo -E apt-get -qq autoremove --purge
+            sudo -E apt-get -qq clean
+            sudo rm -rf /etc/apt/sources.list.d/* /usr/local/lib/android /opt/ghc /usr/share/dotnet /usr/local/graalvm /usr/local/.ghcup \
+            /usr/local/share/powershell /usr/local/share/chromium /usr/local/lib/node_modules
+            sudo timedatectl set-timezone "$TZ"
             sudo mkdir -p /workdir
-            sudo chown $USER:$GROUPS /workdir  
+            sudo chown $USER:$GROUPS $GITHUB_WORKSPACE /workdir 
 
         - name: 更新时区、编译时间
           id: date
@@ -144,59 +145,6 @@
           env:
             TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
             TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
-        - name: 输出编译信息
-          run: |
-            cd openwrt
-
-            echo
-            echo " 系统空间      类型   总数  已用  可用 使用率"
-            df -hT $PWD
-
-            echo
-            echo "=========================================="
-            echo
-
-            echo "	    CPU物理数量:$(cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l)"
-            echo "	    CPU核心及版本信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
-
-            echo
-            echo "=========================================="
-            echo
-
-            echo "KERNEL_PATCHVER=$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')" >> $GITHUB_ENV
-            echo "	    内核版本：$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')"
-
-            echo "	    编译时间：${{ env.FILE_TIME1 }}"
-
-            echo
-            echo "=========================================="
-
-            grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
-            grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
-            sed -i '/INCLUDE/d' Plug-in > /dev/null 2>&1
-            sed -i 's/CONFIG_PACKAGE_/、/g' Plug-in
-            sed -i '/Transparent_Proxy/d' Plug-in > /dev/null 2>&1 #排除 luci-app-passwall_Transparent_Proxy
-            sed -i '/qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1 #排除 luci-app-qbittorrent-simple_dynamic
-            sed -i 's/=y/\ /g' Plug-in
-            awk '$0=NR$0' Plug-in > Plug-2
-            awk '{print "	" $0}' Plug-2 > Plug-in
-
-            echo
-            echo
-            echo "	      已选插件列表"
-            cat Plug-in
-            rm -rf {Plug-in,Plug-2}
-
-            echo
-            echo "=========================================="
-
-            echo
-            echo
-            echo "输出完整插件信息..."
-            echo
-            echo
-            # cat .config
 
       
         - name: Prepare artifact

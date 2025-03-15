@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: jbt-immortalwrt
+name: jbt-immortalwrt-istore
 
 on:
   schedule:
@@ -38,10 +38,10 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/immortalwrt.info
-  Firmware_Name: bllw3002-immortalwrt
-  DIY_P1_SH: smpackage/bllw3002-immortalwrt-1.sh
-  DIY_P2_SH: smpackage/bllw3002-immortalwrt-2.sh
+  CONFIG_FILE: config/immortalwrt-openwrt-4.10.info
+  Firmware_Name: jbt-immortalwrt-istore
+  DIY_P1_SH: smpackage/JBT-immortalwrt-istore-1.sh
+  DIY_P2_SH: smpackage/JBT-immortalwrt-istore-2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -57,7 +57,7 @@ jobs:
   build_openwrt:
 
 
-    name: jbt-immortalwrt
+    name: jbt-immortalwrt-istore
     
     runs-on: Ubuntu-22.04
     
@@ -98,6 +98,7 @@ jobs:
           sudo docker image prune --all --force
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev rename
+          sudo -E apt -y install rename
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
