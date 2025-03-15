@@ -297,6 +297,8 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 # netspeedtest chmod +x /etc/init.d/netspeedtest
 CONFIG_PACKAGE_luci-app-netspeedtest=y
 
+# 宽带监控
+CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 # passwall
 CONFIG_PACKAGE_luci-app-passwall=y
@@ -324,8 +326,9 @@ luci-app-uugamebooster=n
 CONFIG_PACKAGE_luci-app-webadmin=y
 
 
-
+CONFIG_DEFAULT_autosamba=n
 CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=y
 CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
