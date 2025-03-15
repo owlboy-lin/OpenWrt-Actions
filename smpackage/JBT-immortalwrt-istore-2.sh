@@ -213,7 +213,7 @@ EOF
 
 cat >> $ZZZ <<-EOF
 # 设置网络-旁路由模式
-uci set network.lan.gateway='10.0.0.254'                     # 旁路由设置 IPv4 网关
+uci set network.lan.gateway='192.168.24.248'                     # 旁路由设置 IPv4 网关
 uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
 uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
 uci delete network.lan.type                                  # 旁路由桥接模式-禁用
