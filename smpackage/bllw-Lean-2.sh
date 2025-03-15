@@ -169,7 +169,7 @@ rm -rf package/kz8-small
 
 # 自定义定制选项
 # NET="package/base-files/files/bin/config_generate"
-# ZZZ="package/emortal/default-settings/files/99-default-settings"
+ZZZ="package/emortal/default-settings/files/99-default-settings"
 
 #
 # sed -i "s#192.168.1.1#192.168.89.249#g" $NET                                                     # 定制默认IP
@@ -275,6 +275,8 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 # netspeedtest chmod +x /etc/init.d/netspeedtest
 CONFIG_PACKAGE_luci-app-netspeedtest=y
 
+# 宽带监控
+CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 # passwall
 CONFIG_PACKAGE_luci-app-passwall=y
@@ -302,8 +304,9 @@ luci-app-uugamebooster=n
 CONFIG_PACKAGE_luci-app-webadmin=y
 
 
-
+CONFIG_DEFAULT_autosamba=n
 CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=y
 CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
