@@ -134,7 +134,7 @@ CONFIG_PACKAGE_luci-app-webadmin=y
 # CONFIG_PACKAGE_luci-app-upnp=n
 # CONFIG_PACKAGE_luci-app-vsftpd=n
 # CONFIG_PACKAGE_luci-app-wol=n
-
+CONFIG_PACKAGE_swconfig=y
 
 
 

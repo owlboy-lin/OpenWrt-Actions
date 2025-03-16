@@ -9,8 +9,7 @@
 # File name: diy-part2.sh
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
-cd openwrt
-./scripts/feeds install -d y -p istore luci-appe  
+
 
 # 修改openwrt登陆地址,把下面的 10.0.0.1 修改成你想要的就可以了
 # sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
@@ -179,6 +178,7 @@ CONFIG_TARGET_EXT4_BLOCKSIZE=4096
 CONFIG_TARGET_KERNEL_PARTSIZE=1024
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
+# CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=51
 
 # # Themes
 CONFIG_PACKAGE_luci-theme-argon=y
