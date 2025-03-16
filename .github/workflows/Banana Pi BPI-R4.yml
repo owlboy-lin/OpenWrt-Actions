@@ -59,7 +59,7 @@ jobs:
 
     name: Banana Pi BPI-R4
 
-    runs-on: Ubuntu-22.04
+    runs-on: Ubuntu-20.04
     
     steps:
     
@@ -151,8 +151,6 @@ jobs:
         run: |
           cd openwrt 
           ./scripts/feeds install -a 
-          # ./scripts/feeds update istore
-          # ./scripts/feeds install -d y -p istore luci-app-store
            
 
       - name: patch2补丁和自定义设置

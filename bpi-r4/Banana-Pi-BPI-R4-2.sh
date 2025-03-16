@@ -309,6 +309,8 @@ CONFIG_PACKAGE_luci-app-passwall=y
 
 CONFIG_PACKAGE_luci-app-passwall2=y
 
+# luci-app-ssr-plus
+CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 
 # quickstart
@@ -324,6 +326,8 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 # luci-app-uugamebooster
 luci-app-uugamebooster=n
 
+# luci-app-vssr
+CONFIG_PACKAGE_luci-app-vssr=y
 
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
@@ -333,6 +337,7 @@ CONFIG_DEFAULT_autosamba=n
 CONFIG_PACKAGE_autosamba=n
 CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
 CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
 CONFIG_PACKAGE_luci-app-nlbwmon=y
