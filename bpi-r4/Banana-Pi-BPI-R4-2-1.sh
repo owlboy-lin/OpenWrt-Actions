@@ -96,14 +96,14 @@ CONFIG_PACKAGE_luci-app-nlbwmon=y
 CONFIG_PACKAGE_luci-app-passwall=y
 
 
-CONFIG_PACKAGE_luci-app-passwall2=y
+CONFIG_PACKAGE_luci-app-passwall2=n
 
 # luci-app-ssr-plus
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=y
+CONFIG_PACKAGE_luci-app-quickstart=n
 
 
 # store
