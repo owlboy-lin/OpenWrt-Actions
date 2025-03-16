@@ -11,7 +11,7 @@
 #
 
 
-git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 
 
 
