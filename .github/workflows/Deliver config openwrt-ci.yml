@@ -165,9 +165,6 @@ jobs:
           mkdir -p ./artifact/buildinfo
           cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
           cp -rf ./feeds.conf.default ./artifact/buildinfo/
-
-*
-
             
       - name: 上传配置文件
         uses: actions/upload-artifact@v4
