@@ -111,9 +111,9 @@
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git  package/openclash
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/luci-app-passwall
-# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/luci-app-passwall2
-#rm -rf feeds/packages/lang/golang
-#git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/luci-app-passwall2
+# rm -rf feeds/packages/lang/golang
+# git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
 
 # iStore
 git clone --depth 1 -b main https://github.com/linkease/istore.git package/istore
