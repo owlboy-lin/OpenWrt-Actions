@@ -311,6 +311,10 @@ CONFIG_PACKAGE_luci-app-store=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 
 
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=n
+
+
 # luci-app-uugamebooster
 luci-app-uugamebooster=n
 
