@@ -191,8 +191,8 @@ jobs:
         uses: P3TERX/ssh2actions@main
         if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
         env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
     
       - name: Prepare artifact
@@ -205,8 +205,8 @@ jobs:
       - name: Upload config
         uses: actions/upload-artifact@v4
         with:
-        name: ${{ env.Firmware_Name }}_${{ env.FILE_DATE }}
-        path: openwrt/artifact/buildinfo/
+          name: ${{ env.Firmware_Name }}_${{ env.FILE_DATE }}
+          path: openwrt/artifact/buildinfo/
         
 #    - name: SSH connection to Actions
 #      uses: P3TERX/ssh2actions@v1.0.0
@@ -236,8 +236,8 @@ jobs:
       - name: 删除运行记录
         uses: Mattraks/delete-workflow-runs@v2
         with:
-        retain_days: 3     #保留最后多少记录不删除
-        keep_minimum_runs: 0
+          retain_days: 3     #保留最后多少记录不删除
+          keep_minimum_runs: 0
 
 #    - name: Remove old Releases
 #      uses: dev-drprasad/delete-older-releases@v0.1.0
