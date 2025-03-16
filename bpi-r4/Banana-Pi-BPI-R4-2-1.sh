@@ -1,5 +1,5 @@
-sed -i 's/192.168.1.1/192.168.23.1/g' package/base-files/files/bin/config_generate
-sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.23.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
+sed -i 's/192.168.1.1/192.168.89.1/g' package/base-files/files/bin/config_generate
+sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.89.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 # sed -i 's/ImmortalWrt/OpenWrt/g' package/base-files/files/bin/config_generate
 # sed -i 's/ImmortalWrt/OpenWrt/g' package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
 # mv $GITHUB_WORKSPACE/patch/banner package/base-files/files/etc/banner
@@ -14,15 +14,34 @@ sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.23.1/g" $(find ./feeds/luci/modules/l
 #git clone --depth=1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
 #rm -rf feeds/packages/net/quectel-cm
 
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
+rm -rf feeds/packages/net/adguardhome
+
+# git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
 # git clone --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git package/luci-app-adguardhome
+# git clone --depth 1 -b main https://github.com/linkease/istore.git package/istore
 
-# find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
-# find ./ | grep Makefile | grep mosdns | xargs rm -f
 
-# git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-# git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+
+
+git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+mv package/kz8-small/adguardhome package/adguardhome
+mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
+mv package/kz8-small/luci-app-partexp package/luci-app-partexp
+mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
+mv package/kz8-small/wrtbwmon package/wrtbwmon
+mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+mv package/kz8-small/homebox package/homebox
+mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+rm -rf package/kz8-small
+
 
 echo "
 

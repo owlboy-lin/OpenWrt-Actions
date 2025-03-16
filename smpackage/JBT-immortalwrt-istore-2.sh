@@ -94,59 +94,53 @@
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/mosdns package/mosdns
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
 
+#添加TurboAcc
+curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 # sed -i 's/192.168.1.1/192.168.23.1/g' package/base-files/files/bin/config_generate
 # sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.23.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 # sed -i 's/ImmortalWrt/OpenWrt/g' package/base-files/files/bin/config_generate
+# sed -i 's/ImmortalWrt/WiFi/g' package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
 # sed -i 's#mirrors.vsean.net/openwrt#mirrors.pku.edu.cn/immortalwrt#g' package/emortal/default-settings/files/99-default-settings-chinese
 # mv $GITHUB_WORKSPACE/patch/banner $OPENWRT_PATH/package/base-files/files/etc/banner
 # mv $GITHUB_WORKSPACE/patch/immortalwrt-24.10/199-diy.sh package/base-files/files/etc/uci-defaults/199-diy.sh
+git clone --depth 1 -b core https://github.com/vernesong/OpenClash.git  package/openclash-core
+mv package/openclash-core/master/meta/clash-linux-amd64.tar.gz package/base-files/files/etc/clash-linux-amd64.tar.gz
+rm -rf package/openclash-core
 
 #完全删除luci版本
-# sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 #添加编译日期
-# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/usr/lib/os-release
-# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/etc/openwrt_release
+sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/usr/lib/os-release
+sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/etc/openwrt_release
 
-# git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
-# git clone --depth 1 https://github.com/vernesong/OpenClash.git  package/openclash
-# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
-# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/luci-app-passwall
-# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/luci-app-passwall2
-#rm -rf feeds/packages/lang/golang
-#git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+#下载5g模块
+# git clone --depth 1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
 
 # iStore
-git clone --depth 1 -b main https://github.com/linkease/istore.git package/istore
-# git clone --depth 1 -b master https://github.com/linkease/nas-packages.git package/nas-packages
-# git clone --depth 1 -b main https://github.com/linkease/nas-packages-luci.git package/nas-luci
+git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
+# git clone --depth=1 -b master https://github.com/linkease/nas-packages.git package/nas-packages
+# git clone --depth=1 -b main https://github.com/linkease/nas-packages-luci.git package/nas-luci
 # mv package/nas-packages/network/services/* package/nas-packages/
 # rm -rf package/nas-packages/network
 
-#下载5g模块
-#git clone --depth 1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
-#sed -i 's/移动通信模组/通信模组/g' package/5g-modem/luci-app-modem/po/zh-cn/modem.po
-#sed -i 's/移动通信模组/通信模组/g' package/5g-modem/luci-app-modem/po/zh_Hans/modem.po
-#sed -i 's/\"network\"/\"modem\"/g' package/5g-modem/luci-app-modem/luasrc/controller/modem.lua
-
-# # #mosdns
 rm -rf feeds/packages/lang/golang
-git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
 find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
 find ./ | grep Makefile | grep mosdns | xargs rm -f
 git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
+git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+# git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
+git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
+git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
+git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
+rm -rf feeds/packages/devel/gn
+# rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-openclash}
 
-
-# # #ssrp
-# git clone -b master --depth 1 https://github.com/fw876/helloworld.git package/helloworld
-
-
-# rm -rf feeds/packages/net/adguardhome
-# #adguardhome
-# git clone -b 2023.10 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
-# git clone https://github.com/rufengsuixing/luci-app-adguardhome package/luci-app-adguardhome
-# git clone --depth 1 https://github.com/kenzok78/luci-app-adguardhome package/luci-app-adguardhome
+git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
+git clone --depth 1 https://github.com/sirpdboy/luci-app-eqosplus.git package/luci-app-eqosplus
 
 rm -rf feeds/packages/net/adguardhome
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
@@ -161,25 +155,12 @@ mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 rm -rf package/kz8-small
 
-
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
 # mv package/imm23luci/applications/luci-app-adbyby-plus package/luci-app-adbyby-plus
 # rm -rf package/imm23luci
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/packages package/imm23packages
 # mv package/imm23packages/net/adbyby package/adbyby
 # rm -rf package/imm23packages
-
-# git clone --depth 1 -b lua https://github.com/sbwml/luci-app-alist package/alist
-# rm -rf package/alist/alist
-# rm -rf feeds/luci/themes/luci-theme-argon
-# git clone -b 18.06 --depth 1 https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
-
-#UA2F校园网
-# git clone --depth 1 https://github.com/lucikap/luci-app-ua2f.git package/luci-app-ua2f
-# git clone --depth 1 https://github.com/Zxilly/UA2F.git package/UA2F
-#git clone https://github.com/EOYOHOO/UA2F.git package/UA2F
-#git clone https://github.com/EOYOHOO/rkp-ipid.git package/rkp-ipid
-#rm -rf feeds/packages/net/ua2f
 
 # 添加自定义软件包
 
@@ -278,6 +259,10 @@ CONFIG_PACKAGE_luci-theme-argon=y
 CONFIG_PACKAGE_luci-app-autoreboot=y
 
 
+# luci-app-filemanager
+CONFIG_PACKAGE_luci-app-filemanager=y
+
+
 # 关机
 CONFIG_PACKAGE_luci-app-poweroff=y
 
@@ -290,6 +275,7 @@ CONFIG_PACKAGE_luci-app-openclash=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
 CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y
 
+
 # mosdns
 CONFIG_PACKAGE_luci-app-mosdns=y
 
@@ -297,8 +283,10 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 # netspeedtest chmod +x /etc/init.d/netspeedtest
 CONFIG_PACKAGE_luci-app-netspeedtest=y
 
+
 # 宽带监控
 CONFIG_PACKAGE_luci-app-nlbwmon=y
+
 
 # passwall
 CONFIG_PACKAGE_luci-app-passwall=y
@@ -307,19 +295,32 @@ CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-passwall2=y
 
 
+# luci-app-ssr-plus
+CONFIG_PACKAGE_luci-app-ssr-plus=y
+
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=y
+CONFIG_PACKAGE_luci-app-quickstart=n
 
 
 # store
 CONFIG_PACKAGE_luci-app-store=y
 
+
 # luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 
+
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=n
+
+
 # luci-app-uugamebooster
-luci-app-uugamebooster=n
+CONFIG_PACKAGE_luci-app-uugamebooster=n
+
+
+# luci-app-vssr
+CONFIG_PACKAGE_luci-app-vssr=y
 
 
 # luci-app-webadmin=y
@@ -328,11 +329,11 @@ CONFIG_PACKAGE_luci-app-webadmin=y
 
 CONFIG_DEFAULT_autosamba=n
 CONFIG_PACKAGE_autosamba=n
-CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=y
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
 CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
-CONFIG_PACKAGE_luci-app-nlbwmon=y
 CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-upnp=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
