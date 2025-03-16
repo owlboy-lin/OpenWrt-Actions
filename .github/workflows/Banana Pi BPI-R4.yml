@@ -161,7 +161,8 @@ jobs:
         if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
         with:
           ccache: 'true'
-          mixkey: '${{ env.Firmware_Name }}'
+          clean: 'false'
+          mixkey: '${{ env.Firmware_Name }}-${{ env.START_SECONDS }}'
           prefix: ${{ github.workspace }}/openwrt
 
 
