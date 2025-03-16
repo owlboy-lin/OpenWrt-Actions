@@ -126,6 +126,8 @@ jobs:
           df -hT $PWD
           git clone -b $REPO_BRANCH --single-branch --filter=blob:none $REPO_URL openwrt
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+          cd openwrt
+          echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
 
       - name: 缓存
         uses: klever1988/cachewrtbuild@main
@@ -134,7 +136,7 @@ jobs:
           ccache: 'true'
           clean: 'false'
           mixkey: '${{ env.Firmware_Name }}-${{ env.START_SECONDS }}'
-          prefix: ${{ github.workspace }}/openwrt
+          prefix: ${{ env.OPENWRT_PATH }}
 
       - name: patch1补丁和自定义设置
         run: |
