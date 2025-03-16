@@ -102,6 +102,10 @@ CONFIG_PACKAGE_luci-app-passwall2=n
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 
+# quickstart
+CONFIG_PACKAGE_luci-app-quickstart=n
+
+
 # store
 CONFIG_PACKAGE_luci-app-store=y
 
@@ -125,7 +129,6 @@ CONFIG_PACKAGE_luci-app-webadmin=y
 # CONFIG_PACKAGE_luci-app-ksmbd=n
 # CONFIG_PACKAGE_luci-app-arpbind=n
 # CONFIG_PACKAGE_luci-app-ddns=n
-# CONFIG_PACKAGE_luci-app-nlbwmon=y
 # CONFIG_PACKAGE_luci-app-samba4=n
 # CONFIG_PACKAGE_luci-app-upnp=n
 # CONFIG_PACKAGE_luci-app-vsftpd=n
