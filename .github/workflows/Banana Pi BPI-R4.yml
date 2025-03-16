@@ -41,7 +41,7 @@ env:
   CONFIG_FILE: bpi-r4/Banana-Pi-BPI-R4.info
   Firmware_Name: immortalwrt-mt798x-Banana-Pi-BPI-R4
   DIY_P1_SH: bpi-r4/Banana-Pi-BPI-R4-1.sh
-  DIY_P2_SH: bpi-r4/Banana-Pi-BPI-R4-2.sh
+  DIY_P2_SH: bpi-r4/Banana-Pi-BPI-R4-2-1.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -125,7 +125,7 @@ jobs:
         working-directory: /workdir
         run: |
           df -hT $PWD
-          git clone --depth 1 -b $REPO_BRANCH --single-branch $REPO_URL openwrt
+          git clone --depth=1 $REPO_BRANCH $REPO_URL openwrt
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
       - name: 缓存
