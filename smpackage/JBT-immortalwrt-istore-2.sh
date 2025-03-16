@@ -259,6 +259,10 @@ CONFIG_PACKAGE_luci-theme-argon=y
 CONFIG_PACKAGE_luci-app-autoreboot=y
 
 
+# luci-app-filemanager
+CONFIG_PACKAGE_luci-app-filemanager=y
+
+
 # 关机
 CONFIG_PACKAGE_luci-app-poweroff=y
 
