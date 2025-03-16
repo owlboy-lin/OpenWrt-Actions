@@ -28,7 +28,6 @@ git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-mv
 mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 mv package/kz8-small/luci-app-partexp package/luci-app-partexp
