@@ -26,11 +26,7 @@ on:
         required: false
         default: 'false'
         
-      CACHE_BUILD:
-        description: '缓存加速'
-        required: false
-        default: 'true'
-        type: boolean
+
 
 
     
@@ -154,14 +150,6 @@ jobs:
           df -hT $PWD
           git clone --depth=1 -b $REPO_BRANCH --single-branch $REPO_URL openwrt          
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-
-      - name: 缓存
-        uses: klever1988/cachewrtbuild@main
-        if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
-        with:
-          ccache: 'true'
-          mixkey: '${{ env.Firmware_Name }}'
-          prefix: ${{ github.workspace }}/openwrt
 
 
       - name: 更新源 #Update feeds
