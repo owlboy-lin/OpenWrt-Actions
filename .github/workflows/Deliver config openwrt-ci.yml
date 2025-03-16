@@ -33,8 +33,8 @@ env:
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/OpenWrt-CI.info
   Firmware_Name: OpenWrt-CI
-  DIY_P1_SH: smpackage/smpackage-1.sh
-  DIY_P2_SH: smpackage/smpackage-2.sh
+  DIY_P1_SH: smpackage/Lean-1.sh
+  DIY_P2_SH: smpackage/test-2.sh
   GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
@@ -119,6 +119,12 @@ jobs:
           ln -sf /mnt/openwrt/bin openwrt/bin
           ln -sf /mnt/openwrt/staging_dir openwrt/staging_dir
 
+      - name: patch1补丁和自定义设置
+        run: |
+          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+          chmod +x $DIY_P1_SH
+          cd openwrt
+          $GITHUB_WORKSPACE/$DIY_P1_SH
 
 
       - name: 更新源 #Update feeds
@@ -128,7 +134,12 @@ jobs:
         run: cd openwrt && ./scripts/feeds install -a && ./scripts/feeds install -a
 
 
-
+      - name: patch2补丁和自定义设置
+        run: |
+          [ -e files ] && mv files openwrt/files
+          chmod +x $DIY_P2_SH
+          cd openwrt
+          $GITHUB_WORKSPACE/$DIY_P2_SH
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
