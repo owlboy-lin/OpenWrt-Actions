@@ -139,7 +139,7 @@ git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 
 # # #ssrp
-# git clone -b master --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 
 
 # rm -rf feeds/packages/net/adguardhome
