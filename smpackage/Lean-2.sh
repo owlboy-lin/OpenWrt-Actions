@@ -135,7 +135,7 @@ git clone --depth 1 -b main https://github.com/linkease/istore.git package/istor
 #git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 
 rm -rf feeds/packages/net/{adguardhome,mosdns}
-
+rm -rf feeds/luci/applications/{luci-app-adguardhome,luci-app-mosdns}
 # rm -rf feeds/packages/net/{adguardhome,mosdns,xray*,v2ray*,v2ray*,sing*,smartdns,lucky}
 # rm -rf feeds/packages/utils/v2dat
 # rm -rf feeds/luci/applications/{luci-app-alist,luci-app-lucky}
