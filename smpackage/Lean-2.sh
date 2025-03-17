@@ -134,7 +134,7 @@ git clone --depth 1 -b main https://github.com/linkease/istore.git package/istor
 #git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 #git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 
-rm -rf feeds/packages/net/{adguardhome,mosdns}
+rm -rf feeds/packages/net/adguardhome
 rm -rf feeds/luci/applications/{luci-app-adguardhome,luci-app-mosdns}
 # rm -rf feeds/packages/net/{adguardhome,mosdns,xray*,v2ray*,v2ray*,sing*,smartdns,lucky}
 # rm -rf feeds/packages/utils/v2dat
@@ -142,8 +142,8 @@ rm -rf feeds/luci/applications/{luci-app-adguardhome,luci-app-mosdns}
 git clone --depth 1 https://github.com/kenzok8/small-package.git package/kz8-small
 mv package/kz8-small/adguardhome package/adguardhome
 mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
-mv package/kz8-small/mosdns package/mosdns
-mv package/kz8-small/luci-app-mosdns package/luci-app-mosdns
+# mv package/kz8-small/mosdns package/mosdns
+# mv package/kz8-small/luci-app-mosdns package/luci-app-mosdns
 # mv package/kz8-small/lucky package/lucky
 # mv package/kz8-small/luci-app-lucky package/luci-app-lucky
 # mv package/kz8-small/smartdns package/smartdns
@@ -151,6 +151,13 @@ mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 rm -rf package/kz8-small
+
+
+# luci-app-mosdns
+find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/luci-app-mosdns
 
 git clone --depth 1 -b lua https://github.com/sbwml/luci-app-alist package/alist
 rm -rf package/alist/alist
