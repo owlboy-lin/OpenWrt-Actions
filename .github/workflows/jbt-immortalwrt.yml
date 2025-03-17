@@ -6,11 +6,11 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: jbt-immortalwrt-istore
+name: JBT-immortalwrt-istore
 
 on:
   schedule:
-    - cron: 0 22 * * *
+    - cron: 0 21 * * *
 
   release:
     types: [published]
@@ -39,7 +39,7 @@ env:
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/immortalwrt-openwrt-24.10.info
-  Firmware_Name: jbt-immortalwrt-istore
+  Firmware_Name: JBT-immortalwrt-istore
   DIY_P1_SH: smpackage/JBT-immortalwrt-istore-1.sh
   DIY_P2_SH: smpackage/JBT-immortalwrt-istore-2.sh
   UPLOAD_BIN_DIR: false
@@ -57,7 +57,7 @@ jobs:
   build_openwrt:
 
 
-    name: jbt-immortalwrt-istore
+    name: JBT-immortalwrt-istore
     
     runs-on: Ubuntu-22.04
     
