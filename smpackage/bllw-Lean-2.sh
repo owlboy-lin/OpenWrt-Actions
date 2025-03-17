@@ -94,9 +94,9 @@
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/mosdns package/mosdns
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
 
-# sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
-# sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
-# sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
+sed -i 's/192.168.1.1/192.168.89.1/g' package/base-files/files/bin/config_generate
+sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.89.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
+sed -i 's/192.168.1.1/192.168.89.1/g' package/base-files/luci2/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/base-files/files/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/base-files/luci2/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
