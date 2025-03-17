@@ -152,8 +152,8 @@ rm -rf package/kz8-small
 
 git clone --depth 1 -b lua https://github.com/sbwml/luci-app-alist package/alist
 rm -rf package/alist/alist
-rm -rf feeds/luci/themes/luci-theme-argon
-git clone -b 18.06 --depth 1 https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
+# rm -rf feeds/luci/themes/luci-theme-argon
+# git clone -b 18.06 --depth 1 https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
 
 #UA2F校园网
 # git clone --depth 1 https://github.com/lucikap/luci-app-ua2f.git package/luci-app-ua2f
@@ -247,7 +247,7 @@ CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 # CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
 
 # # Themes
-CONFIG_PACKAGE_luci-theme-argon=n
+CONFIG_PACKAGE_luci-theme-argon=y
 
 
 # 自动重启
