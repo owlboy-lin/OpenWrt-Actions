@@ -134,14 +134,16 @@ git clone --depth 1 -b main https://github.com/linkease/istore.git package/istor
 #git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 #git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 
-# rm -rf feeds/packages/net/adguardhome
+rm -rf feeds/packages/net/{adguardhome,mosdns}
 
 # rm -rf feeds/packages/net/{adguardhome,mosdns,xray*,v2ray*,v2ray*,sing*,smartdns,lucky}
 # rm -rf feeds/packages/utils/v2dat
 # rm -rf feeds/luci/applications/{luci-app-alist,luci-app-lucky}
 git clone --depth 1 https://github.com/kenzok8/small-package.git package/kz8-small
-# mv package/kz8-small/adguardhome package/adguardhome
-# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+mv package/kz8-small/adguardhome package/adguardhome
+mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+mv package/kz8-small/mosdns package/mosdns
+mv package/kz8-small/luci-app-mosdns package/luci-app-mosdns
 # mv package/kz8-small/lucky package/lucky
 # mv package/kz8-small/luci-app-lucky package/luci-app-lucky
 # mv package/kz8-small/smartdns package/smartdns
