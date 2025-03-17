@@ -247,6 +247,7 @@ CONFIG_TARGET_EXT4_BLOCKSIZE=4096
 CONFIG_TARGET_KERNEL_PARTSIZE=1024
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
+# CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
 
 # # Themes
 CONFIG_PACKAGE_luci-theme-argon=y
@@ -287,7 +288,7 @@ CONFIG_PACKAGE_luci-app-passwall2=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=y
+CONFIG_PACKAGE_luci-app-quickstart=n
 
 
 # store
@@ -297,7 +298,11 @@ CONFIG_PACKAGE_luci-app-store=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 
 # luci-app-uugamebooster
-luci-app-uugamebooster=n
+CONFIG_PACKAGE_luci-app-uugamebooster=n
+
+
+# luci-app-vssr
+CONFIG_PACKAGE_luci-app-vssr=y
 
 
 # luci-app-webadmin=y
@@ -311,12 +316,12 @@ CONFIG_PACKAGE_luci-app-ksmbd=n
 CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
-CONFIG_PACKAGE_luci-app-nlbwmon=y
 CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-vlmcsd=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wol=n
-
+CONFIG_PACKAGE_swconfig=n
 
 
 
