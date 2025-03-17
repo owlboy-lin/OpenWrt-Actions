@@ -14,7 +14,7 @@ sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.89.1/g" $(find ./feeds/luci/modules/l
 #git clone --depth=1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
 #rm -rf feeds/packages/net/quectel-cm
 
-rm -rf feeds/packages/net/adguardhome
+# rm -rf feeds/packages/net/adguardhome
 
 # git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
@@ -23,25 +23,24 @@ rm -rf feeds/packages/net/adguardhome
 # git clone --depth 1 -b main https://github.com/linkease/istore.git package/istore
 
 
+# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+# mv package/kz8-small/adguardhome package/adguardhome
+# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+# mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
+# mv package/kz8-small/luci-app-partexp package/luci-app-partexp
+# mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
+# mv package/kz8-small/wrtbwmon package/wrtbwmon
+# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+# mv package/kz8-small/homebox package/homebox
+# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+# rm -rf package/kz8-small
+
+
 find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
 find ./ | grep Makefile | grep mosdns | xargs rm -f
 
 git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-
-
-git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-mv package/kz8-small/adguardhome package/adguardhome
-mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
-mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
-mv package/kz8-small/luci-app-partexp package/luci-app-partexp
-mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
-mv package/kz8-small/wrtbwmon package/wrtbwmon
-mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
-mv package/kz8-small/homebox package/homebox
-mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-rm -rf package/kz8-small
-
 
 echo "
 
@@ -126,17 +125,17 @@ CONFIG_PACKAGE_luci-app-vssr=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
 
-# CONFIG_DEFAULT_autosamba=n
-# CONFIG_PACKAGE_autosamba=n
-# CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
-# CONFIG_PACKAGE_luci-app-accesscontrol=n
-# CONFIG_PACKAGE_luci-app-ksmbd=n
-# CONFIG_PACKAGE_luci-app-arpbind=n
-# CONFIG_PACKAGE_luci-app-ddns=n
-# CONFIG_PACKAGE_luci-app-samba4=n
-# CONFIG_PACKAGE_luci-app-upnp=n
-# CONFIG_PACKAGE_luci-app-vsftpd=n
-# CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
+CONFIG_PACKAGE_luci-app-arpbind=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-vsftpd=n
+CONFIG_PACKAGE_luci-app-wol=n
 CONFIG_PACKAGE_swconfig=y
 
 

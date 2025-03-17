@@ -10,7 +10,7 @@ name: JBT-Lean-all-iStore
 
 on:
   schedule:
-    - cron: 0 22 * * *
+    - cron: 0 19 * * *
 
   release:
     types: [published]

@@ -94,9 +94,9 @@
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/mosdns package/mosdns
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
 
-# sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
-# sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
-# sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
+# sed -i 's/192.168.1.1/192.168.89.249/g' package/base-files/files/bin/config_generate
+# sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.89.249/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
+# sed -i 's/192.168.1.1/192.168.89.249/g' package/base-files/luci2/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/base-files/files/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/base-files/luci2/bin/config_generate
 # sed -i 's/LEDE/OpenWrt/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
@@ -129,20 +129,16 @@ git clone --depth 1 -b main https://github.com/linkease/istore.git package/istor
 #sed -i 's/移动通信模组/通信模组/g' package/5g-modem/luci-app-modem/po/zh_Hans/modem.po
 #sed -i 's/\"network\"/\"modem\"/g' package/5g-modem/luci-app-modem/luasrc/controller/modem.lua
 
-# # #mosdns
-find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
-find ./ | grep Makefile | grep mosdns | xargs rm -f
-
-git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 rm -rf feeds/packages/net/adguardhome
+rm -rf feeds/luci/applications/{luci-app-adguardhome,luci-app-mosdns}
 # #adguardhome
 # git clone -b 2023.10 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
 # git clone https://github.com/rufengsuixing/luci-app-adguardhome package/luci-app-adguardhome
 # git clone --depth 1 https://github.com/kenzok78/luci-app-adguardhome package/luci-app-adguardhome
 
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+mv package/kz8-small/adguardhome package/adguardhome
 mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 # mv package/kz8-small/luci-app-partexp package/luci-app-partexp
@@ -152,6 +148,13 @@ mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 rm -rf package/kz8-small
+
+# # #mosdns
+find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/luci-app-mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 # git clone --depth 1 -b lua https://github.com/sbwml/luci-app-alist package/alist
 # rm -rf package/alist/alist
@@ -189,42 +192,42 @@ sed -i "s#192.168.1.1#192.168.89.249#g" $NET                                    
 
 # ================ 网络设置 =======================================
 
-cat >> $ZZZ <<-EOF
-# 设置网络-旁路由模式
-uci set network.lan.gateway='192.168.89.248'                     # 旁路由设置 IPv4 网关
-uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
-uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
-uci delete network.lan.type                                  # 旁路由桥接模式-禁用
-uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
-uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
+# cat >> $ZZZ <<-EOF
+# # 设置网络-旁路由模式
+# uci set network.lan.gateway='192.168.89.248'                     # 旁路由设置 IPv4 网关
+# uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
+# uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
+# uci delete network.lan.type                                  # 旁路由桥接模式-禁用
+# uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
+# uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
 
-# 设置防火墙-旁路由模式
-uci set firewall.@defaults[0].syn_flood='0'                  # 禁用 SYN-flood 防御
-uci set firewall.@defaults[0].flow_offloading='0'           # 禁用基于软件的NAT分载
-uci set firewall.@defaults[0].flow_offloading_hw='0'       # 禁用基于硬件的NAT分载
-uci set firewall.@defaults[0].fullcone='0'                   # 禁用 FullCone NAT
-uci set firewall.@defaults[0].fullcone6='0'                  # 禁用 FullCone NAT6
-uci set firewall.@zone[0].masq='1'                             # 启用LAN口 IP 动态伪装
+# # 设置防火墙-旁路由模式
+# uci set firewall.@defaults[0].syn_flood='0'                  # 禁用 SYN-flood 防御
+# uci set firewall.@defaults[0].flow_offloading='0'           # 禁用基于软件的NAT分载
+# uci set firewall.@defaults[0].flow_offloading_hw='0'       # 禁用基于硬件的NAT分载
+# uci set firewall.@defaults[0].fullcone='0'                   # 禁用 FullCone NAT
+# uci set firewall.@defaults[0].fullcone6='0'                  # 禁用 FullCone NAT6
+# uci set firewall.@zone[0].masq='1'                             # 启用LAN口 IP 动态伪装
 
-# 旁路IPV6需要全部禁用
-uci del network.lan.ip6assign                                 # IPV6分配长度-禁用
-uci del dhcp.lan.ra                                             # 路由通告服务-禁用
-uci del dhcp.lan.dhcpv6                                        # DHCPv6 服务-禁用
-uci del dhcp.lan.ra_management                               # DHCPv6 模式-禁用
+# # 旁路IPV6需要全部禁用
+# uci del network.lan.ip6assign                                 # IPV6分配长度-禁用
+# uci del dhcp.lan.ra                                             # 路由通告服务-禁用
+# uci del dhcp.lan.dhcpv6                                        # DHCPv6 服务-禁用
+# uci del dhcp.lan.ra_management                               # DHCPv6 模式-禁用
 
-# 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
-uci set network.ipv6=interface
-uci set network.ipv6.proto='dhcpv6'
-uci set network.ipv6.ifname='@lan'
-uci set network.ipv6.reqaddress='try'
-uci set network.ipv6.reqprefix='auto'
-uci set firewall.@zone[0].network='lan ipv6'
+# # 如果有用IPV6的话,可以使用以下命令创建IPV6客户端(LAN口)（去掉全部代码uci前面#号生效）
+# uci set network.ipv6=interface
+# uci set network.ipv6.proto='dhcpv6'
+# uci set network.ipv6.ifname='@lan'
+# uci set network.ipv6.reqaddress='try'
+# uci set network.ipv6.reqprefix='auto'
+# uci set firewall.@zone[0].network='lan ipv6'
 
-uci commit dhcp
-uci commit network
-uci commit firewall
+# uci commit dhcp
+# uci commit network
+# uci commit firewall
 
-EOF
+# EOF
 
 
 
@@ -247,6 +250,7 @@ CONFIG_TARGET_EXT4_BLOCKSIZE=4096
 CONFIG_TARGET_KERNEL_PARTSIZE=1024
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
+# CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
 
 # # Themes
 CONFIG_PACKAGE_luci-theme-argon=y
@@ -287,7 +291,7 @@ CONFIG_PACKAGE_luci-app-passwall2=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=y
+CONFIG_PACKAGE_luci-app-quickstart=n
 
 
 # store
@@ -297,7 +301,11 @@ CONFIG_PACKAGE_luci-app-store=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 
 # luci-app-uugamebooster
-luci-app-uugamebooster=n
+CONFIG_PACKAGE_luci-app-uugamebooster=n
+
+
+# luci-app-vssr
+CONFIG_PACKAGE_luci-app-vssr=y
 
 
 # luci-app-webadmin=y
@@ -311,12 +319,12 @@ CONFIG_PACKAGE_luci-app-ksmbd=n
 CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
-CONFIG_PACKAGE_luci-app-nlbwmon=y
 CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-vlmcsd=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wol=n
-
+CONFIG_PACKAGE_swconfig=n
 
 
 

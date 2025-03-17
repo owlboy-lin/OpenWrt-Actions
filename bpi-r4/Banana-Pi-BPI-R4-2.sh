@@ -14,7 +14,7 @@ sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.23.1/g" $(find ./feeds/luci/modules/l
 #git clone --depth=1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
 #rm -rf feeds/packages/net/quectel-cm
 
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
 # git clone --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git package/luci-app-adguardhome
 
@@ -107,17 +107,17 @@ CONFIG_PACKAGE_luci-app-vssr=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
 
-# CONFIG_DEFAULT_autosamba=n
-# CONFIG_PACKAGE_autosamba=n
-# CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
-# CONFIG_PACKAGE_luci-app-accesscontrol=n
-# CONFIG_PACKAGE_luci-app-ksmbd=n
-# CONFIG_PACKAGE_luci-app-arpbind=n
-# CONFIG_PACKAGE_luci-app-ddns=n
-# CONFIG_PACKAGE_luci-app-samba4=n
-# CONFIG_PACKAGE_luci-app-upnp=n
-# CONFIG_PACKAGE_luci-app-vsftpd=n
-# CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
+CONFIG_PACKAGE_luci-app-arpbind=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-vsftpd=n
+CONFIG_PACKAGE_luci-app-wol=n
 CONFIG_PACKAGE_swconfig=y
 
 
