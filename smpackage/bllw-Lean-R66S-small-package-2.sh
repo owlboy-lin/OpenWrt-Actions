@@ -108,7 +108,7 @@
 # mv $GITHUB_WORKSPACE/patch/banner package/base-files/files/etc/banner
 # mv $GITHUB_WORKSPACE/patch/lean/199-diy.sh package/base-files/files/etc/uci-defaults/zz-diy.sh
 
-# git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git  package/openclash
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/luci-app-passwall
@@ -308,6 +308,8 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 # luci-app-uugamebooster
 CONFIG_PACKAGE_luci-app-uugamebooster=n
 
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=y
 
 # luci-app-vssr
 CONFIG_PACKAGE_luci-app-vssr=y
@@ -329,11 +331,13 @@ CONFIG_PACKAGE_luci-app-ipsec-vpnd=n
 CONFIG_PACKAGE_iptables-mod-tproxy=n
 CONFIG_PACKAGE_iptables-mod-extra=n
 CONFIG_PACKAGE_luci-app-openvpn=n
+CONFIG_PACKAGE_luci-app-ramfree=y
 CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-upnp=n
 CONFIG_PACKAGE_luci-app-vlmcsd=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_luci-app-zerotier=n
 CONFIG_PACKAGE_swconfig=n
 
 
