@@ -21,7 +21,7 @@ on:
         
 # 定时触发编译(每月1日早3点)
   schedule:
-    - cron: 0 30 19 * * ? 
+    - cron: 0 30 19 * * * *
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
