@@ -10,7 +10,7 @@ name: imm-mt798x-Banana-Pi-BPI-R4-CI-1
 
 on:
   schedule:
-    - cron: 0 23 * * *
+    - cron: 0 18 * * *
 
   release:
     types: [published]
