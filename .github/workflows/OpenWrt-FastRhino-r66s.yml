@@ -14,7 +14,7 @@ on:
 
 # 定时触发编译(每月1日早3点)
   schedule:
-    - cron: 0 17 2,12,22 * *
+    - cron: 0 22 * * *
 
   release:
     types: [published]
@@ -44,8 +44,8 @@ env:
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: r66s/6.1/config/OpenWrt-FastRhino-r66s-6.1.info
   Firmware_Name: OpenWrt-FastRhino-r66s-6.1    
-  DIY_P1_SH: r66s/6.1/diy-part1.sh
-  DIY_P2_SH: r66s/6.1/diy-part2.sh
+  DIY_P1_SH: r66s/6.1/r66s-test-1.sh
+  DIY_P2_SH: r66s/6.1/bllw-Lean-R66S-small-package-2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -82,6 +82,19 @@ jobs:
           echo "--------------------------硬盘信息--------------------------"
           echo "硬盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
 
+      - name: 释放磁盘空间
+        uses: endersonmenezes/free-disk-space@v2
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell"
+          testing: false
+
        
       - name: 初始化系统环境
         env:
@@ -96,10 +109,12 @@ jobs:
           # sudo timedatectl set-timezone "$TZ"
           # sudo mkdir -p /workdir
           # sudo chown $USER:$GROUPS /workdir
+
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
           sudo docker image prune --all --force
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev rename
+          sudo -E apt -y install rename
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
@@ -133,7 +148,8 @@ jobs:
         if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
         with:
           ccache: 'true'
-          mixkey: 'OpenWrt-FastRhino-r66s-6.1'
+          clean: 'false'
+          mixkey: '${{ env.Firmware_Name }}-${{ env.START_SECONDS }}'
           prefix: ${{ github.workspace }}/openwrt
 
       - name: patch1补丁和自定义设置
@@ -144,27 +160,13 @@ jobs:
           $GITHUB_WORKSPACE/$DIY_P1_SH
 
 
-      # - name: 更新源 #Update feeds
-      #   run: cd openwrt && ./scripts/feeds update -a
+
       
-      - name: 更新源 #Update feeds
-        run: |
-          cd openwrt 
-          ./scripts/feeds clean 
-          ./scripts/feeds update -a
-          # rm -rf feeds/small/luci-app-mosdns
-          # rm -rf feeds/small/mosdns
-          rm -rf feeds/packages/net/{alist,adguardhome,mosdns,xray*,v2ray*,v2ray*,sing*,smartdns}
-          rm -rf feeds/packages/utils/v2dat
-          rm -rf feeds/packages/lang/golang
+      - name: 更新源 Update feeds
+        run: cd openwrt && ./scripts/feeds clean && ./scripts/feeds update -a
 
-          rm -rf feeds/luci/applications/luci-app-mosdns
-          rm -rf feeds/packages/net/v2ray-geodata
-          git clone https://github.com/sbwml/luci-app-mosdns -b v5-lua package/mosdns
-          git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-          git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
 
-      - name: 安装源 #Install feeds
+      - name: 安装源 Install feeds
         run: cd openwrt && ./scripts/feeds install -a
 
 
@@ -183,50 +185,50 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}   
 
-      - name: 输出编译信息
-        run: |
-          cd openwrt
-          echo " 系统空间      类型   总数  已用  可用 使用率"
-          df -hT $PWD
+      # - name: 输出编译信息
+      #   run: |
+      #     cd openwrt
+      #     echo " 系统空间      类型   总数  已用  可用 使用率"
+      #     df -hT $PWD
           
-          echo
-          echo "=========================================="
-          echo
+      #     echo
+      #     echo "=========================================="
+      #     echo
   
-          ZZZ="package/lean/default-settings/files/zzz-default-settings"
-          echo "DISTRIB_REVISION=$(cat $ZZZ|grep DISTRIB_REVISION= | sed 's/^.\{24\}//g' | sed 's/.\{26\}$//')" >> $GITHUB_ENV
-          echo "KERNEL_PATCHVER=$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')" >> $GITHUB_ENV
-          echo "	    当前编译版本：$(cat $ZZZ|grep DISTRIB_REVISION= | sed 's/^.\{24\}//g' | sed 's/.\{26\}$//')"
-          echo "	    内核版本：$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')"
+      #     ZZZ="package/lean/default-settings/files/zzz-default-settings"
+      #     echo "DISTRIB_REVISION=$(cat $ZZZ|grep DISTRIB_REVISION= | sed 's/^.\{24\}//g' | sed 's/.\{26\}$//')" >> $GITHUB_ENV
+      #     echo "KERNEL_PATCHVER=$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')" >> $GITHUB_ENV
+      #     echo "	    当前编译版本：$(cat $ZZZ|grep DISTRIB_REVISION= | sed 's/^.\{24\}//g' | sed 's/.\{26\}$//')"
+      #     echo "	    内核版本：$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')"
   
-          echo
-          echo "=========================================="
+      #     echo
+      #     echo "=========================================="
   
-          grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
-          grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
-          sed -i '/INCLUDE/d' Plug-in > /dev/null 2>&1
-          sed -i 's/CONFIG_PACKAGE_/、/g' Plug-in
-          sed -i '/Transparent_Proxy/d' Plug-in > /dev/null 2>&1 #排除 luci-app-passwall_Transparent_Proxy
-          sed -i '/qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1 #排除 luci-app-qbittorrent-simple_dynamic
-          sed -i 's/=y/\ /g' Plug-in
-          awk '$0=NR$0' Plug-in > Plug-2
-          awk '{print "	" $0}' Plug-2 > Plug-in
+      #     grep -i CONFIG_PACKAGE_luci-app .config | grep  -v \# > Plug-in
+      #     grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
+      #     sed -i '/INCLUDE/d' Plug-in > /dev/null 2>&1
+      #     sed -i 's/CONFIG_PACKAGE_/、/g' Plug-in
+      #     sed -i '/Transparent_Proxy/d' Plug-in > /dev/null 2>&1 #排除 luci-app-passwall_Transparent_Proxy
+      #     sed -i '/qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1 #排除 luci-app-qbittorrent-simple_dynamic
+      #     sed -i 's/=y/\ /g' Plug-in
+      #     awk '$0=NR$0' Plug-in > Plug-2
+      #     awk '{print "	" $0}' Plug-2 > Plug-in
   
-          echo
-          echo
-          echo "	      已选插件列表"
-          cat Plug-in
-          rm -rf {Plug-in,Plug-2}
+      #     echo
+      #     echo
+      #     echo "	      已选插件列表"
+      #     cat Plug-in
+      #     rm -rf {Plug-in,Plug-2}
   
-          echo
-          echo "=========================================="
+      #     echo
+      #     echo "=========================================="
   
-          echo
-          echo
-          echo "输出完整插件信息..."
-          echo
-          echo
-          cat .config
+      #     echo
+      #     echo
+      #     echo "输出完整插件信息..."
+      #     echo
+      #     echo
+      #     cat .config
 
       - name: 下载固件包
         id: package
