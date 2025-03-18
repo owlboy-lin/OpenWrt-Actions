@@ -108,7 +108,7 @@
 # mv $GITHUB_WORKSPACE/patch/banner package/base-files/files/etc/banner
 # mv $GITHUB_WORKSPACE/patch/lean/199-diy.sh package/base-files/files/etc/uci-defaults/zz-diy.sh
 
-# git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git  package/openclash
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/luci-app-passwall
@@ -237,25 +237,51 @@ sed -i "s#192.168.1.1#192.168.89.249#g" $NET3                                   
 
 
 echo "
+CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
+CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-arpbind=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-diskman=n
+CONFIG_PACKAGE_luci-app-ipsec-vpnd=n
+CONFIG_PACKAGE_iptables-mod-tproxy=n
+CONFIG_PACKAGE_iptables-mod-extra=n
+CONFIG_PACKAGE_luci-app-openvpn=n
+CONFIG_PACKAGE_luci-app-ramfree=y
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-quickstart=n
+CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-uugamebooster=n
+CONFIG_PACKAGE_luci-app-vlmcsd=n
+CONFIG_PACKAGE_luci-app-vsftpd=n
+CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_luci-app-zerotier=n
+CONFIG_PACKAGE_swconfig=n
 
 # 额外组件
-CONFIG_GRUB_IMAGES=y
-CONFIG_VMDK_IMAGES=y
+# CONFIG_GRUB_IMAGES=y
+# CONFIG_VMDK_IMAGES=y
 
-CONFIG_TARGET_ROOTFS_EXT4FS=y
-CONFIG_TARGET_EXT4_RESERVED_PCT=0
-CONFIG_TARGET_EXT4_BLOCKSIZE_4K=y
-# CONFIG_TARGET_EXT4_BLOCKSIZE_2K is not set
-# CONFIG_TARGET_EXT4_BLOCKSIZE_1K is not set
-CONFIG_TARGET_EXT4_BLOCKSIZE=4096
-# CONFIG_TARGET_EXT4_JOURNAL is not set
+# CONFIG_TARGET_ROOTFS_EXT4FS=y
+# CONFIG_TARGET_EXT4_RESERVED_PCT=0
+# CONFIG_TARGET_EXT4_BLOCKSIZE_4K=y
+# # CONFIG_TARGET_EXT4_BLOCKSIZE_2K is not set
+# # CONFIG_TARGET_EXT4_BLOCKSIZE_1K is not set
+# CONFIG_TARGET_EXT4_BLOCKSIZE=4096
+# # CONFIG_TARGET_EXT4_JOURNAL is not set
 
+CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=1024
 
 # 固件大小
-CONFIG_TARGET_KERNEL_PARTSIZE=1024
-CONFIG_TARGET_ROOTFS_PARTSIZE=1024
+# CONFIG_TARGET_KERNEL_PARTSIZE=1024
+# CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
 # CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
+
+CONFIG_TARGET_KERNEL_PARTSIZE=128
+CONFIG_TARGET_ROOTFS_PARTSIZE=256
 
 # # Themes
 CONFIG_PACKAGE_luci-theme-argon=y
@@ -296,7 +322,7 @@ CONFIG_PACKAGE_luci-app-passwall2=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=n
+
 
 
 # store
@@ -306,8 +332,11 @@ CONFIG_PACKAGE_luci-app-store=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 
 # luci-app-uugamebooster
-CONFIG_PACKAGE_luci-app-uugamebooster=n
 
+
+
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=y
 
 # luci-app-vssr
 CONFIG_PACKAGE_luci-app-vssr=y
@@ -317,19 +346,7 @@ CONFIG_PACKAGE_luci-app-vssr=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
 
-CONFIG_DEFAULT_autosamba=n
-CONFIG_PACKAGE_autosamba=n
-CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
-CONFIG_PACKAGE_luci-app-ksmbd=n
-CONFIG_PACKAGE_luci-app-accesscontrol=n
-CONFIG_PACKAGE_luci-app-arpbind=n
-CONFIG_PACKAGE_luci-app-ddns=n
-CONFIG_PACKAGE_luci-app-samba4=n
-CONFIG_PACKAGE_luci-app-upnp=n
-CONFIG_PACKAGE_luci-app-vlmcsd=n
-CONFIG_PACKAGE_luci-app-vsftpd=n
-CONFIG_PACKAGE_luci-app-wol=n
-CONFIG_PACKAGE_swconfig=n
+
 
 
 
