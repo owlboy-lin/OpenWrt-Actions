@@ -41,8 +41,8 @@ env:
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: r66s/6.1/r66s-6.1.info
   Firmware_Name: r66s-6.1-all
-  DIY_P1_SH: r66s/6.1/r66s-1-all.sh
-  DIY_P2_SH: r66s/6.1/r66s-2-all.sh
+  DIY_P1_SH: r66s/6.1/r66s-test-1.sh
+  DIY_P2_SH: r66s/6.1/r66s-test-2.sh
   UPLOAD_ORGANIZE: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
