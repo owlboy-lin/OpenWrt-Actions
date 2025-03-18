@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: bllw3002-Lean-Mosdns
+name: bllw3002-Lean-small-package
 
 on:
   schedule:
@@ -57,7 +57,7 @@ jobs:
   build_openwrt:
 
 
-    name: bllw3002-Lean-Mosdns
+    name: bllw3002-Lean-small-package
 
     runs-on: Ubuntu-22.04
     
