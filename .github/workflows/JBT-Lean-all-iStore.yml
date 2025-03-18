@@ -41,7 +41,7 @@ env:
   CONFIG_FILE: config/OpenWrt-CI.info
   Firmware_Name: JBT-Lean-all-iStore
   DIY_P1_SH: smpackage/Lean-1.sh
-  DIY_P2_SH: smpackage/Lean-small-package-2.sh
+  DIY_P2_SH: smpackage/JBT-Lean-small-package-2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
