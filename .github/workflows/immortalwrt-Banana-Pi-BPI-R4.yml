@@ -36,7 +36,7 @@ on:
     
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: openwrt-24.10
+  REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: bpi-r4/Banana-Pi-BPI-R4.info
   Firmware_Name: immortalwrt-mt798x-Banana-Pi-BPI-R4
