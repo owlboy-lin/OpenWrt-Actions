@@ -38,7 +38,7 @@ env:
   REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x.git
   REPO_BRANCH: mt7988
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: 
+  CONFIG_FILE: bpi-r4/Banana-Pi-BPI-R4.info
   Firmware_Name: Banana-Pi-BPI-R4-text
   DIY_P1_SH: bpi-r4/Banana-Pi-BPI-R4-1.sh
   DIY_P2_SH: bpi-r4/Banana-Pi-BPI-R4-2-1.sh
@@ -166,12 +166,12 @@ jobs:
           prefix: ${{ github.workspace }}/openwrt
 
 
-      - name: patch1补丁和自定义设置
-        run: |
-          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x $DIY_P1_SH
-          cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
+      # - name: patch1补丁和自定义设置
+      #   run: |
+      #     [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+      #     chmod +x $DIY_P1_SH
+      #     cd openwrt
+      #     $GITHUB_WORKSPACE/$DIY_P1_SH
 
       - name: 更新源 #Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -181,13 +181,15 @@ jobs:
           cd openwrt 
           ./scripts/feeds install -a 
            
+           
 
-      - name: patch2补丁和自定义设置
-        run: |
-          [ -e files ] && mv files openwrt/files
-          chmod +x $DIY_P2_SH
-          cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P2_SH
+      # - name: patch2补丁和自定义设置
+      #   run: |
+      #     [ -e files ] && mv files openwrt/files
+      #     [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+      #     chmod +x $DIY_P2_SH
+      #     cd openwrt
+      #     $GITHUB_WORKSPACE/$DIY_P2_SH
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
