@@ -10,6 +10,7 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
+rm -rf package/istore/luci-app-store
 
 # iStore
 git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
@@ -29,13 +30,11 @@ git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
 # git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
+
 # rm -rf feeds/packages/devel/gn
 # rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-openclash}
-
-git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
-git clone --depth 1 https://github.com/sirpdboy/luci-app-eqosplus.git package/luci-app-eqosplus
 
 rm -rf feeds/packages/net/adguardhome
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
