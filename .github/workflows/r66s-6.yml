@@ -27,7 +27,8 @@
           
   # 定时触发编译(每月1日早3点)
     schedule:
-      - cron: 0 17 2,12,22 * *
+      - cron: 0 18 * * *
+
 
   env:
     REPO_URL: https://github.com/coolsnowwolf/lede
@@ -82,6 +83,19 @@
           echo "--------------------------硬盘信息--------------------------"
           echo "硬盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
 
+      - name: 释放磁盘空间
+        uses: endersonmenezes/free-disk-space@v2
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell"
+          testing: false
+        
 
       - name: 初始化系统环境
         env:

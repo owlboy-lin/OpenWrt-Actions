@@ -38,10 +38,10 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/immortalwrt.info
+  CONFIG_FILE: config/immortalwrt-openwrt-24.10.info
   Firmware_Name: bllw3002-immortalwrt
   DIY_P1_SH: smpackage/Lean-1.sh
-  DIY_P2_SH: smpackage/bllw-imm-2.sh
+  DIY_P2_SH: smpackage/bllw-imm-small-package-2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true

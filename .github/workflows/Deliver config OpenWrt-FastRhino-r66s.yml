@@ -39,10 +39,10 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede.git
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: r66s/6.1/r66s-6.1.info
+  CONFIG_FILE: r66s/6.1/config/r66s-6.1.info
   Firmware_Name: r66s-6.1-all
-  DIY_P1_SH: r66s/6.1/r66s-1-all.sh
-  DIY_P2_SH: r66s/6.1/r66s-2-all.sh
+  DIY_P1_SH: r66s/6.1/r66s-test-1.sh
+  DIY_P2_SH: r66s/6.1/r66s-test-2.sh
   UPLOAD_ORGANIZE: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
@@ -55,11 +55,41 @@ env:
 jobs:
   build_openwrt:
 
-    runs-on: ubuntu-latest
+    runs-on: Ubuntu-22.04
     
     name: Deliver config OpenWrt-FastRhino-r66s
 
     steps:
+  
+      - name: CPU检测
+        run: |
+          echo "警告⚠"
+          echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
+          echo -e "已知CPU型号(降序): 7763，8370C，8272CL，8171M，E5-2673\n"
+          echo "--------------------------CPU信息--------------------------"
+          echo "CPU物理数量: $(cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l)"
+          echo "CPU核心数量: $(nproc)"
+          echo -e "CPU型号信息:$(cat /proc/cpuinfo | grep -m1 name | awk -F: '{print $2}')\n"
+          echo "--------------------------内存信息--------------------------"
+          echo "已安装内存详细信息:"
+          echo -e "$(sudo lshw -short -C memory | grep GiB)\n"
+          echo "--------------------------硬盘信息--------------------------"
+          echo "硬盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
+
+      - name: 释放磁盘空间
+        uses: endersonmenezes/free-disk-space@v2
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell"
+          testing: false
+        
+
       - name: 初始化系统环境
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -72,13 +102,13 @@ jobs:
           sudo -E apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
           sudo mkdir -p /workdir
-          sudo chown $USER:$GROUPS /workdir 
+          sudo chown $USER:$GROUPS /workdir
+
 
       - name: 更新时区、编译时间
         id: date
         run: |
           sudo timedatectl set-timezone "$TZ"
-          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
           echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
           echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
           echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
@@ -106,12 +136,12 @@ jobs:
 
 
       - name: 更新源 #Update feeds
-        if: (!cancelled())
-        run: cd openwrt && ./scripts/feeds clean && ./scripts/feeds update -a
-
+        run: cd openwrt && ./scripts/feeds update -a
+          
       - name: 安装源 #Install feeds
-        if: (!cancelled())
-        run: cd openwrt && ./scripts/feeds install -a && ./scripts/feeds install -a
+        run: |
+          cd openwrt
+          ./scripts/feeds install -a
 
       - name: patch2补丁和自定义设置
         run: |
@@ -121,6 +151,14 @@ jobs:
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
           make defconfig
+
+      - name: SSH connection to Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
 
       - name: 整理固件文件
         run: |
@@ -136,12 +174,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
           
         
-      - name: SSH connection to Actions
-        uses: P3TERX/ssh2actions@v1.0.0
-        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-        env:
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
              
       - name: 上传配置文件
         uses: actions/upload-artifact@v4
