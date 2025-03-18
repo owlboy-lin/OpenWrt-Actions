@@ -237,6 +237,28 @@ sed -i "s#192.168.1.1#192.168.89.249#g" $NET3                                   
 
 
 echo "
+CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
+CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-arpbind=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-diskman=n
+CONFIG_PACKAGE_luci-app-ipsec-vpnd=n
+CONFIG_PACKAGE_iptables-mod-tproxy=n
+CONFIG_PACKAGE_iptables-mod-extra=n
+CONFIG_PACKAGE_luci-app-openvpn=n
+CONFIG_PACKAGE_luci-app-ramfree=y
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-quickstart=n
+CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-uugamebooster=n
+CONFIG_PACKAGE_luci-app-vlmcsd=n
+CONFIG_PACKAGE_luci-app-vsftpd=n
+CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_luci-app-zerotier=n
+CONFIG_PACKAGE_swconfig=n
 
 # 额外组件
 # CONFIG_GRUB_IMAGES=y
@@ -300,7 +322,7 @@ CONFIG_PACKAGE_luci-app-passwall2=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=n
+
 
 
 # store
@@ -310,7 +332,8 @@ CONFIG_PACKAGE_luci-app-store=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 
 # luci-app-uugamebooster
-CONFIG_PACKAGE_luci-app-uugamebooster=n
+
+
 
 # luci-app-turboacc
 CONFIG_PACKAGE_luci-app-turboacc=y
@@ -323,26 +346,7 @@ CONFIG_PACKAGE_luci-app-vssr=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
 
-CONFIG_DEFAULT_autosamba=n
-CONFIG_PACKAGE_autosamba=n
-CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
-CONFIG_PACKAGE_luci-app-ksmbd=n
-CONFIG_PACKAGE_luci-app-accesscontrol=n
-CONFIG_PACKAGE_luci-app-arpbind=n
-CONFIG_PACKAGE_luci-app-ddns=n
-CONFIG_PACKAGE_luci-app-diskman=n
-CONFIG_PACKAGE_luci-app-ipsec-vpnd=n
-CONFIG_PACKAGE_iptables-mod-tproxy=n
-CONFIG_PACKAGE_iptables-mod-extra=n
-CONFIG_PACKAGE_luci-app-openvpn=n
-CONFIG_PACKAGE_luci-app-ramfree=y
-CONFIG_PACKAGE_luci-app-samba4=n
-CONFIG_PACKAGE_luci-app-upnp=n
-CONFIG_PACKAGE_luci-app-vlmcsd=n
-CONFIG_PACKAGE_luci-app-vsftpd=n
-CONFIG_PACKAGE_luci-app-wol=n
-CONFIG_PACKAGE_luci-app-zerotier=n
-CONFIG_PACKAGE_swconfig=n
+
 
 
 
