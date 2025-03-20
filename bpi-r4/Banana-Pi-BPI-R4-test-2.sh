@@ -126,6 +126,7 @@ CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 # passwall
 CONFIG_PACKAGE_luci-app-passwall=y
+CONFIG_PACKAGE_luci-app-passwall2=y
 
 
 # luci-app-ssr-plus
