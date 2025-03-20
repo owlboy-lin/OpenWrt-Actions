@@ -22,6 +22,20 @@
 # mv package/nas-packages/network/services/* package/nas-packages/
 # rm -rf package/nas-packages/network
 
+
+git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+# git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
+# git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
+# git clone -b main --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
+# t clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
+
+# rm -rf feeds/packages/devel/gn
+# rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-openclash}
+
+# rm -rf feeds/packages/net/{adguardhome,mosdns}
+
+
 # rm -rf feeds/packages/lang/golang
 # git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
 # find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
@@ -29,17 +43,6 @@
 # git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 # git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
-git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
-# git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
-# git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
-# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
-git clone -b main --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
-# t clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
-
-# rm -rf feeds/packages/devel/gn
-# rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-openclash}
-
-# rm -rf feeds/packages/net/adguardhome
 # git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 # mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
