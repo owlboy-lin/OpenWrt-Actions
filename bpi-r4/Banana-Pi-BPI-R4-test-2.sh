@@ -10,12 +10,12 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-rm -rf package/istore/luci-app-store
+# rm -rf package/istore/luci-app-store
 
 # iStore
-git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
-./scripts/feeds update istore
-./scripts/feeds install -d y -p istore luci-app-store
+# git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
+# ./scripts/feeds update istore
+# ./scripts/feeds install -d y -p istore luci-app-store
 
 # git clone --depth=1 -b master https://github.com/linkease/nas-packages.git package/nas-packages
 # git clone --depth=1 -b main https://github.com/linkease/nas-packages-luci.git package/nas-luci
