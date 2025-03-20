@@ -29,7 +29,7 @@
 # git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 # git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
-# git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
 # git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
@@ -138,7 +138,7 @@ CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 
 # store
-CONFIG_PACKAGE_luci-app-store=y
+CONFIG_PACKAGE_luci-app-store=n
 
 # luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-ttyd=y
