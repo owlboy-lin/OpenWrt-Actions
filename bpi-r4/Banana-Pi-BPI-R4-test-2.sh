@@ -14,6 +14,9 @@ rm -rf package/istore/luci-app-store
 
 # iStore
 git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
+./scripts/feeds update istore
+./scripts/feeds install -d y -p istore luci-app-store
+
 # git clone --depth=1 -b master https://github.com/linkease/nas-packages.git package/nas-packages
 # git clone --depth=1 -b main https://github.com/linkease/nas-packages-luci.git package/nas-luci
 # mv package/nas-packages/network/services/* package/nas-packages/
@@ -26,7 +29,7 @@ git clone --depth=1 -b main https://github.com/linkease/istore.git package/istor
 # git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 # git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
-# git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
 # git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
