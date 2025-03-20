@@ -134,7 +134,7 @@ CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 
 # store
-CONFIG_PACKAGE_luci-app-store=n
+CONFIG_PACKAGE_luci-app-store=y
 
 # luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-ttyd=y
