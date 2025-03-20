@@ -155,7 +155,8 @@ CONFIG_PACKAGE_luci-app-vssr=y
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
-
+# luci-app-wrtbwmo
+CONFIG_PACKAGE_luci-app-wrtbwmon=n
 
 
 
