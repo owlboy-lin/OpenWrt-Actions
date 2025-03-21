@@ -30,14 +30,23 @@ git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone -b main --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
 # t clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
 
+
+
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
+
+
+
 # rm -rf feeds/packages/devel/gn
 # rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-openclash}
 
-rm -rf feeds/packages/net/adguardhome
+# rm -rf feeds/packages/net/adguardhome
+git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
+git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
+git clone --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git package/luci-app-adguardhome
 
 
-# rm -rf feeds/packages/lang/golang
-# git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
+
 # find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
 # find ./ | grep Makefile | grep mosdns | xargs rm -f
 # git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
