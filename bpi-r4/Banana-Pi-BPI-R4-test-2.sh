@@ -50,8 +50,8 @@ git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-sma
 # mv package/kz8-small/luci-app-partexp package/luci-app-partexp
 # mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
 # mv package/kz8-small/wrtbwmon package/wrtbwmon
-mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
-mv package/kz8-small/homebox package/homebox
+# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+# mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 # rm -rf package/kz8-small
 
