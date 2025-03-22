@@ -23,7 +23,7 @@
 # rm -rf package/nas-packages/network
 
 
-git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
+# git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
 # git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
