@@ -45,7 +45,7 @@ env:
   CONFIG_FILE: r66s/6.1/config/r66s-6.1-all.info
   Firmware_Name: OpenWrt-FastRhino-r66s-6.1    
   DIY_P1_SH: r66s/6.1/r66s-test-1.sh
-  DIY_P2_SH: r66s/6.1/bllw-Lean-R66S-small-package-2.sh
+  DIY_P2_SH: r66s/6.1/r66s-test-2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
