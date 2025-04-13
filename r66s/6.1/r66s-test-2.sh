@@ -323,8 +323,11 @@ CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-passwall2=y
 
 
+# luci-app-ssr-plus
+CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 # quickstart
+CONFIG_PACKAGE_luci-app-quickstart=n
 
 
 
