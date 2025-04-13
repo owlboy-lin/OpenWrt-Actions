@@ -104,9 +104,9 @@ curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turbo
 # sed -i 's#mirrors.vsean.net/openwrt#mirrors.pku.edu.cn/immortalwrt#g' package/emortal/default-settings/files/99-default-settings-chinese
 # mv $GITHUB_WORKSPACE/patch/banner $OPENWRT_PATH/package/base-files/files/etc/banner
 # mv $GITHUB_WORKSPACE/patch/immortalwrt-24.10/199-diy.sh package/base-files/files/etc/uci-defaults/199-diy.sh
-git clone --depth 1 -b core https://github.com/vernesong/OpenClash.git  package/openclash-core
-mv package/openclash-core/master/meta/clash-linux-amd64.tar.gz package/base-files/files/etc/clash-linux-amd64.tar.gz
-rm -rf package/openclash-core
+# git clone --depth 1 -b core https://github.com/vernesong/OpenClash.git  package/openclash-core
+# mv package/openclash-core/master/meta/clash-linux-amd64.tar.gz package/base-files/files/etc/clash-linux-amd64.tar.gz
+# rm -rf package/openclash-core
 
 #完全删除luci版本
 sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
