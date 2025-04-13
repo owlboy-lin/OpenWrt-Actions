@@ -40,7 +40,7 @@ env:
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: r66s/6.1/config/r66s.config
-  Firmware_Name: OpenWrt-FastRhino-r66s-6.1.info
+  Firmware_Name: OpenWrt-FastRhino-r66s-6.1
   DIY_P1_SH: r66s/6.1/r66s-test-1.sh
   DIY_P2_SH: r66s/6.1/r66s-test-2.sh
   UPLOAD_ORGANIZE: false
