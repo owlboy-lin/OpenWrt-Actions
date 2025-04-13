@@ -39,8 +39,8 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede.git
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: r66s/6.1/config/r66s-6.1.info
-  Firmware_Name: r66s-6.1-all
+  CONFIG_FILE: r66s/6.1/config/r66s.config
+  Firmware_Name: OpenWrt-FastRhino-r66s-6.1.info
   DIY_P1_SH: r66s/6.1/r66s-test-1.sh
   DIY_P2_SH: r66s/6.1/r66s-test-2.sh
   UPLOAD_ORGANIZE: false
@@ -127,12 +127,12 @@ jobs:
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
          
           
-      - name: patch1补丁和自定义设置
-        run: |
-          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x $DIY_P1_SH
-          cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
+      # - name: patch1补丁和自定义设置
+      #   run: |
+      #     [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+      #     chmod +x $DIY_P1_SH
+      #     cd openwrt
+      #     $GITHUB_WORKSPACE/$DIY_P1_SH
 
 
       - name: 更新源 #Update feeds
@@ -143,13 +143,18 @@ jobs:
           cd openwrt
           ./scripts/feeds install -a
 
-      - name: patch2补丁和自定义设置
+      # - name: patch2补丁和自定义设置
+      #   run: |
+      #     [ -e files ] && mv files openwrt/files
+      #     [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+      #     chmod +x $DIY_P2_SH
+      #     cd openwrt
+      #     $GITHUB_WORKSPACE/$DIY_P2_SH
+
+          
+      - name: Generate configuration file
         run: |
-          [ -e files ] && mv files openwrt/files
-          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $DIY_P2_SH
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P2_SH
           make defconfig
 
       - name: SSH connection to Actions
