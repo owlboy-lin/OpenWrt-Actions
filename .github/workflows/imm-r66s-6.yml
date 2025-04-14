@@ -94,6 +94,7 @@
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install $(curl -fsSL https://github.com/popeyema/OpenWrt-R66s/raw/main/depends-ubuntu-latest)
           sudo apt install clang
+          sudo -E apt -y install rename
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
@@ -236,7 +237,7 @@
           du -h --max-depth=1 openwrt/build_dir
           du -h --max-depth=1 openwrt/bin
 
-      - name: 整理固件文件
+      - name: 整理文件
         id: organize
         if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
         run: |
@@ -249,8 +250,26 @@
         uses: actions/upload-artifact@main
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
+          
+      - name: 整理固件文件
+        id: artifact
+        if: steps.compile.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt
+          mkdir -p ./artifact/firmware
+          mkdir -p ./artifact/package
+          mkdir -p ./artifact/buildinfo
+          rm -rf $(find ./bin/targets/ -type d -name "packages")
+          cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
+          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+          cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
+          cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
+          cp -rf ./feeds.conf.default ./artifact/buildinfo/
+          cd artifact/firmware/
+          rename "s/openwrt/${{ env.Firmware_Name }}/" *
       
       - name: 获取内核版本号
         run: |
@@ -266,8 +285,8 @@
           echo "release_date=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "
-          ★ 源码 : https://github.com/coolsnowwolf/lede
-          ★ 分支 : master
+          ★ 源码 : https://github.com/immortalwrt/immortalwrt
+          ★ 分支 : openwrt-24.10
           ★ 感谢源码作者无私分享！
           
           ⏰ 编译时间：${{ env.FILE_TIME1 }}

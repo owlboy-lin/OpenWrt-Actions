@@ -56,8 +56,6 @@ jobs:
 
   build_openwrt:
 
-
-    name: JBT-Lean-all-iStore
     
     runs-on: Ubuntu-22.04
     

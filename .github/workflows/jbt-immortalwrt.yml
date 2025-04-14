@@ -56,8 +56,6 @@ jobs:
 
   build_openwrt:
 
-
-    name: JBT-immortalwrt-istore
     
     runs-on: Ubuntu-22.04
     
