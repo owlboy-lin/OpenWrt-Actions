@@ -133,7 +133,7 @@ git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
-# git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
+git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
 git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
 git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
@@ -155,6 +155,10 @@ mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 rm -rf package/kz8-small
+
+git clone --depth=1  https://github.com/kenzok8/openwrt-packages.git package/kz8-openwrt-packages
+mv package/kz8-openwrt-packages/luci-app-quickstart package/luci-app-quickstart
+rm -rf package/kz8-openwrt-packages
 
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
 # mv package/imm23luci/applications/luci-app-adbyby-plus package/luci-app-adbyby-plus
