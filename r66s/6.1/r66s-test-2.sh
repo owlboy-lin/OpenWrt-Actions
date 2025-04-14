@@ -154,12 +154,11 @@ mv package/kz8-small/wrtbwmon package/wrtbwmon
 mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
+mv package/kz8-small/quickstart package/quickstart
 rm -rf package/kz8-small
 
-git clone --depth=1  https://github.com/kenzok8/openwrt-packages.git package/kz8-openwrt-packages
-mv package/kz8-openwrt-packages/luci-app-quickstart package/luci-app-quickstart
-mv package/kz8-openwrt-packages/quickstart package/quickstart
-rm -rf package/kz8-openwrt-packages
+
 
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
 # mv package/imm23luci/applications/luci-app-adbyby-plus package/luci-app-adbyby-plus
