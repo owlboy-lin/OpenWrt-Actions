@@ -147,6 +147,8 @@ mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+mv package/kz8-small/luci-app-nikki package/luci-app-nikki
+mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
 
 # # #mosdns
@@ -284,8 +286,14 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 # netspeedtest chmod +x /etc/init.d/netspeedtest
 CONFIG_PACKAGE_luci-app-netspeedtest=y
 
+
+# nikki
+CONFIG_PACKAGE_luci-app-nikki=y
+
+
 # 宽带监控
 CONFIG_PACKAGE_luci-app-nlbwmon=y
+
 
 # passwall
 CONFIG_PACKAGE_luci-app-passwall=y
@@ -294,9 +302,8 @@ CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-passwall2=y
 
 
-
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=n
+CONFIG_PACKAGE_luci-app-quickstart=y
 
 
 # store

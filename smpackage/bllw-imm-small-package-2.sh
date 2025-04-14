@@ -154,6 +154,10 @@ mv package/kz8-small/wrtbwmon package/wrtbwmon
 mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
+mv package/kz8-small/quickstart package/quickstart
+mv package/kz8-small/luci-app-nikki package/luci-app-nikki
+mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
 
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
@@ -290,6 +294,10 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-netspeedtest=y
 
 
+# nikki
+CONFIG_PACKAGE_luci-app-nikki=y
+
+
 # 宽带监控
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 
@@ -306,7 +314,7 @@ CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=n
+CONFIG_PACKAGE_luci-app-quickstart=y
 
 
 # store

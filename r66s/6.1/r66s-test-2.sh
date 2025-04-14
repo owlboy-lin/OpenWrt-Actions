@@ -321,7 +321,6 @@ CONFIG_PACKAGE_luci-app-netspeedtest=y
 
 
 # nikki
-luci-app-nikki
 CONFIG_PACKAGE_luci-app-nikki=y
 
 
