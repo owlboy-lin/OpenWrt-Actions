@@ -158,6 +158,7 @@ rm -rf package/kz8-small
 
 git clone --depth=1  https://github.com/kenzok8/openwrt-packages.git package/kz8-openwrt-packages
 mv package/kz8-openwrt-packages/luci-app-quickstart package/luci-app-quickstart
+mv package/kz8-openwrt-packages/quickstart package/quickstart
 rm -rf package/kz8-openwrt-packages
 
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
