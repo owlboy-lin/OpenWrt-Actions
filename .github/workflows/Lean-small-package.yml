@@ -6,11 +6,12 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: JBT-Lean-all-iStore
+name: Lean-small-package
+
 
 on:
   schedule:
-    - cron: 0 19 * * *
+    - cron: 0 22 * * *
 
   release:
     types: [published]
@@ -39,9 +40,9 @@ env:
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/OpenWrt-CI.info
-  DIY_P1_SH: smpackage/Lean-1.sh
-  DIY_P2_SH: smpackage/Lean-2.sh
-  Firmware_Name: JBT-Lean-all-iStore
+  DIY_P1_SH: smpackage/small-package-1.sh
+  DIY_P2_SH: smpackage/Lean-all-iStore-2.sh
+  Firmware_Name: Lean-small-package
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -55,8 +56,7 @@ env:
 jobs:
 
   build_openwrt:
-
-    
+ 
     runs-on: Ubuntu-22.04
     
     steps:
@@ -129,8 +129,7 @@ jobs:
         if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
         with:
           ccache: 'true'
-          clean: 'false'
-          mixkey: '${{ env.Firmware_Name }}-${{ env.START_SECONDS }}'
+          mixkey: '${{ env.Firmware_Name }}'
           prefix: ${{ github.workspace }}/openwrt
 
       - name: patch1补丁和自定义设置
@@ -147,8 +146,8 @@ jobs:
         run: |
           cd openwrt
           ./scripts/feeds install -a
+          ./scripts/feeds install -d y -p istore luci-app-store  
 
-          
       - name: patch2补丁和自定义设置
         run: |
           [ -e files ] && mv files openwrt/files
@@ -216,7 +215,7 @@ jobs:
         run: |
           cd openwrt
           make defconfig
-          make download -j8
+          make download -j$(($(nproc)+1))
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;        
 
@@ -342,13 +341,13 @@ jobs:
           body_path: release.txt
           files: openwrt/artifact/firmware/*
 
-      - name: 删除运行记录
-        uses: Mattraks/delete-workflow-runs@v2
-        if: steps.compile.outputs.status == 'success' && !cancelled()
-        continue-on-error: true
-        with:
-          retain_days: 5     #保留最后多少记录不删除
-          keep_minimum_runs: 0
+      # - name: 删除运行记录
+      #   uses: Mattraks/delete-workflow-runs@v2
+      #   if: steps.compile.outputs.status == 'success' && !cancelled()
+      #   continue-on-error: true
+      #   with:
+      #     retain_days: 3     #保留最后多少记录不删除
+      #     keep_minimum_runs: 0
 
       - name: 删除自动发布的旧固件
         uses: dev-drprasad/delete-older-releases@v0.3.3
