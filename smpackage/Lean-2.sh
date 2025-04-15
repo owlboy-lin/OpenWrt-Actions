@@ -291,6 +291,12 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 # netspeedtest chmod +x /etc/init.d/netspeedtest
 CONFIG_PACKAGE_luci-app-netspeedtest=y
 
+
+# nikki
+CONFIG_PACKAGE_luci-app-nikki=y
+
+
+
 # 宽带监控
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 
@@ -303,7 +309,7 @@ CONFIG_PACKAGE_luci-app-passwall2=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=n
+CONFIG_PACKAGE_luci-app-quickstart=y
 
 
 # store
