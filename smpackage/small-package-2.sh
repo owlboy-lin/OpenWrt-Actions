@@ -185,7 +185,7 @@ NET="package/base-files/luci2/bin/config_generate"
 sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.8/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 # # sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
 # # ZZZ="package/emortal/default-settings/files/99-default-settings"
-
+ZZZ="package/lean/default-settings/files/zzz-default-settings"
 
 # #
 sed -i "s#192.168.1.1#192.168.24.8#g" $NET                                              # 定制默认IP
@@ -205,14 +205,14 @@ sed -i "s#192.168.1.1#192.168.24.8#g" $NET                                      
 
 # # ================ 网络设置 =======================================
 
-# # cat >> $ZZZ <<-EOF
-# # # 设置网络-旁路由模式
-# # uci set network.lan.gateway='192.168.89.248'                     # 旁路由设置 IPv4 网关
-# # uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
-# # uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
-# # uci delete network.lan.type                                  # 旁路由桥接模式-禁用
-# # uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
-# # uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
+cat >> $ZZZ <<-EOF
+# 设置网络-旁路由模式
+uci set network.lan.gateway='192.168.89.248'                     # 旁路由设置 IPv4 网关
+uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
+uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
+uci delete network.lan.type                                  # 旁路由桥接模式-禁用
+uci set network.lan.delegate='0'                             # 去掉LAN口使用内置的 IPv6 管理(若用IPV6请把'0'改'1')
+uci set dhcp.@dnsmasq[0].filter_aaaa='0'                     # 禁止解析 IPv6 DNS记录(若用IPV6请把'1'改'0')
 
 # # # 设置防火墙-旁路由模式
 # # uci set firewall.@defaults[0].syn_flood='0'                  # 禁用 SYN-flood 防御
@@ -240,7 +240,7 @@ sed -i "s#192.168.1.1#192.168.24.8#g" $NET                                      
 # # uci commit network
 # # uci commit firewall
 
-# # EOF
+EOF
 
 
 
