@@ -11,7 +11,7 @@
 # #
 
 # # 修改openwrt登陆地址,把下面的 10.0.0.1 修改成你想要的就可以了
-# # sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
+# # sed -i 's/192.168.1.1/10.0.0.2/g' package/base-files/luci2/bin/config_generate
 # # 修改 子网掩码
 # # sed -i 's/255.255.255.0/255.255.0.0/g' package/base-files/files/bin/config_generate
 
@@ -94,7 +94,9 @@
 # # svn export https://github.com/kiddin9/openwrt-packages/trunk/mosdns package/mosdns
 # # svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
 
-# # sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/files/bin/config_generate
+
+
+# # sed -i 's/192.168.1.1/10.0.0.2/g' package/base-files/luci2/bin/config_generate
 # # sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 # # sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
 # # sed -i 's/LEDE/OpenWrt/g' package/base-files/files/bin/config_generate
@@ -179,16 +181,14 @@ rm -rf package/kz8-small
 # # 添加自定义软件包
 
 # # 自定义定制选项
-# NET="package/base-files/files/bin/config_generate"
-# sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.8/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
-# NET3="package/base-files/luci2/bin/config_generate"
+NET="package/base-files/luci2/bin/config_generate"
+sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.8/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 # # sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
 # # ZZZ="package/emortal/default-settings/files/99-default-settings"
 
 
 # #
-# sed -i "s#192.168.1.1#192.168.24.8#g" $NET       
-# sed -i "s#192.168.1.1#192.168.24.8#g" $NET3                                              # 定制默认IP
+sed -i "s#192.168.1.1#192.168.24.8#g" $NET                                              # 定制默认IP
 # # sed -i "s#ImmortalWrt#ImmortalWrt-X86#g" $NET                                          # 修改默认名称为 ImmortalWrt-X86
 # # sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                          # 取消系统默认密码
 # # echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                      # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
