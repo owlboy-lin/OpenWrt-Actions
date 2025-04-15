@@ -184,6 +184,8 @@
 NET="package/base-files/luci2/bin/config_generate"
 sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.8/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 # # sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
+
+
 # # ZZZ="package/emortal/default-settings/files/99-default-settings"
 ZZZ="package/lean/default-settings/files/zzz-default-settings"
 
