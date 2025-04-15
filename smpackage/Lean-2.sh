@@ -156,7 +156,7 @@ mv package/kz8-small/quickstart package/quickstart
 # mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
 
-git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki package/OpenWrt-nikki
+# git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki package/OpenWrt-nikki
 
 # # luci-app-mosdns
 # find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
