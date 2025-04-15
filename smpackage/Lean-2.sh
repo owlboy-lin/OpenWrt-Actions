@@ -117,7 +117,7 @@
 # #git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
 
 # # iStore
-# git clone --depth 1 -b main https://github.com/linkease/istore.git package/istore
+git clone --depth 1 -b main https://github.com/linkease/istore.git package/istore
 # # git clone --depth 1 -b master https://github.com/linkease/nas-packages.git package/nas-packages
 # # git clone --depth 1 -b main https://github.com/linkease/nas-packages-luci.git package/nas-luci
 # # mv package/nas-packages/network/services/* package/nas-packages/
@@ -139,7 +139,7 @@
 # # rm -rf feeds/packages/net/{adguardhome,mosdns,xray*,v2ray*,v2ray*,sing*,smartdns,lucky}
 # # rm -rf feeds/packages/utils/v2dat
 # # rm -rf feeds/luci/applications/{luci-app-alist,luci-app-lucky}
-# git clone --depth 1 https://github.com/kenzok8/small-package.git package/kz8-small
+git clone --depth 1 https://github.com/kenzok8/small-package.git package/kz8-small
 # mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # # mv package/kz8-small/mosdns package/mosdns
@@ -147,10 +147,12 @@
 # # mv package/kz8-small/lucky package/lucky
 # # mv package/kz8-small/luci-app-lucky package/luci-app-lucky
 # # mv package/kz8-small/smartdns package/smartdns
-# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
-# mv package/kz8-small/homebox package/homebox
-# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-# rm -rf package/kz8-small
+mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+mv package/kz8-small/homebox package/homebox
+mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+mv package/kz8-small/luci-app-nikki package/luci-app-nikki
+mv package/kz8-small/nikki package/nikki
+rm -rf package/kz8-small
 
 
 # # luci-app-mosdns
@@ -239,105 +241,105 @@
 
 
 
-# echo "
+echo "
 
-# # 额外组件
-# CONFIG_GRUB_IMAGES=y
-# CONFIG_VMDK_IMAGES=y
+# 额外组件
+CONFIG_GRUB_IMAGES=y
+CONFIG_VMDK_IMAGES=y
 
-# CONFIG_TARGET_ROOTFS_EXT4FS=y
-# CONFIG_TARGET_EXT4_RESERVED_PCT=0
-# CONFIG_TARGET_EXT4_BLOCKSIZE_4K=y
-# # CONFIG_TARGET_EXT4_BLOCKSIZE_2K is not set
-# # CONFIG_TARGET_EXT4_BLOCKSIZE_1K is not set
-# CONFIG_TARGET_EXT4_BLOCKSIZE=4096
-# # CONFIG_TARGET_EXT4_JOURNAL is not set
-
-
-# # 固件大小
-# CONFIG_TARGET_KERNEL_PARTSIZE=1024
-# CONFIG_TARGET_ROOTFS_PARTSIZE=1024
-
-# # CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
-
-# # # Themes
-# CONFIG_PACKAGE_luci-theme-argon=y
+CONFIG_TARGET_ROOTFS_EXT4FS=y
+CONFIG_TARGET_EXT4_RESERVED_PCT=0
+CONFIG_TARGET_EXT4_BLOCKSIZE_4K=y
+# CONFIG_TARGET_EXT4_BLOCKSIZE_2K is not set
+# CONFIG_TARGET_EXT4_BLOCKSIZE_1K is not set
+CONFIG_TARGET_EXT4_BLOCKSIZE=4096
+# CONFIG_TARGET_EXT4_JOURNAL is not set
 
 
-# # 自动重启
-# CONFIG_PACKAGE_luci-app-autoreboot=y
+# 固件大小
+CONFIG_TARGET_KERNEL_PARTSIZE=1024
+CONFIG_TARGET_ROOTFS_PARTSIZE=1024
+
+# CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
+
+# # Themes
+CONFIG_PACKAGE_luci-theme-argon=y
 
 
-# # 关机
-# CONFIG_PACKAGE_luci-app-poweroff=y
+# 自动重启
+CONFIG_PACKAGE_luci-app-autoreboot=y
 
 
-# # openclash
-# CONFIG_PACKAGE_luci-app-openclash=y
+# 关机
+CONFIG_PACKAGE_luci-app-poweroff=y
 
 
-# # adguardhome
-# CONFIG_PACKAGE_luci-app-adguardhome=y
-# CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y
-
-# # mosdns
-# CONFIG_PACKAGE_luci-app-mosdns=y
+# openclash
+CONFIG_PACKAGE_luci-app-openclash=y
 
 
-# # netspeedtest chmod +x /etc/init.d/netspeedtest
-# CONFIG_PACKAGE_luci-app-netspeedtest=y
+# adguardhome
+CONFIG_PACKAGE_luci-app-adguardhome=y
+CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y
 
-# # 宽带监控
-# CONFIG_PACKAGE_luci-app-nlbwmon=y
-
-# # passwall
-# CONFIG_PACKAGE_luci-app-passwall=y
+# mosdns
+CONFIG_PACKAGE_luci-app-mosdns=y
 
 
-# CONFIG_PACKAGE_luci-app-passwall2=y
+# netspeedtest chmod +x /etc/init.d/netspeedtest
+CONFIG_PACKAGE_luci-app-netspeedtest=y
+
+# 宽带监控
+CONFIG_PACKAGE_luci-app-nlbwmon=y
+
+# passwall
+CONFIG_PACKAGE_luci-app-passwall=y
 
 
-
-# # quickstart
-# CONFIG_PACKAGE_luci-app-quickstart=n
-
-
-# # store
-# CONFIG_PACKAGE_luci-app-store=y
-
-# # luci-app-ttyd=y
-# CONFIG_PACKAGE_luci-app-ttyd=y
-
-# # luci-app-uugamebooster
-# CONFIG_PACKAGE_luci-app-uugamebooster=n
-
-
-# # luci-app-vssr
-# CONFIG_PACKAGE_luci-app-vssr=y
-
-
-# # luci-app-webadmin=y
-# CONFIG_PACKAGE_luci-app-webadmin=y
-
-
-# CONFIG_DEFAULT_autosamba=n
-# CONFIG_PACKAGE_autosamba=n
-# CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
-# CONFIG_PACKAGE_luci-app-ksmbd=n
-# CONFIG_PACKAGE_luci-app-accesscontrol=n
-# CONFIG_PACKAGE_luci-app-arpbind=n
-# CONFIG_PACKAGE_luci-app-ddns=n
-# CONFIG_PACKAGE_luci-app-samba4=n
-# CONFIG_PACKAGE_luci-app-upnp=n
-# CONFIG_PACKAGE_luci-app-vlmcsd=n
-# CONFIG_PACKAGE_luci-app-vsftpd=n
-# CONFIG_PACKAGE_luci-app-wol=n
-# CONFIG_PACKAGE_swconfig=n
+CONFIG_PACKAGE_luci-app-passwall2=y
 
 
 
+# quickstart
+CONFIG_PACKAGE_luci-app-quickstart=n
 
-# " >> .config
+
+# store
+CONFIG_PACKAGE_luci-app-store=y
+
+# luci-app-ttyd=y
+CONFIG_PACKAGE_luci-app-ttyd=y
+
+# luci-app-uugamebooster
+CONFIG_PACKAGE_luci-app-uugamebooster=n
+
+
+# luci-app-vssr
+CONFIG_PACKAGE_luci-app-vssr=y
+
+
+# luci-app-webadmin=y
+CONFIG_PACKAGE_luci-app-webadmin=y
+
+
+CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
+CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-arpbind=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-vlmcsd=n
+CONFIG_PACKAGE_luci-app-vsftpd=n
+CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_swconfig=n
+
+
+
+
+" >> .config
 
 # # 移除 ddns 和 ddnsto
 # # sed -i 's/CONFIG_PACKAGE_ddns-scripts=y/CONFIG_PACKAGE_ddns-scripts=n/' .config
