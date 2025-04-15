@@ -41,7 +41,7 @@ env:
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/OpenWrt-CI.info
   DIY_P1_SH: smpackage/small-package-1.sh
-  DIY_P2_SH: smpackage/Lean-all-iStore-2.sh
+  DIY_P2_SH: smpackage/small-package-2.sh
   Firmware_Name: Lean-small-package
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
