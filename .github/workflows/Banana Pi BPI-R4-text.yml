@@ -57,8 +57,6 @@ jobs:
   build_openwrt:
 
 
-    name: Banana Pi BPI-R4-text
-
     runs-on: Ubuntu-22.04
     
     steps:
