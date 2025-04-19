@@ -57,7 +57,6 @@ jobs:
   build_openwrt:
 
 
-    name: imm-mt798x-Banana-Pi-BPI-R4-CI-1
 
     runs-on: Ubuntu-22.04
     
