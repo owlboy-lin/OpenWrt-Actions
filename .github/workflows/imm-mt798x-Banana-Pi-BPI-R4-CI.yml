@@ -100,7 +100,7 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          chmod +x $OPENWRT_NAME/*.sh
+          chmod +x $OPENWRT_NAME/immortalwrt/*.sh
           $GITHUB_WORKSPACE/$OPENWRT_NAME/immortalwrt/system-Information.sh
 
 
