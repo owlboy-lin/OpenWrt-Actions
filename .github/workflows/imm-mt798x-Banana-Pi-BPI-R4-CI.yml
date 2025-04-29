@@ -39,8 +39,8 @@ env:
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: bpi-r4/mediatek/defconfig
-  DIY_P1_SH: smpackage/Banana-Pi-BPI-R4-1.sh
-  DIY_P2_SH: smpackage/Banana-Pi-BPI-R4-text-2.sh
+  DIY_P1_SH: bpi-r4/diy-part1.sh
+  DIY_P2_SH: bpi-r4/diy-part2.sh
   Firmware_Name: immortalwrt-mt798x-Banana-Pi-BPI-R4-CI-1
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
@@ -111,13 +111,6 @@ jobs:
           prefix: ${{ github.workspace }}/openwrt
 
     
-      - name: patch1补丁和自定义设置
-        run: |
-          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x $DIY_P1_SH
-          cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
-
       - name: 更新源 #Update feeds
         run: |
           cd openwrt
@@ -127,8 +120,15 @@ jobs:
         run: |
           cd openwrt 
           ./scripts/feeds install -a 
+          
 
-           
+      - name: patch1补丁和自定义设置
+        run: |
+          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+          chmod +x $DIY_P1_SH
+          cd openwrt
+          $GITHUB_WORKSPACE/$DIY_P1_SH
+
 
       - name: patch2补丁和自定义设置
         run: |
