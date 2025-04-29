@@ -39,8 +39,8 @@ env:
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: bpi-r4/mediatek/defconfig
-  DIY_P1_SH: bpi-r4/diy-part1.sh
-  DIY_P2_SH: bpi-r4/diy-part2.sh
+  DIY_P1_SH: bpi-r4/Banana-Pi-BPI-R4-test-1.sh
+  DIY_P2_SH: bpi-r4/Banana-Pi-BPI-R4-test-2.sh
   Firmware_Name: immortalwrt-mt798x-Banana-Pi-BPI-R4-CI-1
   OPENWRT_NAME: bpi-r4
   OPENWRT_DEVICE: bpi-r4/mediatek
@@ -96,15 +96,6 @@ jobs:
           START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
           echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
-      - name: Initialize Environment and Display System Info
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          chmod +x $OPENWRT_NAME/immortalwrt/*.sh
-          $GITHUB_WORKSPACE/$OPENWRT_NAME/immortalwrt/system-Information.sh
-
-
-
 
       - name: 准备完成
         uses: actions/checkout@v4
@@ -156,7 +147,8 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-          chmod +x $OPENWRT_NAME/*.sh && cd openwrt
+          chmod +x $DIY_P2_SH
+          cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
 
 
