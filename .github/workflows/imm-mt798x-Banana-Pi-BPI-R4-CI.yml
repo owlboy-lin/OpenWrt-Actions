@@ -42,8 +42,8 @@ env:
   DIY_P1_SH: bpi-r4/diy-part1.sh
   DIY_P2_SH: bpi-r4/diy-part2.sh
   Firmware_Name: immortalwrt-mt798x-Banana-Pi-BPI-R4-CI-1
-  OPENWRT_NAME: bpi-r4/immortalwrt
-  OPENWRT_DEVICE: bpi-r4/immortalwrt/mediatek
+  OPENWRT_NAME: bpi-r4
+  OPENWRT_DEVICE: bpi-r4/mediatek
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -100,7 +100,7 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          chmod +x $OPENWRT_NAME
+          chmod +x $OPENWRT_NAME/*.sh
           $GITHUB_WORKSPACE/$OPENWRT_NAME/system-Information.sh
 
 
