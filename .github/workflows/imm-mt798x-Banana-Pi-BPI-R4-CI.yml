@@ -42,6 +42,8 @@ env:
   DIY_P1_SH: bpi-r4/diy-part1.sh
   DIY_P2_SH: bpi-r4/diy-part2.sh
   Firmware_Name: immortalwrt-mt798x-Banana-Pi-BPI-R4-CI-1
+  OPENWRT_NAME: bpi-r4/immortalwrt
+  OPENWRT_DEVICE: bpi-r4/mediatek
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -65,11 +67,21 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
+          # sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          # sudo -E apt -y install rename
+          # sudo timedatectl set-timezone "$TZ"
+          # sudo mkdir -p /workdir
+          # sudo chown $USER:$GROUPS /workdir
+        
+
+          ( sudo -E apt-get -qq update
+          sudo -E apt-get -qq install build-essential clang flex g++ gawk gcc-multilib gettext \
+          git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion qemu-utils ccache rename libelf-dev
+          sudo -E apt-get -qq purge azure-cli ghc* zulu* hhvm llvm* firefox powershell openjdk* dotnet* google* mysql* php* android* rename speedtest-cli
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-          sudo -E apt -y install rename
+          sudo -E apt-get -qq autoremove --purge
+          sudo -E apt-get -qq clean ) &
           sudo timedatectl set-timezone "$TZ"
-          sudo mkdir -p /workdir
-          sudo chown $USER:$GROUPS /workdir
 
 
       - name: 更新时区、编译时间
@@ -84,6 +96,16 @@ jobs:
           START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
           echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
+      - name: Initialize Environment and Display System Info
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          chmod +x $OPENWRT_NAME/*.sh
+          $GITHUB_WORKSPACE/$OPENWRT_NAME/system-Information.sh
+
+
+
+
       - name: 准备完成
         uses: actions/checkout@v4
 
@@ -91,7 +113,7 @@ jobs:
         working-directory: /workdir
         run: |
           df -hT $PWD
-          git clone $REPO_URL -b $REPO_BRANCH openwrt
+          git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
         
@@ -133,9 +155,8 @@ jobs:
       - name: patch2补丁和自定义设置
         run: |
           [ -e files ] && mv files openwrt/files
-          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $DIY_P2_SH
-          cd openwrt
+          [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
+          chmod +x $OPENWRT_NAME/*.sh && cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
 
 
@@ -154,6 +175,7 @@ jobs:
         run: |
           cd openwrt
           make defconfig
+          cat .config
           make download -j$(($(nproc)+1))
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
@@ -173,7 +195,8 @@ jobs:
         run: |
           cd openwrt
           echo -e "$(nproc) thread compile"
-          make -j$(nproc) || make -j1 || make -j1 V=s
+          make -j$(($(nproc) + 1)) || make -j$(($(nproc) + 1)) V=s
+          echo "status=success" >> $GITHUB_OUTPUT
           echo "======================="
           echo "Space usage:"
           echo "======================="
@@ -182,8 +205,13 @@ jobs:
           du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
+          cd openwrt
+          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
+          [ -s DEVICE_NAME ] && echo "DEVICE_NAME=$(cat DEVICE_NAME)" >> $GITHUB_ENV
+          make -j$(nproc) || make -j1 || make -j1 V=s
+          echo "date1=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+          echo "date2=$(date "+%Y年%m月%d日")" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
-          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
 
       - name: 整理固件文件
