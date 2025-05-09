@@ -1,4 +1,4 @@
-name: imm-Banana-Pi-BPI-R4-test
+name: immortalwrt-Banana-Pi-BPI-R4-test
 
 on:
   schedule:
@@ -30,7 +30,7 @@ env:
   CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig
   DIY_P1_SH: immortalwrt/diy-part1-test.sh
   DIY_P2_SH: immortalwrt/diy-part2-1.sh
-  Firmware_Name: imm-Banana-Pi-BPI-R4-test
+  Firmware_Name: immortalwrt-Banana-Pi-BPI-R4-test
   DIR: bpi-r4
   OPENWRT_NAME: immortalwrt
   OPENWRT_DEVICE: mediatek
@@ -189,21 +189,21 @@ jobs:
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.Firmware_Name }}_firmware_${{ env.DEVICE_NAME }}_${{ env.date1 }}
+        name: ${{ env.Firmware_Name }}_firmware_${{ env.date1 }}
         path: openwrt/artifact/firmware/
 
     - name: 上传配置文件
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_BUILDINFO == 'true' && !cancelled()
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.Firmware_Name }}_buildinfo_${{ env.DEVICE_NAME }}_${{ env.date1 }}
+        name: ${{ env.Firmware_Name }}_buildinfo_${{ env.date1 }}
         path: openwrt/artifact/buildinfo/
 
     - name: 上传插件
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_PACKAGE == 'true' && !cancelled()
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.Firmware_Name }}_package_${{ env.DEVICE_NAME }}_${{ env.date1 }}
+        name: ${{ env.Firmware_Name }}_package_${{ env.date1 }}
         path: openwrt/artifact/package/
 
     - name: Generate release tags
