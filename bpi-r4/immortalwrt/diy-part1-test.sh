@@ -26,7 +26,8 @@ git clone --depth=1 https://github.com/DHDAXCW/dhdaxcw-app
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
 git clone --depth=1 https://github.com/sirpdboy/netspeedtest
-git clone --depth=1 https://github.com/sirpdboy/luci-app-poweroffdevice 
+git clone --depth=1 https://github.com/sirpdboy/luci-app-poweroffdevice
+git clone --depth=1 https://github.com/sirpdboy/luci-app-partexp 
 git clone --depth=1 https://github.com/linkease/istore
 merge_package https://github.com/DHDAXCW/lede-rockchip lede-rockchip/package/wwan
 merge_package https://github.com/kenzok8/jell jell/luci-app-fan
