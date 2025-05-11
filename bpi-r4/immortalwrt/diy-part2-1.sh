@@ -37,7 +37,7 @@ CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=y
+CONFIG_PACKAGE_luci-app-quickstart=n
 
 # 分区扩容
 CONFIG_PACKAGE_luci-app-partexp=y
