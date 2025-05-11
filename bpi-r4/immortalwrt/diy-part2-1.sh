@@ -43,7 +43,7 @@ CONFIG_PACKAGE_luci-app-quickstart=n
 CONFIG_PACKAGE_luci-app-partexp=y
 
 # store
-CONFIG_PACKAGE_luci-app-store=y
+CONFIG_PACKAGE_luci-app-store=nS
 
 # luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-ttyd=y
