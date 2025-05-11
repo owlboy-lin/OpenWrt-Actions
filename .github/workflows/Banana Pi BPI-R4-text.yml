@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: Banana Pi BPI-R4
+name: Banana Pi BPI-R4 test
 
 on:
   schedule:
@@ -56,9 +56,6 @@ env:
 jobs:
 
   build_openwrt:
-
-
-    name: Banana Pi BPI-R4
 
     runs-on: Ubuntu-22.04
     
