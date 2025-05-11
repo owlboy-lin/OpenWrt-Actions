@@ -41,6 +41,7 @@ env:
   DIY_P1_SH: immortalwrt/diy-part1-test.sh
   DIY_P2_SH: immortalwrt/diy-part2-1.sh
   Firmware_Name: imm-Banana-Pi-BPI-R4-test
+  DIR: bpi-r4
   OPENWRT_NAME: immortalwrt
   OPENWRT_DEVICE: mediatek
   UPLOAD_BIN_DIR: false
@@ -67,6 +68,7 @@ jobs:
           root-reserve-mb: 512
           swap-size-mb: 1024
           remove-dotnet: 'true'
+
       - name: Check out the project branch
         uses: actions/checkout@main
     
@@ -165,6 +167,14 @@ jobs:
           START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
           echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
+      - name: Initialize Environment and Display System Info
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          chmod +x $DIR/$OPENWRT_NAME/*.sh
+          $GITHUB_WORKSPACE/$DIR/$OPENWRT_NAME/system-Information.sh
+
+
       - name: 准备完成
         uses: actions/checkout@v4
             
@@ -201,15 +211,15 @@ jobs:
 
       - name: Load feeds.conf.default
         run: |
-          chmod +x $OPENWRT_NAME/*.sh
+          chmod +x $DIR/$OPENWRT_NAME/*.sh
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
+          $GITHUB_WORKSPACE/$DIR/$DIY_P1_SH
 
       - name: Load config
         run: |
           [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-          chmod +x $OPENWRT_NAME/*.sh && cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P2_SH
+          chmod +x $DIR/$OPENWRT_NAME/*.sh && cd openwrt
+          $GITHUB_WORKSPACE/$DIR/$DIY_P2_SH
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
