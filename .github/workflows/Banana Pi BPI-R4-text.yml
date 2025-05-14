@@ -38,7 +38,7 @@ env:
   REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x.git
   REPO_BRANCH: mt7988
   CONFIG_FILE: bpi-r4/padavanonly-immortalwrt-mt798x.ini
-  DIY_P1_SH: immortalwrt/diy-part1-1.sh
+  DIY_P1_SH: immortalwrt/diy-part1-2.sh
   DIY_P2_SH: immortalwrt/diy-part2-2.sh
   Firmware_Name: imm-Banana-Pi-BPI-R4-test
   DIR: bpi-r4
