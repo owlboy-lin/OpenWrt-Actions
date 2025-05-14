@@ -10,6 +10,8 @@ echo "
 CONFIG_PACKAGE_luci-app-autoreboot=y
 
 
+CONFIG_PACKAGE_luci-app-passwall=y
+
 # 关机
 CONFIG_PACKAGE_luci-app-poweroff=y
 CONFIG_PACKAGE_luci-app-poweroffdevice=y
