@@ -6,6 +6,9 @@ sed -i 's/192.168.1.1/192.168.89.249/g' package/base-files/files/bin/config_gene
 
 echo "
 
+
+CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
+
 # 自动重启
 CONFIG_PACKAGE_luci-app-autoreboot=y
 
