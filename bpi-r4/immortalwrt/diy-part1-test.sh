@@ -41,13 +41,13 @@ merge_package "-b Immortalwrt https://github.com/shidahuilang/openwrt-package" o
 # merge_package https://github.com/kenzok8/jell jell/luci-lib-js
 popd
 
-rm  -rf package/community/dhdaxcw-app/adguardhome
-rm  -rf package/community/dhdaxcw-app/luci-app-adguardhome
+# rm  -rf package/community/dhdaxcw-app/adguardhome
+# rm  -rf package/community/dhdaxcw-app/luci-app-adguardhome
 
-pushd package/community
-merge_package https://github.com/kenzok8/small-package small-package/adguardhome
-merge_package https://github.com/kenzok8/small-package small-package/luci-app-adguardhome
-popd
+# pushd package/community
+# merge_package https://github.com/kenzok8/small-package small-package/adguardhome
+# merge_package https://github.com/kenzok8/small-package small-package/luci-app-adguardhome
+# popd
 
 
 # Lucky
