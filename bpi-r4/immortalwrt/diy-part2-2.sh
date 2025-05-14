@@ -10,8 +10,6 @@ echo "
 CONFIG_PACKAGE_luci-app-autoreboot=y
 
 
-CONFIG_PACKAGE_luci-app-passwall=y
-
 # 关机
 CONFIG_PACKAGE_luci-app-poweroff=y
 CONFIG_PACKAGE_luci-app-poweroffdevice=y
@@ -38,7 +36,9 @@ CONFIG_PACKAGE_luci-app-netspeedtest=y
 # 宽带监控
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 
+CONFIG_PACKAGE_luci-app-passwall=y
 
+CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 
 # quickstart
