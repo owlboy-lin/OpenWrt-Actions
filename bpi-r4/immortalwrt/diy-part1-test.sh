@@ -17,10 +17,10 @@ rm -rf feeds/luci/applications/luci-app-argon-config
 # Clone community packages to package/community
 mkdir package/community
 pushd package/community
-git clone --depth=1 https://github.com/fw876/helloworld
-git clone --depth=1 https://github.com/vernesong/OpenClash
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages
+# git clone --depth=1 https://github.com/fw876/helloworld
+# git clone --depth=1 https://github.com/vernesong/OpenClash
+# git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
+# git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages
 git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki
 git clone --depth=1 https://github.com/DHDAXCW/dhdaxcw-app
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
@@ -28,11 +28,11 @@ git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
 git clone --depth=1 https://github.com/sirpdboy/netspeedtest
 git clone --depth=1 https://github.com/sirpdboy/luci-app-poweroffdevice
 git clone --depth=1 https://github.com/sirpdboy/luci-app-partexp 
-git clone --depth=1 https://github.com/linkease/istore
+# git clone --depth=1 https://github.com/linkease/istore
 merge_package https://github.com/DHDAXCW/lede-rockchip lede-rockchip/package/wwan
 merge_package https://github.com/kenzok8/jell jell/luci-app-fan
 merge_package https://github.com/kenzok8/jell jell/luci-app-serverchan
-merge_package https://github.com/kenzok8/jell jell/luci-app-webadmin
+# merge_package https://github.com/kenzok8/jell jell/luci-app-webadmin
 merge_package "-b Immortalwrt https://github.com/shidahuilang/openwrt-package" openwrt-package/relevance/ddnsto
 merge_package "-b Immortalwrt https://github.com/shidahuilang/openwrt-package" openwrt-package/luci-app-ddnsto
 # merge_package "-b Immortalwrt https://github.com/shidahuilang/openwrt-package" openwrt-package/luci-app-quickstart
