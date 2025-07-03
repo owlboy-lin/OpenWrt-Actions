@@ -151,6 +151,7 @@ git clone --depth 1 https://github.com/kenzok8/small-package.git package/kz8-sma
 # # mv package/kz8-small/smartdns package/smartdns
 mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
 mv package/kz8-small/netspeedtest package/netspeedtest
+mv package/kz8-small/speedtest-cli package/speedtest-cli
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
