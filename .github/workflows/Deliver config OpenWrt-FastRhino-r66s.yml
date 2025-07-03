@@ -158,23 +158,23 @@ jobs:
           echo "release_date=$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "
-          ★ 源码 : https://github.com/coolsnowwolf/lede
-          ★ 分支 : master
+          ★ 源码 : ${{ REPO_URL }} 
+          ★ 分支 : ${{ REPO_BRANCH }} 
           ★ 感谢源码作者无私分享！
           
           输出编译信息 OpenWrt-FastRhino-r66s" >> release.txt
           echo "status=success" >> $GITHUB_OUTPUT
       
-      - name: 自动发布固件到 Releases
-        uses: softprops/action-gh-release@v2
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
-        with:
-          name: ${{ steps.tag.outputs.release_date }} 编译信息 OpenWrt-FastRhino-r66s 
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          body_path: release.txt
-          files: ${{ env.FIRMWARE }}/*
+      # - name: 自动发布固件到 Releases
+      #   uses: softprops/action-gh-release@v2
+      #   if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+      #   with:
+      #     name: ${{ steps.tag.outputs.release_date }} 编译信息 OpenWrt-FastRhino-r66s 
+      #     tag_name: ${{ steps.tag.outputs.release_tag }}
+      #     body_path: release.txt
+      #     files: ${{ env.FIRMWARE }}/*
 
       - name: 删除运行记录
         uses: Mattraks/delete-workflow-runs@v2
