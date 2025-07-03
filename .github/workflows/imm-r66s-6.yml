@@ -285,8 +285,8 @@
           echo "release_date=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "
-          ★ 源码 : https://github.com/immortalwrt/immortalwrt
-          ★ 分支 : openwrt-24.10
+          ★ 源码 : ${{ env.REPO_URL }} 
+          ★ 分支 : ${{ env.REPO_BRANCH }} 
           ★ 感谢源码作者无私分享！
           
           ⏰ 编译时间：${{ env.FILE_TIME1 }}
