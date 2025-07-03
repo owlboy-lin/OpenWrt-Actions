@@ -184,8 +184,8 @@ jobs:
           echo "release_date=$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "
-          ★ 源码 : ${{ REPO_URL }} 
-          ★ 分支 : ${{ REPO_BRANCH }} 
+          ★ 源码 : ${{ env.REPO_URL }} 
+          ★ 分支 : ${{ env.REPO_BRANCH }} 
           ★ 感谢源码作者无私分享！
           
           输出编译信息 Lean-p2w_r619ac-128m" >> release.txt
