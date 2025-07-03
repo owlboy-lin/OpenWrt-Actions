@@ -356,16 +356,16 @@ jobs:
           🛠 密码：password" >> release.txt
           echo "status=success" >> $GITHUB_OUTPUT
       
-      - name: 自动发布固件到 Releases
-        uses: softprops/action-gh-release@v2
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
-        with:
-          name: ${{ steps.tag.outputs.release_date }} ${{ env.Firmware_Name }} ${{ env.name }}
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          body_path: release.txt
-          files: openwrt/artifact/firmware/*
+      # - name: 自动发布固件到 Releases
+      #   uses: softprops/action-gh-release@v2
+      #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+      #   with:
+      #     name: ${{ steps.tag.outputs.release_date }} ${{ env.Firmware_Name }} ${{ env.name }}
+      #     tag_name: ${{ steps.tag.outputs.release_tag }}
+      #     body_path: release.txt
+      #     files: openwrt/artifact/firmware/*
 
       # - name: 删除运行记录
       #   uses: Mattraks/delete-workflow-runs@v2
