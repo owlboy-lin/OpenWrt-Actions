@@ -6,11 +6,11 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: JBT-immortalwrt-istore
+name: bllw3002-immortalwrt
 
 on:
   schedule:
-    - cron: 0 21 * * *
+    - cron: 0 22 * * *
 
   release:
     types: [published]
@@ -39,7 +39,7 @@ env:
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/immortalwrt-openwrt-24.10.info
-  Firmware_Name: JBT-immortalwrt-istore
+  Firmware_Name: bllw3002-immortalwrt
   DIY_P1_SH: smpackage/Lean-1.sh
   DIY_P2_SH: smpackage/JBT-imm-small-package-2.sh
   UPLOAD_BIN_DIR: false
@@ -56,6 +56,8 @@ jobs:
 
   build_openwrt:
 
+
+    name: bllw3002-immortalwrt
     
     runs-on: Ubuntu-22.04
     
@@ -96,7 +98,6 @@ jobs:
           sudo docker image prune --all --force
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev rename
-          sudo -E apt -y install rename
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
@@ -122,19 +123,16 @@ jobs:
         working-directory: /workdir
         run: |
           df -hT $PWD
-          git clone -b $REPO_BRANCH --single-branch --filter=blob:none $REPO_URL openwrt
+          git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-          cd openwrt
-          echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
 
       - name: 缓存
         uses: klever1988/cachewrtbuild@main
         if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
         with:
           ccache: 'true'
-          clean: 'false'
-          mixkey: '${{ env.Firmware_Name }}-${{ env.START_SECONDS }}'
-          prefix: ${{ env.OPENWRT_PATH }}
+          mixkey: '${{ env.Firmware_Name }}'
+          prefix: ${{ github.workspace }}/openwrt
 
       - name: patch1补丁和自定义设置
         run: |
@@ -317,8 +315,8 @@ jobs:
           echo "release_date=$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "
-          ★ 源码 : ${{ REPO_URL }} 
-          ★ 分支 : ${{ REPO_BRANCH }} 
+          ★ 源码 : ${{ env.REPO_URL }} 
+          ★ 分支 : ${{ env.REPO_BRANCH }} 
           ★ 感谢源码作者无私分享！
           
           ⏰ 编译时间：${{ env.FILE_TIME1 }}
