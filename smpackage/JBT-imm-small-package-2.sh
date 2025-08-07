@@ -243,6 +243,14 @@ EOF
 
 echo "
 
+
+# JBT
+#多WAN负载均衡。
+CONFIG_PACKAGE_luci-app-mwan3=y
+ 
+#配置同步拨号。
+CONFIG_PACKAGE_luci-app-syncdial=y
+
 # 额外组件
 CONFIG_GRUB_IMAGES=y
 CONFIG_VMDK_IMAGES=y
