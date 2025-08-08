@@ -248,6 +248,13 @@ sed -i "s#192.168.1.1#192.168.24.8#g" $NET                                      
 
 echo "
 
+# JBT
+#多WAN负载均衡。
+CONFIG_PACKAGE_luci-app-mwan3=y
+ 
+#配置同步拨号。
+CONFIG_PACKAGE_luci-app-syncdial=y
+
 # 额外组件
 CONFIG_GRUB_IMAGES=y
 CONFIG_VMDK_IMAGES=y
@@ -312,7 +319,7 @@ CONFIG_PACKAGE_luci-app-passwall2=y
 
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=y
+CONFIG_PACKAGE_luci-app-quickstart=n
 
 
 # store
