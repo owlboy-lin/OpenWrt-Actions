@@ -56,7 +56,7 @@ env:
 jobs:
   build_openwrt:
 
-    runs-on: ubuntu-latest
+    runs-on: Ubuntu-22.04
     
     name: Deliver config Lean-RT_ACRH17
 
