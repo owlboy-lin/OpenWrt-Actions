@@ -340,6 +340,7 @@ CONFIG_PACKAGE_luci-app-turboacc=n
 # luci-app-uugamebooster
 CONFIG_PACKAGE_luci-app-uugamebooster=n
 
+CONFIG_PACKAGE_luci-app-upnp=y
 
 # luci-app-vssr
 CONFIG_PACKAGE_luci-app-vssr=y
@@ -357,7 +358,6 @@ CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
 CONFIG_PACKAGE_luci-app-samba4=n
-## CONFIG_PACKAGE_luci-app-upnp=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wol=n
 
