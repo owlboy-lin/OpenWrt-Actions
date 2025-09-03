@@ -333,6 +333,7 @@ CONFIG_PACKAGE_luci-app-turboacc=n
 # luci-app-uugamebooster
 CONFIG_PACKAGE_luci-app-uugamebooster=n
 
+CONFIG_PACKAGE_luci-app-upnp=y
 
 # luci-app-vssr
 CONFIG_PACKAGE_luci-app-vssr=y
@@ -342,6 +343,16 @@ CONFIG_PACKAGE_luci-app-vssr=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
 
+CONFIG_DEFAULT_autosamba=n
+CONFIG_PACKAGE_autosamba=n
+CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
+CONFIG_PACKAGE_luci-app-accesscontrol=n
+CONFIG_PACKAGE_luci-app-arpbind=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_luci-app-vsftpd=n
+CONFIG_PACKAGE_luci-app-wol=n
 
 " >> .config
 
