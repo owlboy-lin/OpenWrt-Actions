@@ -44,8 +44,8 @@ env:
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: r66s/6.1/config/imm-FastRhino-r66s-6.1.info
   DIY_P1_SH: r66s/6.1/r66s-test-1.sh
-  DIY_P2_SH: r66s/6.1/diy-part2.sh
-  Firmware_Name: OpenWrt-FastRhino-r66s-6.1 
+  DIY_P2_SH: r66s/6.1/r66s-test-2.sh
+  Firmware_Name: imm-FastRhino-r66s-6.1 
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
