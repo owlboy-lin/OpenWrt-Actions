@@ -133,7 +133,7 @@ git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
-git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
+# git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
 git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
 git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
@@ -261,11 +261,11 @@ echo "
 # CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-smartdns=n
 # CONFIG_PACKAGE_luci-app-quickstart=n
-# CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-upnp=y
 # CONFIG_PACKAGE_luci-app-uugamebooster=n
 # CONFIG_PACKAGE_luci-app-vlmcsd=n
 # CONFIG_PACKAGE_luci-app-vsftpd=n
-# CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_luci-app-wol=y
 # CONFIG_PACKAGE_luci-app-zerotier=n
 # CONFIG_PACKAGE_swconfig=n
 
@@ -340,7 +340,7 @@ CONFIG_PACKAGE_luci-app-passwall2=y
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 # quickstart
-CONFIG_PACKAGE_luci-app-quickstart=n
+CONFIG_PACKAGE_luci-app-quickstart=y
 
 
 
