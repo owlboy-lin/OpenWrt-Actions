@@ -36,8 +36,8 @@ on:
         
       
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: r66s/6.1/config/r66s.config
   Firmware_Name: OpenWrt-FastRhino-r66s-6.1
@@ -114,10 +114,10 @@ jobs:
           cd openwrt
           ./scripts/feeds install -a
 
-      - name: patch2补丁和自定义设置
-        run: |
-          [ -e files ] && mv files openwrt/files
-          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+      # - name: patch2补丁和自定义设置
+      #   run: |
+      #     [ -e files ] && mv files openwrt/files
+      #     [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
 
 
           
