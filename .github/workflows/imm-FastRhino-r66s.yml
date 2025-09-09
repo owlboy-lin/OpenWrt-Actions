@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: OpenWrt-FastRhino-r66s-6.1
+name: imm-FastRhino-r66s-6.1
 
 on:
 
@@ -62,7 +62,7 @@ jobs:
   build_openwrt:
 
 
-    name: OpenWrt-FastRhino-r66s-6.1
+    name: imm-FastRhino-r66s-6.1
 
     runs-on: Ubuntu-22.04
     
