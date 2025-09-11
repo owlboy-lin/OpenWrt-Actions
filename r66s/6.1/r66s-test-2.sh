@@ -320,15 +320,11 @@ CONFIG_PACKAGE_luci-app-nlbwmon=y
 CONFIG_PACKAGE_luci-app-passwall=y
 
 
-CONFIG_PACKAGE_luci-app-passwall2=y
-
-
 # luci-app-ssr-plus
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 # quickstart
 CONFIG_PACKAGE_luci-app-quickstart=y
-
 
 
 # store
@@ -344,8 +340,6 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 # luci-app-turboacc
 CONFIG_PACKAGE_luci-app-turboacc=y
 
-# luci-app-vssr
-CONFIG_PACKAGE_luci-app-vssr=n
 
 
 # luci-app-webadmin=y
