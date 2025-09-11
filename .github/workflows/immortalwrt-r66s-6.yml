@@ -271,11 +271,11 @@
           cd artifact/firmware/
           rename "s/openwrt/${{ env.Firmware_Name }}/" *
       
-      # - name: 获取内核版本号
-      #   run: |
-      #     cd openwrt/bin/targets/rockchip/armv8
-      #     KERNEL_VERSION=$(ls -l *openwrt-rockchip-armv8-generic-kernel.bin | awk '{print $9}' | cut -d '-' -f1)
-      #     echo "KERNEL_VERSION=$KERNEL_VERSION" >> $GITHUB_ENV
+      - name: 获取内核版本号
+        run: |
+          cd openwrt/bin/targets/rockchip/armv8
+          KERNEL_VERSION=$(ls -l *openwrt-rockchip-armv8-generic-kernel.bin | awk '{print $9}' | cut -d '-' -f1)
+          echo "KERNEL_VERSION=$KERNEL_VERSION" >> $GITHUB_ENV
 
       - name: 生成发布标签
         id: tag
