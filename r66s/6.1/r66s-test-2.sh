@@ -244,6 +244,11 @@ EOF
 # EOF
 
 echo "
+CONFIG_TARGET_rockchip=y
+CONFIG_TARGET_rockchip_armv8=y
+CONFIG_TARGET_rockchip_armv8_DEVICE_fastrhino_r66s=y
+CONFIG_LINUX_6_6=y
+
 
 # CONFIG_DEFAULT_autosamba=n
 # CONFIG_PACKAGE_autosamba=n
