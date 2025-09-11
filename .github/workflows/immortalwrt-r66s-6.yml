@@ -34,7 +34,7 @@
     REPO_URL: https://github.com/immortalwrt/immortalwrt
     REPO_BRANCH: openwrt-24.10
     FEEDS_CONF: feeds.conf.default
-    CONFIG_FILE: r66s/6.1/config/immortalwrt-FastRhino-r66s-6.1.info
+    CONFIG_FILE: r66s/6.1/config/imm-FastRhino-r66s-6.1.info
     DIY_P1_SH: r66s/6.1/r66s-test-1.sh
     DIY_P2_SH: r66s/6.1/r66s-test-2.sh
     Firmware_Name: imm-FastRhino-r66s-6.1 
