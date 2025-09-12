@@ -43,8 +43,8 @@ env:
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: r66s/6.1/config/imm-FastRhino-r66s-6.1.info
-  DIY_P1_SH: r66s/6.1/r66s-test-1.sh
-  DIY_P2_SH: r66s/6.1/r66s-test-2.sh
+  DIY_P1_SH: r66s/6.1/r66s-my-1.sh
+  DIY_P2_SH: r66s/6.1/r66s-my-2.sh
   Firmware_Name: imm-FastRhino-r66s-6.1 
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
@@ -155,26 +155,22 @@ jobs:
 
 
       
-      - name: 更新源 Update feeds
-        run: cd openwrt && ./scripts/feeds clean && ./scripts/feeds update -a
-
-
-      - name: 安装源 Install feeds
-        run: cd openwrt && ./scripts/feeds install -a
-
-      - name: patch1补丁和自定义设置
+      - name: Update & install feeds
+        working-directory: ./openwrt
         run: |
-          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x $DIY_P1_SH
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: Load feeds.conf.default
+        run: |
+          chmod +x $OPENWRT_NAME/*.sh
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P1_SH
 
-      - name: patch2补丁和自定义设置
+      - name: Load config
         run: |
-          [ -e files ] && mv files openwrt/files
-          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $DIY_P2_SH
-          cd openwrt
+          [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
+          chmod +x $OPENWRT_NAME/*.sh && cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
 
       - name: SSH connection to Actions
