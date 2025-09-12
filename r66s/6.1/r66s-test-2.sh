@@ -24,98 +24,19 @@
 # ttyd 自动登录
 # sed -i "s?/bin/login?/usr/libexec/login.sh?g" ${GITHUB_WORKSPACE}/openwrt/package/feeds/packages/ttyd/files/ttyd.config
 
-# 添加新的主题
-# git clone https://github.com/kenzok8/luci-theme-ifit.git package/lean/luci-theme-ifit
-
-# 添加常用软件包
-# git clone https://github.com/kenzok8/openwrt-packages.git package/openwrt-packages
-
-# 删除默认密码
-# sed -i "/CYXluq4wUazHjmCDBCqXF/d" package/lean/default-settings/files/zzz-default-settings
-
-# 取消bootstrap为默认主题
-#sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
-
-# 修改 WiFi 名称
-# sed -i 's/OpenWrt/OpenWrt/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
-
-# 默认打开 WiFi
-# sed -i 's/disabled=1/disabled=0/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
-
-# Configure pppoe connection
-#uci set network.wan.proto=pppoe
-#uci set network.wan.username='yougotthisfromyour@isp.su'
-#uci set network.wan.password='yourpassword'
+# 修改软件包
+chmod -R 755 files
+rm -rf feeds/luci/applications/luci-app-mosdns && rm -rf feeds/packages/net/{alist,adguardhome,smartdns}
+rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd-alt,miniupnpd-iptables,wireless-regdb}
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
 
 # 移除重复软件包
-# rm -rf feeds/luci/themes/luci-theme-argon
+rm -rf feeds/luci/themes/luci-theme-argon
 
 # Themes
-# git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon
-# git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git lpackage/uci-theme-argon
-# echo 'src-git argon https://github.com/jerrykuku/luci-theme-argon' >>feeds.conf.default
-# git clone -b 18.06 https://github.com/jerrykuku/luci-app-argon-config.git package/luci-app-argon-config
-# echo 'src-git argon-config https://github.com/jerrykuku/luci-app-argon-config' >>feeds.conf.default
+git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon
 
-# 添加额外软件包
-
-
-# 科学上网插件
-
-
-# 科学上网插件依赖
-
-
-
-# openclash
-# svn export https://github.com/kenzok8/openwrt-packages/luci-app-openclash  package/luci-app-openclash
-# svn export https://github.com/kiddin9/openwrt-packages/trunk/luci-app-openclash  package/luci-app-openclash
-# 加入OpenClash核心
-# chmod -R a+x $GITHUB_WORKSPACE/preset-clash-core.sh
-# if [ "$1" = "rk33xx" ]; then
-#     $GITHUB_WORKSPACE/preset-clash-core.sh arm64
-# elif [ "$1" = "rk35xx" ]; then
-#     $GITHUB_WORKSPACE/preset-clash-core.sh arm64
-# elif [ "$1" = "x86" ]; then
-#     $GITHUB_WORKSPACE/preset-clash-core.sh amd64
-# fi
-
-# adguardhome
-# svn export https://github.com/kenzok8/openwrt-packages/luci-app-adguardhome package/luci-app-adguardhome
-# svn export https://github.com/kenzok8/openwrt-packages/adguardhome package/adguardhome
-# svn export https://github.com/kiddin9/openwrt-packages/trunk/luci-app-adguardhome package/luci-app-adguardhome
-# svn export https://github.com/kiddin9/openwrt-packages/trunk/adguardhome package/adguardhome
-
-# mosdns
-# svn export https://github.com/kenzok8/openwrt-packages/luci-app-mosdns package/luci-app-mosdns
-# svn export https://github.com/kenzok8/openwrt-packages/mosdns package/mosdns
-# svn export https://github.com/kenzok8/openwrt-packages/v2dat package/v2dat
-# svn export https://github.com/kiddin9/openwrt-packages/trunk/luci-app-mosdns package/luci-app-mosdns
-# svn export https://github.com/kiddin9/openwrt-packages/trunk/mosdns package/mosdns
-# svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
-
-
-#添加TurboAcc
-# curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
-# sed -i 's/192.168.1.1/192.168.23.1/g' package/base-files/files/bin/config_generate
-# sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.23.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
-# sed -i 's/ImmortalWrt/OpenWrt/g' package/base-files/files/bin/config_generate
-# sed -i 's/ImmortalWrt/WiFi/g' package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
-# sed -i 's#mirrors.vsean.net/openwrt#mirrors.pku.edu.cn/immortalwrt#g' package/emortal/default-settings/files/99-default-settings-chinese
-# mv $GITHUB_WORKSPACE/patch/banner $OPENWRT_PATH/package/base-files/files/etc/banner
-# mv $GITHUB_WORKSPACE/patch/immortalwrt-24.10/199-diy.sh package/base-files/files/etc/uci-defaults/199-diy.sh
-# git clone --depth 1 -b core https://github.com/vernesong/OpenClash.git  package/openclash-core
-# mv package/openclash-core/master/meta/clash-linux-amd64.tar.gz package/base-files/files/etc/clash-linux-amd64.tar.gz
-# rm -rf package/openclash-core
-
-# #完全删除luci版本
-# sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-# #添加编译日期
-# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/usr/lib/os-release
-# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/etc/openwrt_release
-
-#下载5g模块
-# git clone --depth 1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
 
 # iStore
 git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
@@ -135,8 +56,8 @@ git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
 # git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/mihomo
 # git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/passwall
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/passwall2
+# git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall-packages
 # rm -rf feeds/packages/devel/gn
 # rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-openclash}
 
@@ -156,8 +77,8 @@ mv package/kz8-small/netspeedtest package/netspeedtest
 mv package/kz8-small/speedtest-cli package/speedtest-cli
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
-mv package/kz8-small/quickstart package/quickstart
+# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
+# mv package/kz8-small/quickstart package/quickstart
 mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
