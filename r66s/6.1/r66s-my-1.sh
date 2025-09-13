@@ -1,53 +1,112 @@
 #!/bin/bash
+# =================================================================
+# Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+# https://github.com/P3TERX/Actions-OpenWrt
+# File name: diy-part1.sh
+# Description: OpenWrt DIY script part 1 (Before Update feeds)
+# =================================================================
 
-# Merge_package
-function merge_package(){
-    repo=`echo $1 | rev | cut -d'/' -f 1 | rev`
-    pkg=`echo $2 | rev | cut -d'/' -f 1 | rev`
-    # find package/ -follow -name $pkg -not -path "package/openwrt-packages/*" | xargs -rt rm -rf
-    git clone --depth=1 --single-branch $1
-    [ -d package/openwrt-packages ] || mkdir -p package/openwrt-packages
-    mv $2 package/openwrt-packages/
-    rm -rf $repo
-}
+# 执行命令来切换内核
+sed -i 's/PATCHVER:=5.15/PATCHVER:=6.1/g' target/linux/rockchip/Makefile
 
-rm -rf feeds/luci/themes/luci-theme-argon
-rm -rf feeds/luci/applications/luci-app-argon-config
+# Modify default IP
 
-# Clone community packages to package/community
-mkdir package/community
-pushd package/community
-git clone --depth=1 https://github.com/fw876/helloworld
-git clone --depth=1 https://github.com/vernesong/OpenClash
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages
-git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki
-git clone --depth=1 https://github.com/DHDAXCW/dhdaxcw-app
-git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
-git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
-git clone --depth=1 https://github.com/sirpdboy/netspeedtest
-git clone --depth=1 https://github.com/sirpdboy/luci-app-poweroffdevice
-git clone --depth=1 https://github.com/sirpdboy/luci-app-partexp 
-git clone --depth=1 https://github.com/linkease/istore
-merge_package https://github.com/DHDAXCW/lede-rockchip lede-rockchip/package/wwan
-merge_package https://github.com/kenzok8/jell jell/luci-app-fan
-merge_package https://github.com/kenzok8/jell jell/luci-app-serverchan
-merge_package https://github.com/kenzok8/jell jell/luci-app-webadmin
-merge_package "-b Immortalwrt https://github.com/shidahuilang/openwrt-package" openwrt-package/relevance/ddnsto
-merge_package "-b Immortalwrt https://github.com/shidahuilang/openwrt-package" openwrt-package/luci-app-ddnsto
-# merge_package "-b Immortalwrt https://github.com/shidahuilang/openwrt-package" openwrt-package/luci-app-quickstart
-# merge_package https://github.com/kenzok8/jell jell/quickstart
-# merge_package https://github.com/kenzok8/jell jell/luci-app-quickstart
-# merge_package https://github.com/kenzok8/jell jell/luci-lib-js
-popd
+# 添加软件源
+# Uncomment a feed source
+ sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
 
-rm  -rf package/community/dhdaxcw-app/adguardhome
-rm  -rf package/community/dhdaxcw-app/luci-app-adguardhome
+# Add a feed source
+# echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
 
-pushd package/community
-merge_package https://github.com/kenzok8/small-package small-package/adguardhome
-merge_package https://github.com/kenzok8/small-package small-package/luci-app-adguardhome
-popd
+# echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
+
+# sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
+
+# echo 'src-git kenzo https://github.com/kenzok8/openwrt-packages;master' >>feeds.conf.default
+
+# git clone https://github.com/kenzok8/openwrt-packages.git package/openwrt-packages
+
+# git clone https://github.com/kenzok8/small.git package/small
+
+# Modify default IP
+#sed -i 's/192.168.1.1/192.168.50.5/g' package/base-files/files/bin/config_generate
+
+# Import external feeds
+# git clone https://github.com/Lienol/openwrt-package.git package/lienol
+
+# git clone https://github.com/openwrt-develop/luci-theme-atmaterial package/luci-theme-atmaterial
+
+# git clone https://github.com/rosywrt/luci-theme-rosy package/luci-theme-rosy
+
+# luci-theme-argon
+# cd openwrt/package/lean  
+# rm -rf luci-theme-argon  
+# git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git  
+
+# git clone https://github.com/rufengsuixing/luci-app-adguardhome package/adguardhome
+
+# git clone https://github.com/vernesong/OpenClash package/openclash
+
+# git clone https://github.com/frainzy1477/luci-app-clash package/clash
+
+# git clone https://github.com/fw876/helloworld package/ssrplus
+
+# git clone https://github.com/tzxiaozhen88/luci-app-koolproxyR package/koolproxyR
+
+# git clone 其他github插件源码地址 package/文件夹名称
+
+
+#  下载源码
+## adguardhome
+# git clone https://github.com/rufengsuixing/luci-app-adguardhome package/luci-app-adguardhome
+
+## autoreboot
+# git clone https://github.com/f8q8/luci-app-autoreboot package/luci-app-autoreboot
+
+## mosdns
+# echo 'src-git mosdns https://github.com/sbwml/luci-app-mosdns' >>feeds.conf.default
+
+## netspeedtest
+# echo 'src-git netspeedtest https://github.com/sirpdboy/netspeedtest' >>feeds.conf.default
+
+git clone https://github.com/sirpdboy/netspeedtest.git package/netspeedtest
+
+## OpenClash
+# echo 'src-git openclash https://github.com/vernesong/OpenClash' >>feeds.conf.default
+
+## passwall
+# echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
+
+## passwall2
+# echo 'src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2' >>feeds.conf.default
+
+## poweroff
+# git clone https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
+
+
+# sed -i '1i src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
+
+# sed -i '1i src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
+# sed -i '2i src-git small https://github.com/kenzok8/small' feeds.conf.default
+
+
+
+git clone --depth=1 https://github.com/fw876/helloworld fw876/helloworld
+git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki nikkinikki-org/OpenWrt-nikki
+# git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
+# git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
+# git clone --depth=1 https://github.com/sirpdboy/netspeedtest
+git clone --depth=1 https://github.com/sirpdboy/luci-app-poweroffdevice sirpdboy/luci-app-poweroffdevice
+git clone --depth=1 https://github.com/linkease/istore linkease/istore
+
+
+git clone --depth=1 https://github.com/kenzok8/small-package small-package/adguardhome
+git clone --depth=1  https://github.com/kenzok8/small-package small-package/luci-app-adguardhome
+
 
 
 # Lucky
@@ -65,15 +124,3 @@ rm -rf feeds/packages/net/mosdns
 git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
-# add luci-app-OpenClash
-mkdir package/OpenClash
-pushd package/OpenClash
-git clone --depth=1  https://github.com/vernesong/OpenClash
-git config core.sparsecheckout true
-popd
-
-merge_package https://github.com/DHDAXCW/lede-rockchip lede-rockchip/package/wwan
-merge_package "-b openwrt-24.10-6.6 https://github.com/padavanonly/immortalwrt-mt798x-6.6" immortalwrt-mt798x-6.6/package/mtk/applications/luci-app-Airpifanctrl
-merge_package "-b openwrt-24.10-6.6 https://github.com/padavanonly/immortalwrt-mt798x-6.6" immortalwrt-mt798x-6.6/package/mtk/applications/Airpi-gpio-fan
-merge_package "-b openwrt-24.10-6.6 https://github.com/padavanonly/immortalwrt-mt798x-6.6" immortalwrt-mt798x-6.6/package/mtk/applications/mtkhqos_util
-./scripts/feeds update -a
