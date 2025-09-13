@@ -110,8 +110,8 @@ git clone --depth=1  https://github.com/kenzok8/small-package small-package/luci
 
 
 # Lucky
-rm -rf package/lucky
-git clone  https://github.com/gdy666/luci-app-lucky.git package/lucky
+# rm -rf package/lucky
+# git clone  https://github.com/gdy666/luci-app-lucky.git package/lucky
 #echo 'src-git moruiris https://github.com/moruiris/openwrt-packages;immortalwrt' >>feeds.conf.default
 # 添加nikki(mihomo) feed
 # echo "src-git nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git;main" >> "feeds.conf.default"
