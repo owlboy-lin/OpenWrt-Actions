@@ -29,7 +29,12 @@ sed -i 's/192.168.1.1/192.168.89.249/g' package/base-files/files/bin/config_gene
 
 echo "
 
+#rootfs
+# CONFIG_TARGET_ROOTFS_EXT4FS is not set
+CONFIG_TARGET_ROOTFS_PARTSIZE=300
 
+#luci
+CONFIG_PACKAGE_luci-app-cpufreq=y
 
 # CONFIG_DEFAULT_autosamba=n
 # CONFIG_PACKAGE_autosamba=n
