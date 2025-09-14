@@ -8,7 +8,7 @@ rm -rf ./feeds/luci/applications/luci-app-mosdns
 
 #克隆依赖插件
 git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwpage
-git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
 
 
 #克隆的源码放在small文件夹
