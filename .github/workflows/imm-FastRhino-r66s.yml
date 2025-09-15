@@ -144,13 +144,14 @@ jobs:
           git clone $REPO_URL -b $REPO_BRANCH openwrt
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-      - name: 缓存
+      - name: 设置 VERSION 环境变量
+        run: echo "VERSION=${REPO_BRANCH}" >> $GITHUB_ENV
+
+      - name: 开启缓存
         uses: klever1988/cachewrtbuild@main
-        if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
         with:
           ccache: 'true'
-          clean: 'false'
-          mixkey: '${{ env.Firmware_Name }}-${{ env.START_SECONDS }}'
+          mixkey: '${{ env.VERSION }}-rockchip'
           prefix: ${{ github.workspace }}/openwrt
 
 
@@ -163,14 +164,15 @@ jobs:
 
       - name: Load feeds.conf.default
         run: |
-          chmod +x $OPENWRT_NAME/*.sh
+          chmod +x $DIY_P1_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P1_SH
 
       - name: Load config
         run: |
           [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-          chmod +x $OPENWRT_NAME/*.sh && cd openwrt
+          chmod +x $DIY_P2_SH 
+          cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
 
       - name: SSH connection to Actions
