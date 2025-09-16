@@ -21,16 +21,16 @@ on:
         # 分,时,日,月,周。每周 三 20时执行一次 (UTC时间)
   
 env:
-  FREE_DISK_SH: r66s/6.1/free_disk_space.sh
-  ENV_SH: r66s/6.1/environment.sh
+  FREE_DISK_SH: scripts/free_disk_space.sh
+  ENV_SH: scripts/environment.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   # 修改 REPO_BRANCH 来达到更改编译版本
-  PLATFORM_FILE: r66s/6.1/config/rockchip.txt
-  CONFIG_FILE:  r66s/6.1/Packages.txt
-  SETTINGS_SH:  r66s/6.1/init-settings.sh
-  PACKAGES_SH:  r66s/6.1/packages.sh
-  CLASH_CORE_SH:  r66s/6.1/preset-clash-core-arm64-L.sh
+  PLATFORM_FILE: configs/rockchip.txt
+  CONFIG_FILE: configs/Packages.txt
+  SETTINGS_SH: scripts/init-settings.sh
+  PACKAGES_SH: scripts/packages.sh
+  CLASH_CORE_SH: scripts/preset-clash-core-arm64-L.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
   UPLOAD_RELEASE: true
@@ -93,7 +93,7 @@ jobs:
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
         chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
-        # chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
+        chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
 
     - name: 下载文件
       run: |
