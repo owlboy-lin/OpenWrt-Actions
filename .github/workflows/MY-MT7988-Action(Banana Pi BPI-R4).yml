@@ -1,0 +1,162 @@
+name: MY-immortalwrt-mt798x-6.6
+
+on:
+  schedule:
+    - cron: 0 16 * * *
+  workflow_dispatch:
+
+env:
+  REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-6.6
+  REPO_BRANCH: mt798x-mt799x-6.6-mtwifi
+  CONFIG_FILE: immortalwrt/mtk/defconfig
+  DIY_P1_SH: immortalwrt/my-part1.sh
+  DIY_P2_SH: immortalwrt/my-part2.sh
+  Firmware_Name: My-Banana-Pi-BPI-R4
+  OPENWRT_NAME: immortalwrt
+  OPENWRT_DEVICE: mediatek
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  UPLOAD_BUILDINFO: true
+  UPLOAD_PACKAGE: true
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
+  UPLOAD_RELEASE: false
+  GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+  TZ: Asia/Shanghai 
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        
+    - name: Check out the project branch
+      uses: actions/checkout@main
+
+    - name: Initialize the compilation environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        ( sudo -E apt-get -qq update
+        sudo -E apt-get -qq install build-essential clang flex g++ gawk gcc-multilib gettext \
+        git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion qemu-utils ccache rename libelf-dev
+        sudo -E apt-get -qq purge azure-cli ghc* zulu* hhvm llvm* firefox powershell openjdk* dotnet* google* mysql* php* android* rename speedtest-cli
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean ) &
+        sudo timedatectl set-timezone "$TZ"
+        
+    - name: Initialize Environment and Display System Info
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        chmod +x $OPENWRT_NAME/*.sh
+        $GITHUB_WORKSPACE/$OPENWRT_NAME/system-Information.sh
+        
+    - name: Download firmware source code
+      run: |
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        cd openwrt
+        rm -rf feeds.conf.default
+        cp -f $GITHUB_WORKSPACE/patches/filogic/feeds.conf.default feeds.conf.default 
+
+    - name: Update & install feeds
+      working-directory: ./openwrt
+      run: |
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+        
+    - name: Load feeds.conf.default
+      run: |
+        chmod +x $OPENWRT_NAME/*.sh
+        cd openwrt
+        $GITHUB_WORKSPACE/$DIY_P1_SH
+
+    - name: Load config
+      run: |
+        [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
+        chmod +x $OPENWRT_NAME/*.sh && cd openwrt
+        $GITHUB_WORKSPACE/$DIY_P2_SH
+
+    - name: Download the installation package
+      id: package
+      run: |
+        cd openwrt
+        make defconfig
+        cat .config
+        make download -j$(nproc)
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+             
+    - name: Compile the firmware
+      id: compile
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 || make -j1 V=s
+        echo "date1=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+        echo "date2=$(date "+%Y年%m月%d日")" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: 整理固件文件
+      id: artifact
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      run: |
+        cd openwrt
+        mkdir -p ./artifact/firmware
+        mkdir -p ./artifact/package
+        mkdir -p ./artifact/buildinfo
+        rm -rf $(find ./bin/targets/ -type d -name "packages")
+        cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
+        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+        cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+        cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
+        cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
+        cp -rf ./feeds.conf.default ./artifact/buildinfo/ 
+        cd artifact/firmware/
+        # rename "s/openwrt/${{ env.Firmware_Name }}/" *
+
+    - name: Organize and Rename Files
+      id: organize
+      if: ${{ env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
+      run: |
+        cd openwrt/bin/targets/mediatek/filogic
+        # rm -rf packages *mt798* *.config *.buildinfo *.json sha256sums 
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
+        
+    - name: Upload the firmware to github
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      with:
+        name: ${{ env.date1 }}_${{ env.Firmware_Name }}
+        path: ${{ env.FIRMWARE }}
+
+    - name: Generate release tags
+      id: tag
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        echo "release_tag=${{ env.date2 }}" >> $GITHUB_OUTPUT
+        touch release.txt
+        echo "📥 固件下载" >> release.txt
+        echo "status=success" >> $GITHUB_OUTPUT
+        
+    - name: Publish to release
+      uses: softprops/action-gh-release@v1
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: ${{ env.FIRMWARE }}/*
+        name: ${{ env.date3 }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
