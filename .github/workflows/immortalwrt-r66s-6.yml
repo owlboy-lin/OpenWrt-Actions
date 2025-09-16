@@ -262,7 +262,7 @@
           cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
           cp -rf ./feeds.conf.default ./artifact/buildinfo/
           cd artifact/firmware/
-          rename "s/openwrt/${{ env.Firmware_Name }}/" *
+          # rename "s/openwrt/${{ env.Firmware_Name }}/" *
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
 
