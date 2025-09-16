@@ -268,7 +268,7 @@
 
       - name: 上传固件目录
         uses: actions/upload-artifact@main
-        if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
+        if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' 
         with:
           name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
