@@ -214,8 +214,6 @@
           make checksum
           echo "status=success" >> $GITHUB_OUTPUT
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
-          [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
-          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: 空间使用情况7
         if: (!cancelled())
@@ -235,19 +233,39 @@
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
-      - name: 整理文件
-        id: organize
+      # - name: 整理文件
+      #   id: organize
+      #   if: steps.compile.outputs.status == 'success' && !cancelled()
+      #   run: |
+      #     cd openwrt/bin/targets/*/*
+      #     rm -rf *.bin
+      #     rm -rf *.buildinfo 
+      #     rm -rf *.json 
+      #     rm -rf *.manifest 
+      #     rm -rf packages
+      #     echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+      #     echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: 整理固件文件
+        id: artifact
         if: steps.compile.outputs.status == 'success' && !cancelled()
         run: |
-          cd openwrt/bin/targets/*/*
-          rm -rf *.bin
-          rm -rf *.buildinfo 
-          rm -rf *.json 
-          rm -rf *.manifest 
-          rm -rf packages
+          cd openwrt
+          mkdir -p ./artifact/firmware
+          mkdir -p ./artifact/package
+          mkdir -p ./artifact/buildinfo
+          rm -rf $(find ./bin/targets/ -type d -name "packages")
+          cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
+          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+          cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
+          cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
+          cp -rf ./feeds.conf.default ./artifact/buildinfo/
+          cd artifact/firmware/
+          rename "s/openwrt/${{ env.Firmware_Name }}/" *
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
-
+          
       - name: 上传固件目录
         uses: actions/upload-artifact@main
         if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
@@ -272,6 +290,8 @@
           cp -rf ./feeds.conf.default ./artifact/buildinfo/
           cd artifact/firmware/
           rename "s/openwrt/${{ env.Firmware_Name }}/" *
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+          echo "status=success" >> $GITHUB_OUTPUT
       
       - name: 获取内核版本号
         run: |
