@@ -35,8 +35,8 @@
     ENV_SH: scripts/environment.sh
     REPO_URL: https://github.com/immortalwrt/immortalwrt
     REPO_BRANCH: openwrt-24.10
-    PLATFORM_FILE: configs/rockchip.txt
-    CONFIG_FILE: configs/Packages.txt
+    PLATFORM_FILE: configs/My-rockchip.txt
+    CONFIG_FILE: configs/My-Packages.txt
     SETTINGS_SH: scripts/init-settings.sh
     PACKAGES_SH: scripts/packages.sh
     CLASH_CORE_SH: scripts/preset-clash-core-arm64-L.sh
@@ -297,7 +297,7 @@
           
           🎉 编译版本：${{ env.DISTRIB_REVISION }}
           
-          🖥 管理地址：192.168.1.1 
+          🖥 管理地址：192.168.8.1 
           
           🌴 名称：root
           
