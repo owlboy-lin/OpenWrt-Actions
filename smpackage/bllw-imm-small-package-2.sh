@@ -336,7 +336,7 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 
 
 # luci-app-turboacc
-CONFIG_PACKAGE_luci-app-turboacc=n
+CONFIG_PACKAGE_luci-app-turboacc=y
 
 
 # luci-app-uugamebooster
@@ -351,7 +351,10 @@ CONFIG_PACKAGE_luci-app-vssr=y
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
+CONFIG_PACKAGE_luci-app-lucky=y
+
 CONFIG_PACKAGE_luci-app-netdata=y
+
 CONFIG_DEFAULT_autosamba=n
 CONFIG_PACKAGE_autosamba=n
 CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n

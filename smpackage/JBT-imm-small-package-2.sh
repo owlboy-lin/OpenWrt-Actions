@@ -339,7 +339,7 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 
 
 # luci-app-turboacc
-CONFIG_PACKAGE_luci-app-turboacc=n
+CONFIG_PACKAGE_luci-app-turboacc=y
 
 
 # luci-app-uugamebooster
