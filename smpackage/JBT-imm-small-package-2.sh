@@ -161,8 +161,8 @@ mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
 
 
-#nikki
-# git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki
+# OpenWrt-nikki
+# git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
 
 #adguardhome
 git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
