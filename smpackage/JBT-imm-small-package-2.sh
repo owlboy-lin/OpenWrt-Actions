@@ -144,8 +144,8 @@ git clone --depth 1 https://github.com/sirpdboy/luci-app-eqosplus.git package/lu
 
 rm -rf feeds/packages/net/adguardhome
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-mv package/kz8-small/adguardhome package/adguardhome
-mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+# mv package/kz8-small/adguardhome package/adguardhome
+# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 mv package/kz8-small/luci-app-partexp package/luci-app-partexp
 mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
@@ -160,6 +160,12 @@ mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
 
+#adguardhome
+git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
+#lucky
+git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git package/luci-app-lucky
+
+# #smartdns
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
 # mv package/imm23luci/applications/luci-app-adbyby-plus package/luci-app-adbyby-plus
 # rm -rf package/imm23luci
