@@ -156,13 +156,13 @@ mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
 mv package/kz8-small/quickstart package/quickstart
-mv package/kz8-small/luci-app-nikki package/luci-app-nikki
-mv package/kz8-small/nikki package/nikki
+# mv package/kz8-small/luci-app-nikki package/luci-app-nikki
+# mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
 
 
 # OpenWrt-nikki
-# git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
+git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git package/OpenWrt-nikki
 
 #adguardhome
 git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
