@@ -142,7 +142,7 @@ git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git p
 git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 git clone --depth 1 https://github.com/sirpdboy/luci-app-eqosplus.git package/luci-app-eqosplus
 
-rm -rf feeds/packages/net/adguardhome
+# rm -rf feeds/packages/net/adguardhome
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 # mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
