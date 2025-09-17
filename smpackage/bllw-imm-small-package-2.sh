@@ -342,7 +342,7 @@ CONFIG_PACKAGE_luci-app-vssr=y
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
-
+CONFIG_PACKAGE_luci-app-netdata=y
 CONFIG_DEFAULT_autosamba=n
 CONFIG_PACKAGE_autosamba=n
 CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
