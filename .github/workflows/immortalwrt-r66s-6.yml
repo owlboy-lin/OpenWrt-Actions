@@ -307,7 +307,7 @@
       - name: 删除自动发布的旧固件
         uses: dev-drprasad/delete-older-releases@master
         #   continue-on-error: true
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: steps.tag.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
         with:
           keep_latest: 20        #保留多少个releases不删除
           delete_tags: true
@@ -316,7 +316,7 @@
 
       - name: 删除以前的工作流程
         uses: Mattraks/delete-workflow-runs@v2
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: steps.tag.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
