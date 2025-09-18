@@ -263,7 +263,7 @@
 
       - name: 生成发布标签
         id: tag
-        if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
+        if: env.UPLOAD_RELEASE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
         run: |
           echo "release_tag=$(date +"%Y.%m.%d")-Lean" >> $GITHUB_OUTPUT
           echo "release_date=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
@@ -307,7 +307,7 @@
       - name: 删除自动发布的旧固件
         uses: dev-drprasad/delete-older-releases@master
         #   continue-on-error: true
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
         with:
           keep_latest: 20        #保留多少个releases不删除
           delete_tags: true
@@ -316,7 +316,7 @@
 
       - name: 删除以前的工作流程
         uses: Mattraks/delete-workflow-runs@v2
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
