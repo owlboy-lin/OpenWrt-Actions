@@ -350,6 +350,8 @@ CONFIG_PACKAGE_luci-app-upnp=y
 # luci-app-vssr
 CONFIG_PACKAGE_luci-app-vssr=y
 
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=y
 
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
