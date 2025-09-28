@@ -188,7 +188,8 @@ CONFIG_PACKAGE_luci-app-uugamebooster=n
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
-
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=y
 
 
 " >> .config
