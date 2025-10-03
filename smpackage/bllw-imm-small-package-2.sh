@@ -170,6 +170,12 @@ git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardh
 #lucky
 git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git package/luci-app-lucky
 
+
+# luci-app-watchdog
+git clone https://github.com/sirpdboy/luci-app-watchdog package/watchdog
+
+
+
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
 # mv package/imm23luci/applications/luci-app-adbyby-plus package/luci-app-adbyby-plus
 # rm -rf package/imm23luci
@@ -347,6 +353,8 @@ CONFIG_PACKAGE_luci-app-upnp=y
 # luci-app-vssr
 CONFIG_PACKAGE_luci-app-vssr=y
 
+# luci-app-watchdog
+CONFIG_PACKAGE_luci-app-watchdog=y
 
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
