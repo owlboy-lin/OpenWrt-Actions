@@ -106,7 +106,8 @@ jobs:
           # sudo timedatectl set-timezone "$TZ"
           # sudo mkdir -p /workdir
           # sudo chown $USER:$GROUPS /workdir  
-          
+
+        
           chmod +x $FREE_DISK_SH && $FREE_DISK_SH
           sudo -E apt-get -qq update -y
           sudo -E apt-get -qq full-upgrade -y
@@ -115,7 +116,6 @@ jobs:
           sudo timedatectl set-timezone "$TZ"
           docker image prune -a -f
           docker container prune -f
-          sudo timedatectl set-timezone "$TZ"
           sudo mkdir -p /workdir
           sudo chown $USER:$GROUPS /workdir
 
