@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: JBT-immortalwrt
+name: JBT-immortalwrt-24.10
 
 on:
   schedule:
@@ -60,7 +60,7 @@ jobs:
   build_openwrt:
 
 
-    name: JBT-immortalwrt
+    name: JBT-immortalwrt-24.10
     
     runs-on: Ubuntu-24.04
     
