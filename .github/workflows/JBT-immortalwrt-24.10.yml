@@ -69,7 +69,7 @@ jobs:
 
       - name: 初始化环境
         env:
-            DEBIAN_FRONTEND: noninteractive
+          DEBIAN_FRONTEND: noninteractive
         run: |
           chmod +x $FREE_DISK_SH && $FREE_DISK_SH
           chmod +x $ENV_SH && $ENV_SH
