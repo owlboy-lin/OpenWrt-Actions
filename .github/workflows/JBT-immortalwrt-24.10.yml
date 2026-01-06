@@ -39,9 +39,8 @@ env:
   ENV_SH: scripts/environment.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
-  PLATFORM_FILE: configs/My-rockchip.txt
-  CONFIG_FILE: configs/Packages-x86.txt
   Firmware_Name: JBT-immortalwrt
+  CONFIG_FILE: configs/Packages-x86.txt
   SETTINGS_SH: scripts/init-settings.sh
   PACKAGES_SH: scripts/packages.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
@@ -72,16 +71,14 @@ jobs:
         env:
             DEBIAN_FRONTEND: noninteractive
         run: |
-            chmod +x $FREE_DISK_SH && $FREE_DISK_SH
-            sudo -E apt-get -qq update -y
-            sudo -E apt-get -qq full-upgrade -y
-            chmod +x $ENV_SH && $ENV_SH
-            sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-            sudo timedatectl set-timezone "$TZ"
-            docker image prune -a -f
-            docker container prune -f
-            sudo mkdir -p /workdir
-            sudo chown $USER:$GROUPS /workdir
+          chmod +x $FREE_DISK_SH && $FREE_DISK_SH
+          chmod +x $ENV_SH && $ENV_SH
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo timedatectl set-timezone "$TZ"
+          docker image prune -a -f
+          docker container prune -f
+          sudo mkdir -p /workdir
+          sudo chown $USER:$GROUPS /workdir
 
       - name: 检查空间使用情况1
         if: (!cancelled())
