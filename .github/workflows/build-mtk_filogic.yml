@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: master-rockchip
+name: build-mtkfilogic
 
 permissions: write-all
 #开启写权限，防止无法上传到release
@@ -16,18 +16,18 @@ permissions: write-all
 on:
   repository_dispatch:
   workflow_dispatch:
-#  schedule:
-  # - cron: 0 22 * * 2
-   #   分,时,日,月,星期。每周 三 22时执行一次 (UTC时间)
+  schedule:
+   - cron: 0 20 * * 3
+        # 分,时,日,月,周。每周 四 20时执行一次 (UTC时间)
   
 env:
   FREE_DISK_SH: scripts/free_disk_space.sh
   ENV_SH: scripts/environment.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: master
+  REPO_BRANCH: openwrt-24.10
   # 修改 REPO_BRANCH 来达到更改编译版本
-  PLATFORM_FILE: configs/rockchip.txt
-  CONFIG_FILE: configs/Packages.txt
+  PLATFORM_FILE: configs/filogic.txt
+  CONFIG_FILE: configs/Packages-L.txt
   SETTINGS_SH: scripts/init-settings.sh
   PACKAGES_SH: scripts/packages.sh
   CLASH_CORE_SH: scripts/preset-clash-core-arm64-L.sh
@@ -67,15 +67,15 @@ jobs:
         git clone $REPO_URL --depth 1 -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: 设置 VERSION 环境变量
-      run: echo "VERSION=${REPO_BRANCH}" >> $GITHUB_ENV
+    # - name: 设置 VERSION 环境变量
+    #   run: echo "VERSION=${REPO_BRANCH#*-}" >> $GITHUB_ENV
 
-    - name: 开启缓存
-      uses: klever1988/cachewrtbuild@main
-      with:
-        ccache: 'true'
-        mixkey: '${{ env.VERSION }}-rockchip'
-        prefix: ${{ github.workspace }}/openwrt
+    # - name: 开启缓存
+    #   uses: klever1988/cachewrtbuild@main
+    #   with:
+    #     ccache: 'true'
+    #     mixkey: '${{ env.VERSION }}-filogic'
+    #     prefix: ${{ github.workspace }}/openwrt
 
     - name: 安装 feeds
       run: |
@@ -124,7 +124,6 @@ jobs:
       run: |
         cd openwrt
         rm -rf dl/*
-        rm -rf build_dir/host/*
         rm -rf build_dir/toolchain-*
 
     - name: 空间使用情况3_2
@@ -198,7 +197,6 @@ jobs:
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        rm -rf *.bin
         rm -rf *.buildinfo 
         rm -rf *.json 
         rm -rf *.manifest 
@@ -217,9 +215,9 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        VERSION1="${REPO_BRANCH}"
-        echo -e "🎉 Rockchip平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
-        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_rockchip")" >> $GITHUB_OUTPUT
+        VERSION1="${REPO_BRANCH#*-}"
+        echo -e "🎉 MTK filogic平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
+        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_filogic")" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: 上传固件到发布
