@@ -40,7 +40,7 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: configs/Packages-x86.txt
+  CONFIG_FILE: config/immortalwrt-openwrt-24.10.info
   Firmware_Name: JBT-immortalwrt
   DIY_P1_SH: smpackage/Lean-1.sh
   DIY_P2_SH: smpackage/JBT-imm-small-package-2.sh
@@ -152,12 +152,10 @@ jobs:
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P1_SH
 
-      - name: 更新源 #Update feeds
-        run: cd openwrt && ./scripts/feeds update -a
-          
-      - name: 安装源 #Install feeds
+      - name: 安装 feeds
         run: |
           cd openwrt
+          ./scripts/feeds update -a
           ./scripts/feeds install -a
       
 
