@@ -132,7 +132,7 @@ rm -rf ./feeds/luci/applications/luci-app-mosdns
 git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwpage
 git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 # #mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 
 
 # rm -rf feeds/packages/lang/golang
