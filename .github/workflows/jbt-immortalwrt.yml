@@ -40,7 +40,7 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/immortalwrt-openwrt-24.10.info
+  CONFIG_FILE: config/immortalwrt-24.10.info
   Firmware_Name: JBT-immortalwrt
   DIY_P1_SH: smpackage/Lean-1.sh
   DIY_P2_SH: smpackage/JBT-imm-small-package-2.sh
