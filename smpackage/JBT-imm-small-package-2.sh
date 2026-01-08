@@ -128,6 +128,9 @@ git clone --depth=1 -b main https://github.com/linkease/istore.git package/istor
 rm -rf feeds/packages/lang/golang
 rm -rf ./feeds/packages/net/{geoview,shadowsocks-libev,chinadns-ng,mosdns}
 rm -rf ./feeds/luci/applications/luci-app-mosdns
+#克隆依赖插件
+git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwpage
+git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 # #mosdns
 git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
