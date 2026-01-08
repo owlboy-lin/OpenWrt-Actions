@@ -133,7 +133,7 @@ git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwp
 git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 
 # #mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git package/mosdns
 
 # rm -rf feeds/packages/lang/golang
 # git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
