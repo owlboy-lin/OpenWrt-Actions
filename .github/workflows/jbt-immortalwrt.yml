@@ -39,9 +39,8 @@ env:
   ENV_SH: scripts/environment.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
-  PLATFORM_FILE: configs/My-rockchip.txt
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/immortalwrt-openwrt-24.10.info
+  CONFIG_FILE: configs/Packages-x86.txt
   Firmware_Name: JBT-immortalwrt
   DIY_P1_SH: smpackage/Lean-1.sh
   DIY_P2_SH: smpackage/JBT-imm-small-package-2.sh
