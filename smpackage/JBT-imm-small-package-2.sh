@@ -131,9 +131,9 @@ rm -rf ./feeds/luci/applications/luci-app-mosdns
 #克隆依赖插件
 git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwpage
 git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
-# #mosdns
-git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 
+# #mosdns
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # rm -rf feeds/packages/lang/golang
 # git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
