@@ -125,22 +125,24 @@ git clone --depth=1 -b main https://github.com/linkease/istore.git package/istor
 
 #删除feeds中的插件
 # rm -rf ./feeds/packages/net/v2ray-geodata
-rm -rf feeds/packages/lang/golang
-rm -rf ./feeds/packages/net/{geoview,shadowsocks-libev,chinadns-ng,mosdns}
-rm -rf ./feeds/luci/applications/luci-app-mosdns
+# rm -rf feeds/packages/lang/golang
+# rm -rf ./feeds/packages/net/{geoview,shadowsocks-libev,chinadns-ng,mosdns}
+# rm -rf ./feeds/luci/applications/luci-app-mosdns
 #克隆依赖插件
 git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwpage
-git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
-
-# #mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git package/mosdns
-
-# rm -rf feeds/packages/lang/golang
 # git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
-# find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
-# find ./ | grep Makefile | grep mosdns | xargs rm -f
-# git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-# git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+
+# # #mosdns
+# git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git package/mosdns
+
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
+
+find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 git clone --depth 1 https://github.com/fw876/helloworld.git package/helloworld
 # git clone --depth 1 https://github.com/vernesong/OpenClash.git package/OpenClash
