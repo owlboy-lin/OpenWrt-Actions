@@ -103,15 +103,15 @@
 # sed -i 's#mirrors.vsean.net/openwrt#mirrors.pku.edu.cn/immortalwrt#g' package/emortal/default-settings/files/99-default-settings-chinese
 # mv $GITHUB_WORKSPACE/patch/banner $OPENWRT_PATH/package/base-files/files/etc/banner
 # mv $GITHUB_WORKSPACE/patch/immortalwrt-24.10/199-diy.sh package/base-files/files/etc/uci-defaults/199-diy.sh
-git clone --depth 1 -b core https://github.com/vernesong/OpenClash.git  package/openclash-core
-mv package/openclash-core/master/meta/clash-linux-amd64.tar.gz package/base-files/files/etc/clash-linux-amd64.tar.gz
-rm -rf package/openclash-core
+# git clone --depth 1 -b core https://github.com/vernesong/OpenClash.git  package/openclash-core
+# mv package/openclash-core/master/meta/clash-linux-amd64.tar.gz package/base-files/files/etc/clash-linux-amd64.tar.gz
+# rm -rf package/openclash-core
 
-#完全删除luci版本
-sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-#添加编译日期
-sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/usr/lib/os-release
-sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/etc/openwrt_release
+# #完全删除luci版本
+# sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+# #添加编译日期
+# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/usr/lib/os-release
+# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/etc/openwrt_release
 
 #下载5g模块
 # git clone --depth 1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
@@ -216,18 +216,18 @@ sed -i "s#192.168.1.1#192.168.24.8#g" $NET
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # ========================性能跑分========================
-echo "rm -f /etc/uci-defaults/xxx-coremark" >> "$ZZZ"
-cat >> $ZZZ <<EOF
-cat /dev/null > /etc/bench.log
-echo " (CpuMark : 191219.823122" >> /etc/bench.log
-echo " Scores)" >> /etc/bench.log
-EOF
+# echo "rm -f /etc/uci-defaults/xxx-coremark" >> "$ZZZ"
+# cat >> $ZZZ <<EOF
+# cat /dev/null > /etc/bench.log
+# echo " (CpuMark : 191219.823122" >> /etc/bench.log
+# echo " Scores)" >> /etc/bench.log
+# EOF
 
 # ================ 网络设置 =======================================
 
-# cat >> $ZZZ <<-EOF
+cat >> $ZZZ <<-EOF
 # # 设置网络-旁路由模式
-# uci set network.lan.gateway='192.168.24.248'                     # 旁路由设置 IPv4 网关
+uci set network.lan.gateway='192.168.24.248'                     # 旁路由设置 IPv4 网关
 # uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
 # uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
 # uci delete network.lan.type                                  # 旁路由桥接模式-禁用
@@ -260,7 +260,7 @@ EOF
 # uci commit network
 # uci commit firewall
 
-# EOF
+EOF
 
 
 
@@ -286,7 +286,7 @@ CONFIG_TARGET_KERNEL_PARTSIZE=1024
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
 
-# # Themes
+# themes
 CONFIG_PACKAGE_luci-theme-argon=y
 
 
