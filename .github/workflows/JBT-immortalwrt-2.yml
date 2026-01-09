@@ -26,9 +26,9 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   # 修改 REPO_BRANCH 来达到更改编译版本
-  CONFIG_FILE: configs/Packages-x86.txt
+  CONFIG_FILE: config/immortalwrt-openwrt-24.10.info
   SETTINGS_SH: scripts/init-settings.sh
-  PACKAGES_SH: scripts/packages.sh
+  PACKAGES_SH: smpackage/Jbt-packages.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
