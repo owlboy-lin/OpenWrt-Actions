@@ -11,6 +11,9 @@ git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwp
 git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 
 
+#添加TurboAcc
+curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
+
 #克隆的源码放在small文件夹
 mkdir package/small
 pushd package/small
