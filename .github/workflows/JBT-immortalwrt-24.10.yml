@@ -42,7 +42,7 @@ env:
   Firmware_Name: JBT-immortalwrt
   CONFIG_FILE: configs/Packages-x86.txt
   SETTINGS_SH: scripts/init-settings.sh
-  PACKAGES_SH: scripts/packages.sh
+  PACKAGES_SH: smpackage/Jbt-packages.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
