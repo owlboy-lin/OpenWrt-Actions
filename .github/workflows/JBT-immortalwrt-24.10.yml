@@ -41,7 +41,7 @@ env:
   REPO_BRANCH: openwrt-24.10
   Firmware_Name: JBT-immortalwrt-24.10
   CONFIG_FILE: config/immortalwrt-24.10.info
-  SETTINGS_SH: scripts/init-settings.sh
+  SETTINGS_SH: scripts/JBT-init-settings.sh
   PACKAGES_SH: smpackage/Jbt-packages.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   UPLOAD_BIN_DIR: false
