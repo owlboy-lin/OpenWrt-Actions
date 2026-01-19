@@ -53,7 +53,6 @@ mv package/kz8-small/netspeedtest package/netspeedtest
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
 mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
-mv package/kz8-small/luci-app-store package/luci-app-store
 mv package/kz8-small/quickstart package/quickstart
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
