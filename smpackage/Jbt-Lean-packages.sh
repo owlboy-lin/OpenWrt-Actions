@@ -39,6 +39,10 @@ git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 # git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
 # OpenWrt-nikki
 git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
+
+# sirpdboy luci-app-netspeedtest
+git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest package/netspeedtest
+
 # iStore
 git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
