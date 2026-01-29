@@ -61,6 +61,8 @@ mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
 mv package/kz8-small/quickstart package/quickstart
 mv package/kz8-small/luci-app-store package/luci-app-store
 mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
+mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
+mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
