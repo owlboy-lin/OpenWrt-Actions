@@ -40,7 +40,7 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   Firmware_Name: JBT-Lean
-  CONFIG_FILE: config/OpenWrt-CI.info
+  CONFIG_FILE: config/immortalwrt-24.10.info
   SETTINGS_SH: scripts/JBT-init-settings.sh
   PACKAGES_SH: smpackage/Jbt-Lean-packages.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
