@@ -57,9 +57,7 @@ env:
   TZ: Asia/Shanghai  
 
 jobs:
-
   build_openwrt:
-
 
     name: JBT-Lean-text
     
