@@ -43,10 +43,10 @@ env:
   Firmware_Name: JBT-Lean-text
   PLATFORM_FILE: configs/Target-X86.txt
   CONFIG_FILE: configs/Packages.txt
-  CONFIG_5G: configs/Packages-5G.txt
+  # CONFIG_5G: configs/Packages-5G.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
   PACKAGES_SH: smpackage/Jbt-Lean-packages.sh
-  INSTALL5G_SH: scripts/install-5G.sh
+  # INSTALL5G_SH: scripts/install-5G.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
