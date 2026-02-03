@@ -5,60 +5,29 @@
 #
 # Copyright (C) 2020 KFERMercer
 #
-
 name: OpenWrt-CI
 
 on:
   schedule:
     - cron: 0 20 * * *
-  release:
-    types: [published]
-    
-  repository_dispatch:
-  workflow_dispatch:
-    inputs:
-      ssh:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
-  watch:
-    types: [started]
-    
 
 permissions:
   contents: read
-
-
-    
-env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
-  FEEDS_CONF: feeds.conf.default
-#  CONFIG_FILE: .config
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
-  UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: true
-  UPLOAD_RELEASE: false
-  TZ: Asia/Shanghai 
 
 jobs:
 
   build_openwrt:
 
+    name: Build OpenWrt Firmware
 
-    name: Build OpenWrt firmware
+    runs-on: ubuntu-22.04
 
-    runs-on: Ubuntu-22.04
-    
     steps:
       - name: Space cleanup and Initialization environment
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          docker rmi `docker images -q`
+          docker image prune -f
           sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d /usr/local/lib/android
           sudo -E apt-mark hold grub-efi-amd64-signed
           sudo -E apt update
@@ -70,80 +39,37 @@ jobs:
           sudo -E apt clean
           sudo -E timedatectl set-timezone "Asia/Shanghai"
 
-      - name: 更新时区、编译时间
-        id: date
-        run: |
-          sudo timedatectl set-timezone "$TZ"
-          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-          echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
-          echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
-          echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
-          echo "编译开始时间..."
-          START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
-          echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
-
-
       - name: Checkout OpenWrt
         uses: actions/checkout@v4
-          
-      - name: 下载源代码
-        working-directory: /workdir
-        run: |
-          df -hT $PWD
-          git clone $REPO_URL -b $REPO_BRANCH openwrt
-          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-
-        
-      # - name: SSH connection to Actions
-        # uses: P3TERX/ssh2actions@v1.0.0
-        # if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-        # env:
-          # TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          # TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}    
-
-      - name: Cache
-        uses: stupidloud/cachewrtbuild@main
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
         with:
-          ccache: 'true'
-          mixkey: ${{ matrix.target }}
-          clean: ${{ contains(github.event.action, 'nocache') }}
-          prefix: ${{ github.workspace }}/openwrt
-
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: true
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
 
       - name: Update feeds
         run: |
-          cd openwrt
+          sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-      - name: SSH connection to Actions
-        uses: P3TERX/ssh2actions@v1.0.0
-        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-        env:
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} 
-
       - name: Generate configuration file
-        run: |
-          cd openwrt
-          make defconfig
+        run: make defconfig
 
-      - name: Make download
-        run: |
-          cd openwrt
-          make download -j16
-  
-      # - name: SSH connection to Actions
-      #   uses: P3TERX/ssh2actions@v1.0.0
-      #   if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      #   env:
-      #     TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      #     TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}   
+      - name: Download packages
+        run: make download -j16
 
       - name: Compile firmware
         run: |
-          cd openwrt
           make -j$(nproc) || make -j1 V=s
           echo "======================="
           echo "Space usage:"
@@ -153,49 +79,29 @@ jobs:
           du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
-          echo "status=success" >> $GITHUB_OUTPUT
-          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
-          [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
-          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: Prepare artifact
         run: |
-          cd openwrt
-          mkdir -p ./artifact/firmware
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
           rm -rf $(find ./bin/targets/ -type d -name "packages")
-          cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
-          cp -rf ./.config ./artifact/buildinfo/
-          cp -rf ./feeds.conf.default ./artifact/buildinfo/
 
-         
-      - name: Deliver buildinfo
+      - name: Upload buildinfo
         uses: actions/upload-artifact@v4
         with:
           name: OpenWrt_buildinfo
-          path: openwrt/artifact/buildinfo/
+          path: ./artifact/buildinfo/
 
-      - name: Deliver package
+      - name: Upload package
         uses: actions/upload-artifact@v4
         with:
           name: OpenWrt_package
-          path: openwrt/artifact/package/
+          path: ./artifact/package/
 
-      - name: Deliver firmware
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: OpenWrt_firmware
-          path: openwrt/bin/targets/
-  
-
-#      - name: Upload release asset
-#        if: github.event == 'release'
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.YOURTOKEN }}
-#          file: openwrt/artifact/firmware/*
-#          tag: ${{ github.ref }}
-#          file_glob: true
+          path: ./bin/targets/
