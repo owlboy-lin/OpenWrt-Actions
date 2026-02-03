@@ -1,34 +1,51 @@
+# （精简版配置文件，保证科学上网）后面的y是编译..... n就是不编译
 CONFIG_PACKAGE_default-settings-chn=y
 
-#kmod
-CONFIG_PACKAGE_kmod-usb-net-rndis=y
-
-#themes
+# 主题调整
 CONFIG_PACKAGE_luci-theme-argon=y
-
-#luci
-CONFIG_PACKAGE_luci=y
-CONFIG_PACKAGE_luci-app-adblock=y
-CONFIG_PACKAGE_luci-app-adguardhome=y
-# CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary is not set
-CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-argon-config=y
-CONFIG_PACKAGE_luci-app-ddns=y
-CONFIG_PACKAGE_luci-app-diskman=y
-CONFIG_PACKAGE_luci-app-hd-idle=y
+
+# 科学插件调整
 CONFIG_PACKAGE_luci-app-homeproxy=y
-CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-openclash=y
 CONFIG_PACKAGE_luci-app-passwall=y
-CONFIG_PACKAGE_luci-app-passwall2=y
+# 下面几个不编译（我只用homeproxy..有ipv6）
+CONFIG_PACKAGE_luci-app-passwall2=n
+CONFIG_PACKAGE_luci-app-nikki=n
+CONFIG_PACKAGE_luci-app-momo=n
+CONFIG_PACKAGE_luci-app-daed=n
+
+# luci插件调整
+CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-app-adguardhome=y
+# CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary is not set
+CONFIG_PACKAGE_luci-app-attendedsysupgrade=n
+CONFIG_PACKAGE_luci-app-autoreboot=y
+CONFIG_PACKAGE_luci-app-lucky=n
+CONFIG_PACKAGE_luci-app-mosdns=n
+CONFIG_PACKAGE_luci-app-ramfree=y
 CONFIG_PACKAGE_luci-app-samba4=y
 CONFIG_PACKAGE_luci-app-smartdns=y
+CONFIG_PACKAGE_luci-app-timecontrol=y
 CONFIG_PACKAGE_luci-app-ttyd=y
+CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-usb-printer=y
 CONFIG_PACKAGE_luci-app-vlmcsd=y
-CONFIG_PACKAGE_luci-app-wechatpush=y
+CONFIG_PACKAGE_luci-app-wechatpush=n
+CONFIG_PACKAGE_luci-app-wol=y
 
 
+# 流量统计(可能会有冲突)
+CONFIG_PACKAGE_luci-app-nlbwmon=y
+CONFIG_PACKAGE_luci-app-statistics=n
+CONFIG_PACKAGE_luci-app-vnstat2=n
+CONFIG_PACKAGE_luci-app-wrtbwmon=n
+
+# 内核模块调整
+CONFIG_PACKAGE_kmod-usb-net-rndis=y
+CONFIG_PACKAGE_kmod-usb-storage=y
+
+# passwall调整（sing-box一个顶？）
 # Configuration
 #
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Haproxy is not set
@@ -40,29 +57,14 @@ CONFIG_PACKAGE_luci-app-wechatpush=y
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Server is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Client is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Server is not set
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadow_TLS is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Simple_Obfs is not set
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_SingBox=y
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_Plus is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_tuic_client is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Geodata is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin is not set
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin is not set
-# end of Configuration
-
-# Configuration
-#
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Haproxy is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Hysteria is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_NaiveProxy is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Shadowsocks_Libev_Client is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Shadowsocks_Libev_Server is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Shadowsocks_Rust_Client is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Shadowsocks_Rust_Server is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_ShadowsocksR_Libev_Client is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_ShadowsocksR_Libev_Server is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Simple_Obfs is not set
-CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_SingBox=y
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_tuic_client is not set
-# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_V2ray_Plugin is not set
 # end of Configuration
 
