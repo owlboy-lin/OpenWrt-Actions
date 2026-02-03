@@ -1,3 +1,4 @@
+### Target-X86.txt ###
 #设备平台
 CONFIG_TARGET_x86=y
 CONFIG_TARGET_x86_64=y
@@ -29,6 +30,10 @@ CONFIG_PACKAGE_kmod-hwmon-w83627hf=y
 CONFIG_PACKAGE_kmod-w83627hf-wdt=y
 #插件调整
 CONFIG_PACKAGE_luci-app-dockerman=y
+
+### Target-X86.txt ###
+
+### Packages.txt###
 
 # 全量版插件（插件太多 容易编译失败，按需自己克隆修改）
 # 后面的y是编译..... n就是不编译
@@ -201,7 +206,9 @@ CONFIG_PACKAGE_usb-modeswitch=y
 CONFIG_PACKAGE_usbmuxd=y
 CONFIG_PACKAGE_usbutils=y
 
+### Packages.txt###
 
+## Packages-5G.txt ###
 
 CONFIG_PACKAGE_luci-app-qmodem=y
 CONFIG_PACKAGE_luci-app-qmodem_ADD_LUA_LUCI_HOMEPAGE=y
@@ -254,3 +261,6 @@ CONFIG_PACKAGE_minicom=y
 # 脚本拨号工具依赖
 CONFIG_PACKAGE_procps-ng=y
 CONFIG_PACKAGE_procps-ng-ps=y
+
+## Packages-5G.txt ###
+
