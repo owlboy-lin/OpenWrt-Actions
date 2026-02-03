@@ -63,7 +63,7 @@ jobs:
 
     name: JBT-Lean-text
     
-    runs-on: Ubuntu-24.04
+    runs-on: ubuntu-latest
     
     steps:
       - name: 检查
