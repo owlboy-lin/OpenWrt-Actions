@@ -182,9 +182,9 @@ jobs:
 
       - name: 安装 feeds
         run: |
-            cd openwrt
-            ./scripts/feeds update -a
-            ./scripts/feeds install -a
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
 
       - name: 导入补丁和配置 & 执行脚本
         run: |
