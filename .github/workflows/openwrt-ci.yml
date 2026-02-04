@@ -129,16 +129,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: OpenWrt_buildinfo
-          path: cd openwrt && ./artifact/buildinfo/
+          path: openwrt/artifact/buildinfo/
 
       - name: Upload package
         uses: actions/upload-artifact@v4
         with:
           name: OpenWrt_package
-          path: cd openwrt && ./artifact/package/
+          path: openwrt/artifact/package/
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: OpenWrt_firmware
-          path: cd openwrt && ./bin/targets/
+          path: openwrt/bin/targets/
