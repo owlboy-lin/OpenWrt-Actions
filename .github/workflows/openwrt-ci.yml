@@ -125,9 +125,7 @@ jobs:
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
           cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
-          cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
 
-          
       - name: Upload buildinfo
         uses: actions/upload-artifact@v4
         with:
