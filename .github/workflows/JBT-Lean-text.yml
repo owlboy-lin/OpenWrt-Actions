@@ -81,18 +81,6 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          # chmod +x $FREE_DISK_SH && $FREE_DISK_SH
-          # sudo docker image prune --all --force
-          # sudo -E apt-get -qq update -y
-          # sudo -E apt-get -qq full-upgrade -y
-          # chmod +x $ENV_SH && $ENV_SH
-          # sudo rm -rf /etc/apt/sources.list.d/*
-          # sudo rm -rf /var/lib/apt/lists/*
-          # # 设置时区
-          # sudo timedatectl set-timezone "$TZ"
-          # sudo mkdir -p /workdir
-          # sudo chown $USER:$GROUPS /workdir
-
           docker image prune -f
           sudo -E rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d /usr/local/lib/android
           sudo -E apt-mark hold grub-efi-amd64-signed
