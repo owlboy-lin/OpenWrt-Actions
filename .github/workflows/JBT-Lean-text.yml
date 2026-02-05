@@ -207,11 +207,13 @@ jobs:
 
 
       
-      - name: 下载固件包
+      - name: 下载文件
         run: |
-            cd openwrt
-            make defconfig
-            make download -j8
+          cd openwrt
+          make defconfig
+          make download -j8 V=10
+          find dl -size -1024c -exec ls -l {} \;
+          find dl -size -1024c -exec rm -f {} \;
 
 
       - name: 空间使用情况2
