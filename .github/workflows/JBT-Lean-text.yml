@@ -82,6 +82,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           chmod +x $FREE_DISK_SH && $FREE_DISK_SH
+          sudo docker image prune --all --force
           sudo -E apt-get -qq update -y
           sudo -E apt-get -qq full-upgrade -y
           chmod +x $ENV_SH && $ENV_SH
