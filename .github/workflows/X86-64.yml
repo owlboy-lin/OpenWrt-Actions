@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: master-X86
+name: X86-64
 
 permissions: write-all
 #开启写权限，防止无法上传到release
@@ -16,16 +16,16 @@ permissions: write-all
 on:
   repository_dispatch:
   workflow_dispatch:
-  # schedule:
-  #  - cron: 0 22 * * 4
-   #         分,时,日,月,周。每周五 22时执行一次 (UTC时间)
+  schedule:
+   - cron: 0 20 * * 4
+   #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
   
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   FREE_DISK_SH: scripts/free_disk_space.sh
   ENV_SH: scripts/environment.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: master
+  REPO_BRANCH: openwrt-24.10
   # 修改 REPO_BRANCH 来达到更改编译版本
   PLATFORM_FILE: configs/Target-X86.txt
   CONFIG_FILE: configs/Packages.txt
@@ -33,7 +33,6 @@ env:
   SETTINGS_SH: scripts/init-settings.sh
   PACKAGES_SH: scripts/packages.sh
   INSTALL5G_SH: scripts/install-5G.sh
-  HANDLES_SH: scripts/Handles.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
@@ -105,15 +104,52 @@ jobs:
         git clone $REPO_URL --depth 1 -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    # - name: 设置 VERSION 环境变量
-    #   run: echo "VERSION=${REPO_BRANCH}" >> $GITHUB_ENV
+        cd ./openwrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
-    # - name: 开启缓存
-    #   uses: klever1988/cachewrtbuild@main
-    #   with:
-    #     ccache: 'true'
-    #     mixkey: '${{ env.VERSION }}_X86-64'
-    #     prefix: ${{ github.workspace }}/openwrt
+        # GitHub Action 移除国内下载源
+        # PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
+        # if [ -f "$PROJECT_MIRRORS_FILE" ]; then
+        #   sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
+        # fi
+
+    - name: 检查缓存
+      id: check-cache
+      uses: actions/cache@main
+      with:
+        key: x86-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
+        restore-keys: x86-${{env.REPO_BRANCH}}
+        path: |
+          ./openwrt/.ccache
+          ./openwrt/staging_dir/host*
+          ./openwrt/staging_dir/tool*
+
+    - name: 开启CCACHE配置
+      run: |
+        echo 'CONFIG_DEVEL=y' >> openwrt/.config
+        echo 'CONFIG_CCACHE=y' >> openwrt/.config
+
+    - name: 更新缓存
+      run: |
+        if [ -d "./openwrt/staging_dir" ]; then
+          find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
+            find "$DIR" -type f -exec touch {} +
+          done
+
+          mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
+
+          echo "toolchain skiped done!"
+        else
+          echo "caches missed!"
+        fi
+
+        if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
+          CACHE_LIST=$(gh cache list --key "x86-$REPO_BRANCH" | cut -f 1)
+          for CACHE_KEY in $CACHE_LIST; do
+            gh cache delete $CACHE_KEY
+          done
+
+          echo "caches cleanup done!"
+        fi
 
     - name: 安装 feeds
       run: |
@@ -145,81 +181,13 @@ jobs:
       if: (!cancelled())
       run: df -hT
 
-    - name: 编译工具链
-      id: mtools
+    - name: 编译固件
+      id: compile
       run: |
         cd openwrt
         make defconfig
-        echo -e "$(($(nproc)+1)) thread compile"
-        make tools/compile -j$(($(nproc)+1)) || make tools/compile -j1 V=s
-        make toolchain/compile -j$(($(nproc)+1)) || make toolchain/compile -j1 V=s
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: 空间使用情况（工具链占用）
-      if: (!cancelled())
-      run: df -hT
-
-    - name: 清除工具链编译中间产物...
-      if: steps.mtools.outputs.status == 'success' && !cancelled()
-      run: |
-        cd openwrt
-        rm -rf dl/*
-        rm -rf build_dir/host/*
-        rm -rf build_dir/toolchain-*
-
-    - name: 空间使用情况（清理后占用）
-      if: (!cancelled())
-      run: df -hT
-
-    - name: 编译内核
-      id: mkernel
-      if: steps.mtools.outputs.status == 'success' && !cancelled()
-      run: |
-        cd openwrt
-        echo -e "$(($(nproc)+1)) thread compile"
-        make target/linux/compile -j$(($(nproc)+1)) || make target/linux/compile -j1 V=s
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: 空间使用情况（内核占用）
-      if: (!cancelled())
-      run: df -hT
-
-    - name: 编译插件
-      id: mpackage
-      if: steps.mkernel.outputs.status == 'success' && !cancelled()
-      run: |
-        cd openwrt
-        echo -e "$(($(nproc)+1)) thread compile"
-        make package/compile -j$(($(nproc)+1)) || make package/compile -j1 V=s
-        make package/install -j$(nproc) || make package/install -j1 V=s
-        make package/index
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: 空间使用情况（插件占用）
-      if: (!cancelled())
-      run: df -hT
-
-    - name: 清除插件编译文件
-      id: cpackage
-      if: steps.mpackage.outputs.status == 'success' && !cancelled()
-      run: |
-        cd openwrt
-        rm -rf build_dir/target-*/host
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: 空间使用情况（插件清理后占用）
-      if: (!cancelled())
-      run: df -hT
-
-    - name: 编译固件
-      id: compile
-      if: steps.cpackage.outputs.status == 'success' && !cancelled()
-      run: |
-        cd openwrt
         echo -e "$(nproc) thread compile"
-        make target/install -j$(nproc) || make target/install -j1 V=s
-        make json_overview_image_info
-        make checksum
+        make -j$(($(nproc)+1)) || make -j1 V=s
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: 空间使用情况（编译占用）
@@ -257,7 +225,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        VERSION1="${REPO_BRANCH}"
+        VERSION1="${REPO_BRANCH#*-}"
         echo -e "🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
         echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64")" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
