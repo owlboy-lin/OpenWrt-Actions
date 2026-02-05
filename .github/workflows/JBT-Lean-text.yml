@@ -92,6 +92,8 @@ jobs:
           sudo -E apt -y autoremove --purge
           sudo -E apt clean
           sudo -E timedatectl set-timezone "Asia/Shanghai"
+          sudo mkdir -p /workdir
+          sudo chown $USER:$GROUPS /workdir   
 
       - name: 检查空间使用情况
         if: (!cancelled())
@@ -214,7 +216,7 @@ jobs:
         run: |
             cd openwrt
             make defconfig
-            make download -j8 V=10
+            make download -j$(($(nproc)+1))
             find dl -size -1024c -exec ls -l {} \;
             find dl -size -1024c -exec rm -f {} \;        
 
