@@ -221,7 +221,7 @@ jobs:
         if: (!cancelled())
         run: df -hT
 
-      - name: 编译工具链
+      - name: 编译固件
         id: compile
         run: |
           cd openwrt
