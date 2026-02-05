@@ -119,9 +119,11 @@ CONFIG_TARGET_KERNEL_PARTSIZE=1024
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
 
-# # Themes
+# 主题调整
 CONFIG_PACKAGE_luci-theme-argon=y
-
+CONFIG_PACKAGE_luci-app-argon-config=y
+CONFIG_PACKAGE_luci-theme-aurora=y
+CONFIG_PACKAGE_luci-app-autoreboot=y
 
 # 自动重启
 CONFIG_PACKAGE_luci-app-autoreboot=y
@@ -133,6 +135,17 @@ CONFIG_PACKAGE_luci-app-filemanager=y
 
 # 关机
 CONFIG_PACKAGE_luci-app-poweroff=y
+
+
+# 科学插件调整
+CONFIG_PACKAGE_luci-app-homeproxy=y
+CONFIG_PACKAGE_luci-app-openclash=n
+CONFIG_PACKAGE_luci-app-passwall=y
+CONFIG_PACKAGE_luci-app-passwall2=y
+CONFIG_PACKAGE_luci-app-nikki=y
+CONFIG_PACKAGE_luci-app-momo=y
+CONFIG_PACKAGE_luci-app-daed=y
+CONFIG_PACKAGE_luci-app-ssr-plus=y
 
 
 # openclash
@@ -160,17 +173,6 @@ CONFIG_PACKAGE_luci-app-nikki=y
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 
-# passwall
-CONFIG_PACKAGE_luci-app-passwall=y
-
-
-CONFIG_PACKAGE_luci-app-passwall2=y
-
-
-# luci-app-ssr-plus
-CONFIG_PACKAGE_luci-app-ssr-plus=y
-
-
 # quickstart
 CONFIG_PACKAGE_luci-app-quickstart=n
 
@@ -194,6 +196,9 @@ CONFIG_PACKAGE_luci-app-upnp=y
 
 # luci-app-vssr
 CONFIG_PACKAGE_luci-app-vssr=y
+
+# luci-app-timecontrol
+CONFIG_PACKAGE_luci-app-timecontrol=y
 
 # luci-app-turboacc
 CONFIG_PACKAGE_luci-app-turboacc=y
