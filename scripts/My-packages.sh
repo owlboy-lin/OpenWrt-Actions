@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# 处理feeds中的rust版本
+rm -rf feeds/packages/lang/rust
+cp -r /workdir/patchs/rust feeds/packages/lang
+# chmod -R 755 feeds/packages/lang/rust
+
 #删除feeds中的插件
 rm -rf feeds/packages/lang/golang
 rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata}
@@ -33,19 +38,19 @@ git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 # git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
 
 # ssrp
-# git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 
 # VIKINGYFY/packages
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
 
 # passwall
-# git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git
+git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git
 
 # passwall2
 # git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
 
 # mosdns
-# git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-app-netspeedtest
 git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
