@@ -7,13 +7,18 @@ cp -r /workdir/patchs/rust feeds/packages/lang
 
 #删除feeds中的插件
 rm -rf feeds/packages/lang/golang
-rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata}
-rm -rf ./feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
-rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core}
 rm -rf ./feeds/luci/applications/{luci-app-mosdns,luci-app-passwall}
 
-#克隆依赖插件
+# 移除 openwrt feeds 自带的核心库
+rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages package/passwall-packages
+
+# 移除 openwrt feeds 过时的luci版本
+rm -rf feeds/luci/applications/luci-app-passwall
+git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git package/passwall-luci
+
+#克隆依赖插件
+# git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages package/passwall-packages
 git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
 
 
@@ -44,7 +49,7 @@ git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
 
 # passwall
-git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git package/passwall-luci
+# git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git package/passwall-luci
 
 # passwall2
 # git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
