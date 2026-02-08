@@ -96,13 +96,7 @@ jobs:
           sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-
-      - name: Generate configuration file
-        run: cd openwrt && make defconfig
-
-      - name: Download packages
-        run: cd openwrt && make download -j16
-
+          
       - name: patch2补丁和自定义设置
         run: |
           [ -e files ] && mv files openwrt/files
@@ -110,6 +104,12 @@ jobs:
           chmod +x $DIY_P2_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
+
+      - name: Generate configuration file
+        run: cd openwrt && make defconfig
+
+      - name: Download packages
+        run: cd openwrt && make download -j16
 
       - name: Compile firmware
         run: |
