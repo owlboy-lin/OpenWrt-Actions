@@ -1,20 +1,19 @@
 #!/bin/bash
 
-# 处理feeds中的rust版本
-rm -rf feeds/packages/lang/rust
-cp -r /workdir/patchs/rust feeds/packages/lang
-# chmod -R 755 feeds/packages/lang/rust
-
 #删除feeds中的插件
 rm -rf feeds/packages/lang/golang
+rm -rf feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata}
+rm -rf feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
+rm -rf feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core}
 rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall}
 
+
 # 移除 openwrt feeds 自带的核心库
-rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
+# rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages package/passwall-packages
 
 # 移除 openwrt feeds 过时的luci版本
-rm -rf feeds/luci/applications/luci-app-passwall
+# rm -rf feeds/luci/applications/luci-app-passwall
 git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git package/passwall-luci
 
 #克隆依赖插件
