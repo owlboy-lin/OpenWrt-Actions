@@ -69,7 +69,7 @@ git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
 git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
 
 # daed
-git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
+git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git package/dae
 
 #添加TurboAcc
 # curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
