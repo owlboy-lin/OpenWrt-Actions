@@ -19,7 +19,7 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 #克隆依赖插件
 # git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages package/passwall-packages
 git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
-
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 #克隆的源码放在small文件夹
 mkdir package/small
