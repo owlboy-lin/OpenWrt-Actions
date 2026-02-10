@@ -140,6 +140,12 @@ jobs:
 
           cd ./openwrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
+          # GitHub Action 移除国内下载源
+          PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
+          if [ -f "$PROJECT_MIRRORS_FILE" ]; then
+            sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
+          fi
+
       - name: 检查缓存
         id: check-cache
         uses: actions/cache@main
@@ -191,6 +197,7 @@ jobs:
           [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
           [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
           # [ -f $CONFIG_5G ] && cat $CONFIG_5G >> openwrt/.config
+          chmod +x $RUST_SH && $RUST_SH
           cd openwrt
           chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
           chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
@@ -225,7 +232,7 @@ jobs:
         run: |
           cd openwrt
           echo -e "$(nproc) thread compile"
-          make -j$(nproc) || make -j1 || make -j1 V=s
+          make -j$(($(nproc)+1)) || make -j1 V=s
           echo "======================="
           echo "Space usage:"
           echo "======================="
