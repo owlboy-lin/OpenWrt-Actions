@@ -36,7 +36,7 @@ env:
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   RUST_SH: scripts/rust.sh
   UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: false
+  UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
