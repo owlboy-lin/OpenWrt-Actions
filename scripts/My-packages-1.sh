@@ -44,10 +44,6 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 # passwall2
 # git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
 
-# mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
-git clone -b main --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-
 # luci-app-netspeedtest
 git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
 
@@ -88,6 +84,10 @@ mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
+
+# mosdns
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+git clone -b main --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 popd
 
