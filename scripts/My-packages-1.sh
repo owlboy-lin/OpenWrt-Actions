@@ -10,7 +10,7 @@ rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall}
 #克隆依赖插件
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
 git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
-
+git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 #克隆的源码放在small文件夹
 mkdir package/small
@@ -43,6 +43,9 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 
 # passwall2
 # git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
+
+# mosdns
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-app-netspeedtest
 git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
@@ -84,10 +87,6 @@ mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
-
-# mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
-git clone -b main --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 popd
 
