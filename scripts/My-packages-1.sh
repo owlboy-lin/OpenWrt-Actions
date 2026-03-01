@@ -2,15 +2,15 @@
 
 #删除feeds中的插件
 rm -rf feeds/packages/lang/golang
-rm -rf feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata}
+rm -rf feeds/packages/net/{geoview,chinadns-ng,hysteria}
 rm -rf feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
 rm -rf feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core}
-rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall}
+rm -rf feeds/luci/applications/{luci-app-passwall}
 
 #克隆依赖插件
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
 git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
-git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+# git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 #克隆的源码放在small文件夹
 mkdir package/small
@@ -45,7 +45,7 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 # git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
 
 # mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+# git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-app-netspeedtest
 git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
