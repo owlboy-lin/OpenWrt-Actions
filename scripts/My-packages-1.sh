@@ -12,8 +12,6 @@ git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-package
 git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
-# mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 #克隆的源码放在small文件夹
 mkdir package/small
 pushd package/small
@@ -46,7 +44,8 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 # passwall2
 git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
 
-
+# mosdns
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-app-netspeedtest
 git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
