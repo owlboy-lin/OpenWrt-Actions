@@ -48,10 +48,10 @@ git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
 
 # passwall
-# git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git package/passwall-luci
+git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git package/passwall-luci
 
 # passwall2
-# git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
+git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
 
 # mosdns
 git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
