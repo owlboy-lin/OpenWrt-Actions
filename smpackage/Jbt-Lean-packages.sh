@@ -18,7 +18,7 @@ rm -rf feeds/luci/applications/luci-app-passwall
 git clone https://github.com/Openwrt-Passwall/openwrt-passwall package/passwall-luci
 
 #克隆依赖插件
-git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
 git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 #克隆的源码放在small文件夹
