@@ -72,10 +72,10 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
 
 # iStore
-git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
+git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # kz8-small
-git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 # mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
