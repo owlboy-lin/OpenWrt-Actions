@@ -54,7 +54,6 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-app-netspeedtest
-# luci-app-netspeedtest
 #git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
 git clone -b master --depth 1  https://github.com/sirpdboy/netspeedtest.git
 
@@ -74,7 +73,12 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
 
 # iStore
-git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
+# git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
+git clone --depth=1 --single-branch https://github.com/linkease/istore.git
+
+# poweroff
+git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice package/luci-app-poweroffdevice
+# git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
 # kz8-small
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
@@ -88,13 +92,13 @@ git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-sma
 # mv package/kz8-small/netspeedtest package/netspeedtest
 # mv package/kz8-small/homebox package/homebox
 # mv package/kz8-small/speedtest-cli package/speedtest-cli
-mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
-mv package/kz8-small/quickstart package/quickstart
-mv package/kz8-small/luci-app-store package/luci-app-store
-mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
-mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
-mv package/kz8-small/taskd package/taskd
+# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
+# mv package/kz8-small/quickstart package/quickstart
+# mv package/kz8-small/luci-app-store package/luci-app-store
+# mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
+# mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
+# mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
