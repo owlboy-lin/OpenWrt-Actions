@@ -39,7 +39,7 @@ git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 # sed -n '33p' smartdns/package/openwrt/Makefile
 
 # ssrp
-# git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 
 # VIKINGYFY/packages
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
