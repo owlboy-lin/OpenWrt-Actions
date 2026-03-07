@@ -41,7 +41,6 @@ env:
   UPLOAD_COWTRANSFER: false
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: true
-  SSH_ACTIONS: true
   TZ: Asia/Shanghai 
 
 jobs:
@@ -141,10 +140,6 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}  
 
-    # 界面化配置,等待SSH连接 
-      - name: SSH connection to Actions
-        uses: P3TERX/debugger-action@master
-        if: env.SSH_ACTIONS == 'true'        
 
 
       # - name: 执行远程SSH命令
