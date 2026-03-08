@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: BLLW-Lean-text
+name: BLLW-LEDE-text
 
 permissions: write-all
 #开启写权限，防止无法上传到release
@@ -31,7 +31,7 @@ env:
   ENV_SH: scripts/My-LEDE-environment.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  Firmware_Name: BLLW-Lean-text
+  Firmware_Name: BLLW-LEDE-text
   # 修改 REPO_BRANCH 来达到更改编译版本
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/My-Packages.txt
