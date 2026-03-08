@@ -8,6 +8,9 @@
 # Author: SuLingGG
 # Blog: https://mlapp.cn
 # 参考网址：https://github.com/zzcabc/OpenWrt_Action/blob/11208c3d5160128d22d14318772ec48f1918deb9/script/immortalwrt/diy2.sh
+# 插件网址：https://github.com/vernesong/OpenClash
+# 内核网址：https://github.com/MetaCubeX/mihomo
+# 规则网址：https://github.com/MetaCubeX/meta-rules-dat
 #=================================================
 
 
@@ -21,14 +24,19 @@ mkdir -p files/etc/openclash/core
 # openclash 的 TUN内核
 # CLASH_TUN_VERSION=$(curl -sL https://github.com/vernesong/OpenClash/raw/core/master/core_version | head -n 2 | tail -n 1)
 # CLASH_TUN_URL="https://github.com/vernesong/OpenClash/raw/core/master/premium/clash-linux-amd64-$CLASH_TUN_VERSION.gz"
+
 # openclash 的 Meta内核版本
 # CLASH_META_URL="https://github.com/vernesong/OpenClash/raw/core/master/meta/clash-linux-amd64.tar.gz"
+
+
 
 # d大 的 dev内核
 # CLASH_DEV_URL=$(curl -sL https://api.github.com/repos/Dreamacro/clash/releases/latest | grep /clash-linux-amd64 | awk -F '"' '{print $4}' | head -n 1)
 
 # d大 的 premium内核
 # CLASH_TUN_URL=$(curl -sL https://api.github.com/repos/Dreamacro/clash/releases/tags/premium | grep /clash-linux-amd64-2 | awk -F '"' '{print $4}' | head -n 1)
+
+
 
 # Meta内核版本
 CLASH_META_URL=$(curl -sL https://api.github.com/repos/MetaCubeX/Clash.Meta/releases/tags/Prerelease-Alpha | grep -o '"browser_download_url": *"[^"]*mihomo-linux-amd64-compatible-alpha-[^"]*\.gz"' | awk -F '"' '{print $4}' | head -n 1)
