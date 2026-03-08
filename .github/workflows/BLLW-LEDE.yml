@@ -68,13 +68,20 @@ jobs:
       - name: 检查
         uses: actions/checkout@main
 
+      - name: 检测 /dev/sda1 分区是否存在（Overlay部分）
+        id: overlay
+        run: |
+          if [ ! -b /dev/sda1 ]; then
+            echo "错误：/dev/sda1 分区不存在，无法继续执行 OverlayFS 相关操作，退出 Actions！"
+            exit 1  # 退出并标记 Actions 执行失败
+          fi
+            echo "成功检测到 /dev/sda1 分区，继续执行后续步骤。"
+
       - name: 初始化环境
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
           chmod +x $FREE_DISK_SH && $FREE_DISK_SH
-          sudo -E apt-get -qq update -y
-          sudo -E apt-get -qq full-upgrade -y
           chmod +x $ENV_SH && $ENV_SH
           sudo rm -rf /etc/apt/sources.list.d/*
           sudo rm -rf /var/lib/apt/lists/*
@@ -100,23 +107,45 @@ jobs:
           START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
           echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
-      - name: 下载源代码
+      - name: 创建 OverlayFS 目录结构（Overlay部分）
+        run: |
+          sudo mkdir -p /overlay/lower
+          sudo mkdir -p /mnt/overlay/upper
+          sudo mkdir -p /mnt/overlay/work
+          # 下面1行去除Overlay需要还原到 初始化环境中
+          sudo mkdir -p /workdir
+          sudo chmod 777 /overlay/lower
+          sudo chmod 777 /mnt/overlay/upper
+
+      - name: 挂载 OverlayFS 合并分区（Overlay部分）
+        run: |
+          sudo mount -t overlay overlay \
+          -o rw,lowerdir=/overlay/lower,upperdir=/mnt/overlay/upper,workdir=/mnt/overlay/work /workdir
+          mount | grep overlay
+
+      - name: 设置 /workdir 权限（Overlay部分）
+        run: |
+          # 下面1行去除Overlay需要还原到 初始化环境中
+          sudo chown $USER:$GROUPS /workdir
+
+      - name: 检查空间使用情况（OverlayFS是否生效）
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 克隆源码
         working-directory: /workdir
         run: |
           git clone $REPO_URL --depth 1 -b $REPO_BRANCH openwrt
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
+          cd ./openwrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
-      - name: 设置 VERSION 环境变量
-        run: echo "VERSION=${REPO_BRANCH#*-}" >> $GITHUB_ENV
+          # GitHub Action 移除国内下载源
+          PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
+          if [ -f "$PROJECT_MIRRORS_FILE" ]; then
+            sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
+          fi
 
-    #   - name: 缓存
-    #     uses: klever1988/cachewrtbuild@main
-    #     if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
-    #     with:
-    #       ccache: 'true'
-    #       mixkey: '${{ env.VERSION }}_${{ env.Firmware_Name }}'
-    #       prefix: ${{ github.workspace }}/openwrt
 
       - name: 检查缓存
         id: check-cache
@@ -157,12 +186,11 @@ jobs:
             echo "caches cleanup done!"
           fi
 
-
       - name: 安装 feeds
         run: |
-            cd openwrt
-            ./scripts/feeds update -a
-            ./scripts/feeds install -a
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
 
       - name: 导入补丁和配置 & 执行脚本
         run: |
