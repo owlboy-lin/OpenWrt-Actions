@@ -58,7 +58,7 @@ git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-app-netspeedtest
 #git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
-git clone -b master --depth 1  https://github.com/sirpdboy/netspeedtest.git
+git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 
 # openclash
 git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
@@ -76,7 +76,7 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
 
 # poweroff
-git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice package/luci-app-poweroffdevice
+git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
 # git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
 # kz8-small

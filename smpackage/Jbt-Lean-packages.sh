@@ -52,7 +52,7 @@ git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-app-netspeedtest
 #git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
-git clone -b master --depth 1  https://github.com/sirpdboy/netspeedtest.git
+git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 
 # openclash
 # git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
