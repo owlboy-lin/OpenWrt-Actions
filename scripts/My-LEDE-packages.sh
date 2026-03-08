@@ -101,7 +101,7 @@ git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-po
 # mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
-rm -rf package/kz8-small
+# rm -rf package/kz8-small
 
 popd
 
