@@ -79,30 +79,6 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git pac
 # git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice package/luci-app-poweroffdevice
 git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
-
-# kz8-small
-# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-# mv package/kz8-small/adguardhome package/adguardhome
-# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
-# mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
-# mv package/kz8-small/luci-app-partexp package/luci-app-partexp
-# mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
-# mv package/kz8-small/wrtbwmon package/wrtbwmon
-# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
-# mv package/kz8-small/netspeedtest package/netspeedtest
-# mv package/kz8-small/homebox package/homebox
-# mv package/kz8-small/speedtest-cli package/speedtest-cli
-# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
-# mv package/kz8-small/quickstart package/quickstart
-# mv package/kz8-small/luci-app-store package/luci-app-store
-# mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
-# mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
-# mv package/kz8-small/taskd package/taskd
-# mv package/kz8-small/luci-app-nikki package/luci-app-nikki
-# mv package/kz8-small/nikki package/nikki
-# rm -rf package/kz8-small
-
 popd
 
 echo "packages executed successfully!"
