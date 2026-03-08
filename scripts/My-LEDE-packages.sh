@@ -73,8 +73,8 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
 
 # iStore
-# git clone --depth=1 -b main https://github.com/linkease/istore.git 
-git clone --depth=1 --single-branch https://github.com/linkease/istore.git
+git clone --depth=1 -b main https://github.com/linkease/istore.git 
+# git clone --depth=1 --single-branch https://github.com/linkease/istore.git
 
 # poweroff
 git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice package/luci-app-poweroffdevice
