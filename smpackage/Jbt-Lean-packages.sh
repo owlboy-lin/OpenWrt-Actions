@@ -1,27 +1,19 @@
 #!/bin/bash
 
-#删除feeds中的插件
-rm -rf feeds/packages/lang/golang
-rm -rf feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata}
-rm -rf feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
-rm -rf feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core}
-rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall，luci-app-passwall2}
-find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
-find ./ | grep Makefile | grep mosdns | xargs rm -f
+# 删除feeds中的插件
+rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky}
+rm -rf ./feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
+rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smartdns}
 
-# 移除 openwrt feeds 自带的核心库
-rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
-git clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages package/passwall-packages
+rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
+rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns}
+rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
-# 移除 openwrt feeds 过时的luci版本
-rm -rf feeds/luci/applications/luci-app-passwall
-git clone https://github.com/Openwrt-Passwall/openwrt-passwall package/passwall-luci
+# 克隆依赖插件
+git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
+# git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
 
-#克隆依赖插件
-git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
-git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
-#克隆的源码放在small文件夹
 mkdir package/small
 pushd package/small
 
@@ -40,6 +32,8 @@ git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 # smartdns
 # git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
 # git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
+# sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
+# sed -n '33p' smartdns/package/openwrt/Makefile
 
 # ssrp
 git clone -b master --depth 1 https://github.com/fw876/helloworld.git
@@ -57,7 +51,8 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-app-netspeedtest
-git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
+#git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
+git clone -b master --depth 1  https://github.com/sirpdboy/netspeedtest.git
 
 # openclash
 # git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
@@ -71,14 +66,23 @@ git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
 # daed
 git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git package/dae
 
+#modem
+# git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
+
 #添加TurboAcc
 # curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 
 # iStore
-git clone --depth=1 -b main https://github.com/linkease/istore.git package/istore
+# git clone --depth=1 -b main https://github.com/linkease/istore.git 
+git clone --depth=1 --single-branch https://github.com/linkease/istore.git
+
+# poweroff
+git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice package/luci-app-poweroffdevice
+# git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
+
 
 # kz8-small
-git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 # mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
@@ -89,16 +93,16 @@ git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-sma
 # mv package/kz8-small/netspeedtest package/netspeedtest
 # mv package/kz8-small/homebox package/homebox
 # mv package/kz8-small/speedtest-cli package/speedtest-cli
-mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
-mv package/kz8-small/quickstart package/quickstart
-mv package/kz8-small/luci-app-store package/luci-app-store
-mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
-mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
-mv package/kz8-small/taskd package/taskd
+# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
+# mv package/kz8-small/quickstart package/quickstart
+# mv package/kz8-small/luci-app-store package/luci-app-store
+# mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
+# mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
+# mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
-rm -rf package/kz8-small
+# rm -rf package/kz8-small
 
 popd
 
