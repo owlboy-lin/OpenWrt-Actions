@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: BLLW-Lean
+name: BLLW-LEDE
 
 on:
   schedule:
@@ -60,9 +60,9 @@ jobs:
   build_openwrt:
 
 
-    name: BLLW-Lean
+    name: BLLW-LEDE
     
-    runs-on: Ubuntu-22.04
+    runs-on: Ubuntu-24.04
     
     steps:
       - name: 检查
