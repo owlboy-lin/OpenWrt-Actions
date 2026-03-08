@@ -73,12 +73,11 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git pac
 # curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 
 # iStore
-git clone --depth=1 -b main https://github.com/linkease/istore.git 
-# git clone --depth=1 --single-branch https://github.com/linkease/istore.git
+# git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # poweroff
-git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice package/luci-app-poweroffdevice
-# git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
+# git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice package/luci-app-poweroffdevice
+git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
 
 # kz8-small
