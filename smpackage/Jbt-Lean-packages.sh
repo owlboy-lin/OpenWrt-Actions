@@ -76,7 +76,7 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git pac
 # git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # poweroff
-# git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice package/luci-app-poweroffdevice
+# git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice 
 git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
 popd
