@@ -18,7 +18,7 @@ mkdir package/small
 pushd package/small
 
 # iStore
-git clone --depth=1 -b main https://github.com/linkease/istore.git 
+# git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # luci-theme-aurora
 git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
