@@ -43,7 +43,7 @@ env:
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/My-Packages.txt
   SETTINGS_SH: scripts/BLLW-init-settings.sh
-  PACKAGES_SH: smpackage/Jbt-Lean-packages.sh
+  PACKAGES_SH: smpackage/My-LEDE-packages.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
