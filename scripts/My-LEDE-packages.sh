@@ -17,6 +17,10 @@ git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-package
 mkdir package/small
 pushd package/small
 
+、
+# ssrp
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+
 # iStore
 git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
@@ -44,8 +48,6 @@ git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 # sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
 # sed -n '33p' smartdns/package/openwrt/Makefile
 
-# ssrp
-git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 
 # VIKINGYFY/packages
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
