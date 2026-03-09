@@ -18,7 +18,10 @@ mkdir package/small
 pushd package/small
 
 # iStore
-# git clone --depth=1 -b main https://github.com/linkease/istore.git 
+git clone --depth=1 -b main https://github.com/linkease/istore.git 
+
+# mosdns
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-theme-aurora
 git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
@@ -42,7 +45,7 @@ git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 # sed -n '33p' smartdns/package/openwrt/Makefile
 
 # ssrp
-git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+# git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 
 # VIKINGYFY/packages
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
@@ -53,8 +56,7 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 # passwall2
 git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
 
-# mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+
 
 # luci-app-netspeedtest
 #git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
