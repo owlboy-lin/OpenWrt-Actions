@@ -132,7 +132,7 @@ CONFIG_PACKAGE_luci-app-nikki=y
 CONFIG_PACKAGE_luci-app-momo=y
 CONFIG_PACKAGE_luci-app-daed=y
 CONFIG_PACKAGE_luci-app-ssr-plus=y
-
+CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_MosDNS=n
 
 # openclash
 CONFIG_PACKAGE_luci-app-openclash=y
