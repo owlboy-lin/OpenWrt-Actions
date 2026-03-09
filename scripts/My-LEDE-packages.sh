@@ -17,7 +17,6 @@ git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-package
 mkdir package/small
 pushd package/small
 
-、
 # ssrp
 git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 
@@ -80,7 +79,7 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
 
 # poweroff
-git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
+# git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
 # git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
 # kz8-small
