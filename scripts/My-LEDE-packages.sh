@@ -19,6 +19,8 @@ pushd package/small
 
 # ssrp
 git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+
 
 # iStore
 git clone --depth=1 -b main https://github.com/linkease/istore.git 
