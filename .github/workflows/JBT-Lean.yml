@@ -73,10 +73,10 @@ jobs:
         run: |
           chmod +x $FREE_DISK_SH && $FREE_DISK_SH
           chmod +x $ENV_SH && $ENV_SH
-          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo rm -rf /etc/apt/sources.list.d/*
+          sudo rm -rf /var/lib/apt/lists/*
+          # 设置时区
           sudo timedatectl set-timezone "$TZ"
-          docker image prune -a -f
-          docker container prune -f
           sudo mkdir -p /workdir
           sudo chown $USER:$GROUPS /workdir
 
