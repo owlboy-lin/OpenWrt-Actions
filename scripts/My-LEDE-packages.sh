@@ -78,8 +78,8 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
 
 # poweroff
-# git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
-git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
+git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
+# git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
 # kz8-small
 # git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
