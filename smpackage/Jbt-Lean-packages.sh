@@ -17,6 +17,10 @@ git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-package
 mkdir package/small
 pushd package/small
 
+# ssrp
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+
 # luci-theme-aurora
 git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
 
@@ -34,9 +38,6 @@ git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 # git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
 # sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
 # sed -n '33p' smartdns/package/openwrt/Makefile
-
-# ssrp
-git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 
 # VIKINGYFY/packages
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
@@ -64,8 +65,7 @@ git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
 git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
 
 # daed
-git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git package/dae
-
+git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git 
 #modem
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
 
@@ -73,11 +73,11 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git pac
 # curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 
 # iStore
-# git clone --depth=1 -b main https://github.com/linkease/istore.git 
+git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # poweroff
-git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice 
-# git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
+# git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice 
+git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
 popd
 
