@@ -5,7 +5,7 @@ MIT © P3TERX
 
 仅供学习、查阅资料使用。
 <br>
-**English** | [中文](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
+
 
 # Actions-OpenWrt
 
@@ -42,3 +42,5 @@ A template for building OpenWrt with GitHub Actions
 - [WYC-2020/Actions-OpenWrt](https://github.com/WYC-2020/Actions-OpenWrt)
 - [mingxiaoyu/R1-Plus-LTS](https://github.com/mingxiaoyu/R1-Plus-LTS)
 - [SuLingGG/OpenWrt-Rpi](https://github.com/SuLingGG/OpenWrt-Rpi)
+- [XiaoBinin/Actions-lede](https://github.com/XiaoBinin/Actions-lede)
+- [XiaoBinin/Actions-immortalwrt](https://github.com/XiaoBinin/Actions-immortalwrt)
