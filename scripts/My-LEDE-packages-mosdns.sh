@@ -23,7 +23,7 @@ find ./ | grep Makefile | grep mosdns | xargs rm -f
 
 
 # iStore
-git clone --depth=1 -b main https://github.com/linkease/istore.git 
+# git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # mosdns
 git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
