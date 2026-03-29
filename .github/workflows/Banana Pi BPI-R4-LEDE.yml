@@ -59,7 +59,7 @@ jobs:
 
     name: Banana Pi BPI-R4-LEDE
 
-    runs-on: Ubuntu-22.04
+    runs-on: Ubuntu-24.04
     
     steps:
 
