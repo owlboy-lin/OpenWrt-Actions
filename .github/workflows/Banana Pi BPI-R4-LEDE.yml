@@ -40,7 +40,7 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   # FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: bpi-r4/LEDE-Banana-Pi-BPI-R4.info
+  CONFIG_FILE: bpi-r4/LEDE-Banana-Pi-BPI-R4-1.info
   DIY_P1_SH: bpi-r4/Banana-Pi-BPI-R4-test-1.sh
   DIY_P2_SH: bpi-r4/diy-part2.sh
   Firmware_Name: LEDE-mt798x-Banana-Pi-BPI-R4
