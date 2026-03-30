@@ -39,7 +39,7 @@ env:
   ENV_SH: scripts/My-Lean-environment.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  FEEDS_CONF: feeds.conf.default
+  # FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: bpi-r4/LEDE-Banana-Pi-BPI-R4.info
   DIY_P1_SH: bpi-r4/Banana-Pi-BPI-R4-test-1.sh
   DIY_P2_SH: bpi-r4/diy-part2.sh
@@ -150,12 +150,12 @@ jobs:
           prefix: ${{ github.workspace }}/openwrt
 
 
-      - name: patch1补丁和自定义设置
-        run: |
-          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x $DIY_P1_SH
-          cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
+      # - name: patch1补丁和自定义设置
+      #   run: |
+      #     [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+      #     chmod +x $DIY_P1_SH
+      #     cd openwrt
+      #     $GITHUB_WORKSPACE/$DIY_P1_SH
 
       - name: 更新源 #Update feeds
         run: cd openwrt && ./scripts/feeds update -a
