@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: JBT-Lean
+name: JBT-Lean-mosdns
 
 on:
   schedule:
@@ -39,7 +39,7 @@ env:
   ENV_SH: scripts/My-Lean-environment.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  Firmware_Name: JBT-Lean-modns
+  Firmware_Name: JBT-Lean-mosdns
   CONFIG_FILE: config/OpenWrt-CI-text-1.info
   SETTINGS_SH: scripts/JBT-init-settings.sh
   PACKAGES_SH: smpackage/Jbt-Lean-packages-mosdns.sh
@@ -59,7 +59,7 @@ jobs:
   build_openwrt:
 
 
-    name: JBT-Lean-modns
+    name: JBT-Lean-mosdns
     
     runs-on: ubuntu-latest
     
