@@ -43,6 +43,7 @@ env:
   UPLOAD_BUILDINFO: true
   UPLOAD_PACKAGE: true
   UPLOAD_RELEASE: true
+  GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
   TZ: Asia/Shanghai
 
 jobs:
