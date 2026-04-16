@@ -278,6 +278,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
       with:
+        name: ${{ steps.tag.outputs.release_date }} ${{ env.Firmware_Name }} ${{ env.name }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
