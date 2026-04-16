@@ -33,7 +33,6 @@ on:
         type: boolean
       
 env:
-  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   FREE_DISK_SH: scripts/free_disk_space.sh
   ENV_SH: scripts/My-LEDE-environment.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
