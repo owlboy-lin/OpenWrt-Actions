@@ -39,7 +39,7 @@ env:
   ENV_SH: scripts/My-Lean-environment.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  Firmware_Name: BLLW-Lean
+  Firmware_Name: BLLW-LEDE
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/My-Packages.txt
   SETTINGS_SH: scripts/BLLW-init-settings.sh
