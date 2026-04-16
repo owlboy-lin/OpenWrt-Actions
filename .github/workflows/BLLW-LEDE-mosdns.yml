@@ -26,7 +26,6 @@ on:
     types: [started]
       
 env:
-  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   FREE_DISK_SH: scripts/free_disk_space.sh
   ENV_SH: scripts/My-LEDE-environment.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -278,6 +277,8 @@ jobs:
     - name: 上传固件到发布
       uses: softprops/action-gh-release@master
       if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
