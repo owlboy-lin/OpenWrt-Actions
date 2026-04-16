@@ -11,8 +11,6 @@
 name: JBT-LEDE-mosdns
 
 on:
-  repository_dispatch:
-  workflow_dispatch:
   schedule:
    - cron: 0 20 * * *
    #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
@@ -21,6 +19,20 @@ on:
   
   watch:
     types: [started]
+
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+        
+      CACHE_BUILD:
+        description: '缓存加速'
+        required: false
+        default: 'true'
+        type: boolean
       
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
