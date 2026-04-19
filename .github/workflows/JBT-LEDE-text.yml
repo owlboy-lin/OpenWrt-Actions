@@ -26,7 +26,6 @@ on:
     types: [started]
       
 env:
-  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   FREE_DISK_SH: scripts/free_disk_space.sh
   ENV_SH: scripts/My-LEDE-environment.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -34,7 +33,7 @@ env:
   Firmware_Name: JBT-Lean-text
   # 修改 REPO_BRANCH 来达到更改编译版本
   PLATFORM_FILE: configs/My-Target-X86.txt
-  CONFIG_FILE: configs/My-Packages.txt
+  CONFIG_FILE: configs/My-Packages-mosdns-1.txt
   CONFIG_5G: configs/Packages-5G.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
   PACKAGES_SH: scripts/My-LEDE-packages.sh
@@ -46,6 +45,7 @@ env:
   UPLOAD_BUILDINFO: true
   UPLOAD_PACKAGE: true
   UPLOAD_RELEASE: true
+  GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
   TZ: Asia/Shanghai
 
 jobs:
