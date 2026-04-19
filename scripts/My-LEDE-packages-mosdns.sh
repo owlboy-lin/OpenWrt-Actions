@@ -35,7 +35,8 @@ git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
 git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # adguardhome
-git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
+# git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
+git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
 
 # homeproxy
 # git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
