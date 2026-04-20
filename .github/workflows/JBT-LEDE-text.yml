@@ -44,7 +44,7 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
   UPLOAD_PACKAGE: true
-  UPLOAD_RELEASE: true
+  UPLOAD_RELEASE: false
   GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
   TZ: Asia/Shanghai
 
