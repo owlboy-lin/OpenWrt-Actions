@@ -267,7 +267,7 @@ jobs:
       run: |
         VERSION1="${REPO_BRANCH#*-}"
 
-        echo "
+        echo -e "
         ★ 源码 : ${{ env.REPO_URL }} 
         ★ 分支 : ${{ env.REPO_BRANCH }} 
         ★ 感谢源码作者无私分享！
