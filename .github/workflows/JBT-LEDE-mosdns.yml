@@ -288,7 +288,7 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: 删除运行记录
-      uses: Mattraks/delete-workflow-runs@master
+      uses: Mattraks/delete-workflow-runs@main
       if: steps.compile.outputs.status == 'success' && !cancelled()
       continue-on-error: true
       with:
