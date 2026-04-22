@@ -266,6 +266,13 @@ jobs:
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         VERSION1="${REPO_BRANCH#*-}"
+        
+        echo "
+        ★ 源码 : ${{ env.REPO_URL }} 
+        ★ 分支 : ${{ env.REPO_BRANCH }} 
+        ★ 感谢源码作者无私分享！
+
+        ⏰ 编译时间：${{ env.FILE_TIME1 }}
         echo -e "🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
         echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64")" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
