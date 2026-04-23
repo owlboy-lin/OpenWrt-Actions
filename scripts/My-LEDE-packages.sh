@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # 删除feeds中的插件
-rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky}
+rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky,adguardhome}
 rm -rf ./feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
 rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smartdns}
 
 rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
-rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns}
+rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns,luci-app-adguardhome}
 rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
 # 克隆依赖插件
@@ -84,9 +84,9 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
 # git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
-# kz8-small
-# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-# mv package/kz8-small/adguardhome package/adguardhome
+kz8-small
+git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 # mv package/kz8-small/luci-app-partexp package/luci-app-partexp
@@ -105,7 +105,7 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
-# rm -rf package/kz8-small
+rm -rf package/kz8-small
 
 popd
 
