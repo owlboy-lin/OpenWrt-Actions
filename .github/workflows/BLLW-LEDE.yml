@@ -295,25 +295,16 @@ jobs:
         id: tag
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
-          echo "release_tag=$(date +"%Y.%m.%d.%H.%M")-${{ env.Firmware_Name }}" >> $GITHUB_OUTPUT
-          echo "release_date=$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_OUTPUT
-          touch release.txt
-          echo "
+          VERSION1="${REPO_BRANCH#*-}"
+
+          echo -e "
           ★ 源码 : ${{ env.REPO_URL }} 
           ★ 分支 : ${{ env.REPO_BRANCH }} 
           ★ 感谢源码作者无私分享！
-          
+
           ⏰ 编译时间：${{ env.FILE_TIME1 }}
-          
-          🎈 内核版本：${{ env.KERNEL_PATCHVER }}
-          
-          🎉 编译版本：${{ env.DISTRIB_REVISION }}
-          
-          🖥 管理地址：192.168.8.1 
-          
-          🌴 名称：root
-          
-          🛠 密码：password" >> release.txt
+          🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
+          echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: 自动发布固件到 Releases
