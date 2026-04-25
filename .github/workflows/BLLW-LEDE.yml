@@ -245,7 +245,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: 上传完整固件目录
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@main
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled()
         with:
           name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
