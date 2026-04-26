@@ -9,8 +9,6 @@ rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-
 rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns,luci-app-adguardhome}
 rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
-./scripts/feeds install -a -p adguardhome
-
 # 克隆依赖插件
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
 # git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
@@ -37,8 +35,8 @@ git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
 git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # adguardhome
-git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
-# git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+# git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
+git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
 
 # homeproxy
 # git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
