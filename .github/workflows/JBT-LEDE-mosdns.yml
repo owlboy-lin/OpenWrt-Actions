@@ -8,7 +8,12 @@
 
 name: JBT-LEDE-mosdns
 
+permissions: write-all
+#开启写权限，防止无法上传到release
+
 on:
+  repository_dispatch:
+  workflow_dispatch:
   schedule:
    - cron: 0 20 * * *
    #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
@@ -17,20 +22,6 @@ on:
   
   watch:
     types: [started]
-
-  repository_dispatch:
-  workflow_dispatch:
-    inputs:
-      ssh:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
-        
-      CACHE_BUILD:
-        description: '缓存加速'
-        required: false
-        default: 'true'
-        type: boolean
       
 env:
   FREE_DISK_SH: scripts/free_disk_space.sh
@@ -51,7 +42,7 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
   UPLOAD_PACKAGE: true
-  UPLOAD_RELEASE: false
+  UPLOAD_RELEASE: true
   GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
   TZ: Asia/Shanghai
 
@@ -275,35 +266,41 @@ jobs:
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         VERSION1="${REPO_BRANCH#*-}"
-        echo -e "🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
-        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64")" >> $GITHUB_OUTPUT
+
+        echo -e "
+        ★ 源码 : ${{ env.REPO_URL }} 
+        ★ 分支 : ${{ env.REPO_BRANCH }} 
+        ★ 感谢源码作者无私分享！
+
+        ⏰ 编译时间：${{ env.FILE_TIME1 }}
+        🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
+        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: 自动发布固件到 Releases
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@master
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
       with:
-        name: ${{ steps.tag.outputs.release_date }} Lean-bcm27xx-bcm2711-rpi-4B ${{ env.name }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-    - name: 删除运行记录
-      uses: Mattraks/delete-workflow-runs@v2
-      if: steps.compile.outputs.status == 'success' && !cancelled()
-      continue-on-error: true
-      with:
-        retain_days: 3     #保留最后多少记录不删除
-        keep_minimum_runs: 0
+    # - name: 删除运行记录
+    #   uses: Mattraks/delete-workflow-runs@main
+    #   if: steps.compile.outputs.status == 'success' && !cancelled()
+    #   continue-on-error: true
+    #   with:
+    #     retain_days: 10     #保留最后多少记录不删除
+    #     keep_minimum_runs: 0
 
-    - name: 删除自动发布的旧固件
-      uses: dev-drprasad/delete-older-releases@v0.3.3
-      continue-on-error: true
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 20        #保留多少个releases不删除
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - name: 删除自动发布的旧固件
+    #   uses: dev-drprasad/delete-older-releases@v0.3.3
+    #   continue-on-error: true
+    #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #   with:
+    #     keep_latest: 20        #保留多少个releases不删除
+    #     delete_tags: true
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

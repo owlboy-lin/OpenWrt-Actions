@@ -31,7 +31,7 @@ env:
   ENV_SH: scripts/My-LEDE-environment.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  Firmware_Name: JBT-Lean
+  Firmware_Name: JBT-LEDE
   # 修改 REPO_BRANCH 来达到更改编译版本
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/My-Packages.txt
@@ -270,8 +270,15 @@ jobs:
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         VERSION1="${REPO_BRANCH#*-}"
-        echo -e "🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
-        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64")" >> $GITHUB_OUTPUT
+
+        echo -e "
+        ★ 源码 : ${{ env.REPO_URL }} 
+        ★ 分支 : ${{ env.REPO_BRANCH }} 
+        ★ 感谢源码作者无私分享！
+
+        ⏰ 编译时间：${{ env.FILE_TIME1 }}
+        🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
+        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: 上传固件到发布

@@ -17,13 +17,36 @@ git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-package
 mkdir package/small
 pushd package/small
 
+# kz8-small
+git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+mv package/kz8-small/adguardhome package/adguardhome
+# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+# mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
+# mv package/kz8-small/luci-app-partexp package/luci-app-partexp
+# mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
+# mv package/kz8-small/wrtbwmon package/wrtbwmon
+# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+# mv package/kz8-small/netspeedtest package/netspeedtest
+# mv package/kz8-small/homebox package/homebox
+# mv package/kz8-small/speedtest-cli package/speedtest-cli
+# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
+# mv package/kz8-small/quickstart package/quickstart
+# mv package/kz8-small/luci-app-store package/luci-app-store
+# mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
+# mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
+# mv package/kz8-small/taskd package/taskd
+# mv package/kz8-small/luci-app-nikki package/luci-app-nikki
+# mv package/kz8-small/nikki package/nikki
+rm -rf package/kz8-small
+
 # ssrp
 git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 find ./ | grep Makefile | grep mosdns | xargs rm -f
 
 
 # iStore
-git clone --depth=1 -b main https://github.com/linkease/istore.git 
+# git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # mosdns
 git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
@@ -36,12 +59,13 @@ git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # adguardhome
 git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
+# git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
 
 # homeproxy
-git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
+# git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
 
 # lucky
-git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
+# git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 
 # smartdns
 # git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
@@ -72,7 +96,7 @@ git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
 git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
 
 # OpenWrt-momo
-git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
+# git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
 
 # daed
 git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
@@ -84,28 +108,7 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
 # git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
-# kz8-small
-git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-mv package/kz8-small/adguardhome package/adguardhome
-# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
-# mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
-# mv package/kz8-small/luci-app-partexp package/luci-app-partexp
-# mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
-# mv package/kz8-small/wrtbwmon package/wrtbwmon
-# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
-# mv package/kz8-small/netspeedtest package/netspeedtest
-# mv package/kz8-small/homebox package/homebox
-# mv package/kz8-small/speedtest-cli package/speedtest-cli
-# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
-# mv package/kz8-small/quickstart package/quickstart
-# mv package/kz8-small/luci-app-store package/luci-app-store
-# mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
-# mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
-# mv package/kz8-small/taskd package/taskd
-# mv package/kz8-small/luci-app-nikki package/luci-app-nikki
-# mv package/kz8-small/nikki package/nikki
-rm -rf package/kz8-small
+
 
 popd
 
