@@ -18,8 +18,8 @@ mkdir package/small
 pushd package/small
 
 # kz8-small
-git clone -b main --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-mv package/kz8-small/adguardhome package/adguardhome
+# git clone -b main --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+# mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 # mv package/kz8-small/luci-app-partexp package/luci-app-partexp
@@ -58,8 +58,9 @@ git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
 git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # adguardhome
-git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
+# git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
 # git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 
 # homeproxy
 # git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
