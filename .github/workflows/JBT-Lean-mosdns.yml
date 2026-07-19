@@ -111,6 +111,45 @@ jobs:
             sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
           fi
 
+      - name: 检查缓存
+        id: check-cache
+        uses: actions/cache@main
+        with:
+          key: x86-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
+          restore-keys: x86-${{env.REPO_BRANCH}}
+          path: |
+            ./openwrt/.ccache
+            ./openwrt/staging_dir/host*
+            ./openwrt/staging_dir/tool*
+
+      - name: 开启CCACHE配置
+        run: |
+          echo 'CONFIG_DEVEL=y' >> openwrt/.config
+          echo 'CONFIG_CCACHE=y' >> openwrt/.config
+
+      - name: 更新缓存
+        run: |
+          if [ -d "./openwrt/staging_dir" ]; then
+            find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
+              find "$DIR" -type f -exec touch {} +
+            done
+
+            mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
+
+            echo "toolchain skiped done!"
+          else
+            echo "caches missed!"
+          fi
+
+          if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
+            CACHE_LIST=$(gh cache list --key "x86-$REPO_BRANCH" | cut -f 1)
+            for CACHE_KEY in $CACHE_LIST; do
+              gh cache delete $CACHE_KEY
+            done
+
+            echo "caches cleanup done!"
+          fi
+
 
 
       - name: 设置 VERSION 环境变量
