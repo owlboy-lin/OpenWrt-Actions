@@ -42,7 +42,7 @@ env:
   Firmware_Name: JBT-Lean-mosdns
   CONFIG_FILE: config/OpenWrt-CI-text-1.info
   SETTINGS_SH: scripts/JBT-init-settings.sh
-  PACKAGES_SH: smpackage/Jbt-Lean-packages-mosdns.sh
+  PACKAGES_SH: smpackage/My-LEDE-packages-mosdns.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
