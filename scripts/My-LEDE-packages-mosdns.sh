@@ -135,3 +135,132 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 popd
 
 echo "packages executed successfully!"
+
+echo "
+
+
+
+# 额外组件
+CONFIG_GRUB_IMAGES=y
+CONFIG_VMDK_IMAGES=y
+
+CONFIG_TARGET_ROOTFS_EXT4FS=y
+CONFIG_TARGET_EXT4_RESERVED_PCT=0
+CONFIG_TARGET_EXT4_BLOCKSIZE_4K=y
+# CONFIG_TARGET_EXT4_BLOCKSIZE_2K is not set
+# CONFIG_TARGET_EXT4_BLOCKSIZE_1K is not set
+CONFIG_TARGET_EXT4_BLOCKSIZE=4096
+# CONFIG_TARGET_EXT4_JOURNAL is not set
+
+
+# 固件大小
+CONFIG_TARGET_KERNEL_PARTSIZE=1024
+CONFIG_TARGET_ROOTFS_PARTSIZE=1024
+
+
+# 主题调整
+CONFIG_PACKAGE_luci-theme-argon=y
+CONFIG_PACKAGE_luci-app-argon-config=y
+CONFIG_PACKAGE_luci-theme-aurora=y
+CONFIG_PACKAGE_luci-app-autoreboot=y
+
+# 自动重启
+CONFIG_PACKAGE_luci-app-autoreboot=y
+
+
+# luci-app-filemanager
+CONFIG_PACKAGE_luci-app-filemanager=y
+
+
+# 关机
+CONFIG_PACKAGE_luci-app-poweroff=y
+
+
+# 科学插件调整
+CONFIG_PACKAGE_luci-app-homeproxy=y
+CONFIG_PACKAGE_luci-app-openclash=n
+CONFIG_PACKAGE_luci-app-passwall=y
+CONFIG_PACKAGE_luci-app-passwall2=y
+CONFIG_PACKAGE_luci-app-nikki=y
+CONFIG_PACKAGE_luci-app-momo=y
+CONFIG_PACKAGE_luci-app-daed=y
+CONFIG_PACKAGE_luci-app-ssr-plus=y
+CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_MosDNS=n
+
+# openclash
+CONFIG_PACKAGE_luci-app-openclash=y
+
+
+# adguardhome
+CONFIG_PACKAGE_luci-app-adguardhome=y
+CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y
+
+
+# mosdns
+CONFIG_PACKAGE_luci-app-mosdns=y
+
+
+# netspeedtest chmod +x /etc/init.d/netspeedtest
+CONFIG_PACKAGE_luci-app-netspeedtest=y
+
+
+# nikki
+CONFIG_PACKAGE_luci-app-nikki=y
+
+
+# 宽带监控
+CONFIG_PACKAGE_luci-app-nlbwmon=y
+
+
+# quickstart
+CONFIG_PACKAGE_luci-app-quickstart=n
+
+
+# store
+CONFIG_PACKAGE_luci-app-store=y
+
+
+# luci-app-ttyd=y
+CONFIG_PACKAGE_luci-app-ttyd=y
+
+
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=y
+
+
+# luci-app-uugamebooster
+CONFIG_PACKAGE_luci-app-uugamebooster=n
+
+CONFIG_PACKAGE_luci-app-upnp=y
+
+# luci-app-vssr
+CONFIG_PACKAGE_luci-app-vssr=y
+
+# luci-app-timecontrol
+CONFIG_PACKAGE_luci-app-timecontrol=y
+
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=y
+
+# luci-app-webadmin=y
+CONFIG_PACKAGE_luci-app-webadmin=y
+
+CONFIG_PACKAGE_luci-app-lucky=y
+
+# CONFIG_PACKAGE_luci-app-netdata=y
+# CONFIG_DEFAULT_autosamba=n
+# CONFIG_PACKAGE_autosamba=n
+# CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
+# CONFIG_PACKAGE_luci-app-ksmbd=n
+# CONFIG_PACKAGE_luci-app-accesscontrol=n
+# CONFIG_PACKAGE_luci-app-arpbind=n
+# CONFIG_PACKAGE_luci-app-ddns=n
+# CONFIG_PACKAGE_luci-app-samba4=n
+# CONFIG_PACKAGE_luci-app-vsftpd=n
+# CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_luci-app-vlmcsd=n
+
+
+
+
+" >> .config
