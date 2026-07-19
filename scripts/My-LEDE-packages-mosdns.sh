@@ -91,10 +91,10 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 
 # openclash
-git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
+# git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
 
 # OpenWrt-nikki
-git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
+# git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
 
 # OpenWrt-momo
 # git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
