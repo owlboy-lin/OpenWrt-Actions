@@ -173,6 +173,7 @@ jobs:
         run: |
             [ -d files ] && mv files openwrt/files || echo "files not found"
             [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
+            chmod +x $VLMCSD_SH && $VLMCSD_SH
             cd openwrt
             chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
             chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH

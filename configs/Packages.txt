@@ -1,10 +1,8 @@
-# 全量版插件（插件太多 容易编译失败，按需自己克隆修改）
+#全量版插件（插件太多 容易编译失败，按需自己克隆修改）
 # 后面的y是编译..... n就是不编译
-CONFIG_PACKAGE_default-settings-chn=y
 
 # 主题调整
-CONFIG_PACKAGE_luci-theme-argon=y
-CONFIG_PACKAGE_luci-app-argon-config=y
+CONFIG_PACKAGE_luci-theme-design=y
 
 # 科学插件调整
 CONFIG_PACKAGE_luci-app-homeproxy=y
@@ -16,14 +14,12 @@ CONFIG_PACKAGE_luci-app-momo=y
 CONFIG_PACKAGE_luci-app-daed=y
 
 # luci插件调整
-CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-adblock=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
-CONFIG_PACKAGE_luci-app-adguardhome_INCLUDE_binary=y
 CONFIG_PACKAGE_luci-app-alist=n
 CONFIG_PACKAGE_luci-app-aliyundrive-fuse=n
 CONFIG_PACKAGE_luci-app-aliyundrive-webdav=y
-CONFIG_PACKAGE_luci-app-attendedsysupgrade=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-ddns-go=y
@@ -32,7 +28,7 @@ CONFIG_PACKAGE_luci-app-ddnsto=n
 CONFIG_PACKAGE_luci-app-diskman=y
 CONFIG_PACKAGE_luci-app-diskman_INCLUDE_btrfs_progs=y
 CONFIG_PACKAGE_luci-app-diskman_INCLUDE_lsblk=y
-CONFIG_PACKAGE_luci-app-filemanager=n
+CONFIG_PACKAGE_luci-app-filetransfer=y
 CONFIG_PACKAGE_luci-app-frpc=n
 CONFIG_PACKAGE_luci-app-frps=y
 CONFIG_PACKAGE_luci-app-hd-idle=y
@@ -54,7 +50,6 @@ CONFIG_PACKAGE_luci-app-syncdial=y
 CONFIG_PACKAGE_luci-app-squid=n
 CONFIG_PACKAGE_luci-app-socat=n
 CONFIG_PACKAGE_luci-app-taskplan=n
-CONFIG_PACKAGE_luci-app-tencentddns=n
 CONFIG_PACKAGE_luci-app-timecontrol=y
 CONFIG_PACKAGE_luci-app-tinyfilemanager=n
 CONFIG_PACKAGE_luci-app-ttyd=y
@@ -66,8 +61,8 @@ CONFIG_PACKAGE_luci-app-vlmcsd=y
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wechatpush=n
 CONFIG_PACKAGE_luci-app-wireguard=y
-CONFIG_PACKAGE_luci-app-wol=y
-CONFIG_PACKAGE_luci-app-zerotier=y
+CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_luci-app-wolplus=y
 
 
 # 流量统计(可能会有冲突)
@@ -77,6 +72,7 @@ CONFIG_PACKAGE_luci-app-vnstat2=y
 CONFIG_PACKAGE_luci-app-wrtbwmon=y
 
 # 内核模块调整
+
 CONFIG_PACKAGE_kmod-usb3=y
 CONFIG_PACKAGE_kmod-usb-audio=y
 CONFIG_PACKAGE_kmod-usb-core=y
@@ -107,6 +103,7 @@ CONFIG_PACKAGE_kmod-usb-xhci=y
 # 组件调整
 CONFIG_PACKAGE_autocore=y
 CONFIG_PACKAGE_automount=y
+CONFIG_PACKAGE_autosamba=n
 CONFIG_PACKAGE_coremark=y
 CONFIG_PACKAGE_htop=y
 CONFIG_PACKAGE_iperf3=y
