@@ -41,8 +41,8 @@ pushd package/small
 rm -rf package/kz8-small
 
 # ssrp
-git clone -b master --depth 1 https://github.com/fw876/helloworld.git
-find ./ | grep Makefile | grep mosdns | xargs rm -f
+# git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+# find ./ | grep Makefile | grep mosdns | xargs rm -f
 
 
 # iStore
