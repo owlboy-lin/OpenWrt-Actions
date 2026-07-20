@@ -39,7 +39,7 @@ env:
   PACKAGES_SH: scripts/My-LEDE-packages-mosdns.sh
   INSTALL5G_SH: scripts/install-5G.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
-  RUST_SH: scripts/rust.sh
+  VLMCSD_SH: scripts/vlmcsd.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
