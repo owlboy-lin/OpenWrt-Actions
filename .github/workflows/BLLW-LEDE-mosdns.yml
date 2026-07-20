@@ -56,15 +56,6 @@ jobs:
     - name: 检查代码
       uses: actions/checkout@main
 
-    - name: 检测 /dev/sda1 分区是否存在（Overlay部分）
-      id: overlay
-      run: |
-        if [ ! -b /dev/sda1 ]; then
-          echo "错误：/dev/sda1 分区不存在，无法继续执行 OverlayFS 相关操作，退出 Actions！"
-          exit 1  # 退出并标记 Actions 执行失败
-        fi
-          echo "成功检测到 /dev/sda1 分区，继续执行后续步骤。"
-
     - name: 初始化环境
       env:
         DEBIAN_FRONTEND: noninteractive
