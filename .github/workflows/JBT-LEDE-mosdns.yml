@@ -92,15 +92,15 @@ jobs:
       if: (!cancelled())
       run: df -hT
 
-    - name: 创建 OverlayFS 目录结构（Overlay部分）
-      run: |
-        sudo mkdir -p /overlay/lower
-        sudo mkdir -p /mnt/overlay/upper
-        sudo mkdir -p /mnt/overlay/work
-        # 下面1行去除Overlay需要还原到 初始化环境中
-        sudo mkdir -p /workdir
-        sudo chmod 777 /overlay/lower
-        sudo chmod 777 /mnt/overlay/upper
+    # - name: 创建 OverlayFS 目录结构（Overlay部分）
+    #   run: |
+    #     sudo mkdir -p /overlay/lower
+    #     sudo mkdir -p /mnt/overlay/upper
+    #     sudo mkdir -p /mnt/overlay/work
+    #     # 下面1行去除Overlay需要还原到 初始化环境中
+    #     sudo mkdir -p /workdir
+    #     sudo chmod 777 /overlay/lower
+    #     sudo chmod 777 /mnt/overlay/upper
 
     - name: 挂载 OverlayFS 合并分区（Overlay部分）
       run: |
