@@ -38,7 +38,7 @@ pushd package/small
 # mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
-# rm -rf package/kz8-small
+rm -rf package/kz8-small
 
 # ssrp
 git clone -b master --depth 1 https://github.com/fw876/helloworld.git
