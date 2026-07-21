@@ -18,15 +18,14 @@ on:
   workflow_dispatch:
   schedule:
    - cron: 0 20 * * 0
-   #      分,时,日,月,周。每周一 20时执行一次 (UTC时间)
+   #     分,时,日,月,周。每周一 20时执行一次 (UTC时间)
   
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   FREE_DISK_SH: scripts/free_disk_space.sh
   ENV_SH: scripts/environment.sh
-  REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: openwrt-25.12
-  # 修改 REPO_BRANCH 来达到更改编译版本
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
   PLATFORM_FILE: configs/Target-allwinner.txt
   CONFIG_FILE: configs/Packages-L.txt
   CONFIG_5G: configs/Packages-5G.txt
@@ -34,9 +33,9 @@ env:
   PACKAGES_SH: scripts/packages.sh
   INSTALL5G_SH: scripts/install-5G.sh
   CLASH_CORE_SH: scripts/preset-clash-core-arm64-L.sh
+  VLMCSD_SH: scripts/vlmcsd.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
-  UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -47,54 +46,20 @@ jobs:
     - name: 检查代码
       uses: actions/checkout@main
 
-    - name: 检测 /dev/sda1 分区是否存在（Overlay部分）
-      id: overlay
-      run: |
-        if [ ! -b /dev/sda1 ]; then
-          echo "错误：/dev/sda1 分区不存在，无法继续执行 OverlayFS 相关操作，退出 Actions！"
-          exit 1  # 退出并标记 Actions 执行失败
-        fi
-          echo "成功检测到 /dev/sda1 分区，继续执行后续步骤。"
-
     - name: 初始化环境
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
         chmod +x $FREE_DISK_SH && $FREE_DISK_SH
-        sudo -E apt-get -qq update -y
-        sudo -E apt-get -qq full-upgrade -y
         chmod +x $ENV_SH && $ENV_SH
         sudo rm -rf /etc/apt/sources.list.d/*
         sudo rm -rf /var/lib/apt/lists/*
         # 设置时区
         sudo timedatectl set-timezone "$TZ"
-
-    - name: 检查空间使用情况（清理情况）
-      if: (!cancelled())
-      run: df -hT
-
-    - name: 创建 OverlayFS 目录结构（Overlay部分）
-      run: |
-        sudo mkdir -p /overlay/lower
-        sudo mkdir -p /mnt/overlay/upper
-        sudo mkdir -p /mnt/overlay/work
-        # 下面1行去除Overlay需要还原到 初始化环境中
         sudo mkdir -p /workdir
-        sudo chmod 777 /overlay/lower
-        sudo chmod 777 /mnt/overlay/upper
-
-    - name: 挂载 OverlayFS 合并分区（Overlay部分）
-      run: |
-        sudo mount -t overlay overlay \
-         -o rw,lowerdir=/overlay/lower,upperdir=/mnt/overlay/upper,workdir=/mnt/overlay/work /workdir
-        mount | grep overlay
-
-    - name: 设置 /workdir 权限（Overlay部分）
-      run: |
-        # 下面1行去除Overlay需要还原到 初始化环境中
         sudo chown $USER:$GROUPS /workdir
 
-    - name: 检查空间使用情况（OverlayFS是否生效）
+    - name: 检查空间使用情况（清理情况）
       if: (!cancelled())
       run: df -hT
 
@@ -112,44 +77,17 @@ jobs:
           sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
         fi
 
-    - name: 检查缓存
-      id: check-cache
-      uses: actions/cache@main
+    - name: 开启缓存
+      uses: klever1988/cachewrtbuild@main
       with:
-        key: allwinner-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
-        restore-keys: allwinner-${{env.REPO_BRANCH}}
-        path: |
-          ./openwrt/.ccache
-          ./openwrt/staging_dir/host*
-          ./openwrt/staging_dir/tool*
+        ccache: 'true'
+        mixkey: 'allwinner'
+        prefix: ${{ github.workspace }}/openwrt
 
     - name: 开启CCACHE配置
       run: |
         echo 'CONFIG_DEVEL=y' >> openwrt/.config
         echo 'CONFIG_CCACHE=y' >> openwrt/.config
-
-    - name: 更新缓存
-      run: |
-        if [ -d "./openwrt/staging_dir" ]; then
-          find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
-            find "$DIR" -type f -exec touch {} +
-          done
-
-          mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
-
-          echo "toolchain skiped done!"
-        else
-          echo "caches missed!"
-        fi
-
-        if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
-          CACHE_LIST=$(gh cache list --key "allwinner-$REPO_BRANCH" | cut -f 1)
-          for CACHE_KEY in $CACHE_LIST; do
-            gh cache delete $CACHE_KEY
-          done
-
-          echo "caches cleanup done!"
-        fi
 
     - name: 安装 feeds
       run: |
@@ -163,6 +101,7 @@ jobs:
         [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
         [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
         [ -f $CONFIG_5G ] && cat $CONFIG_5G >> openwrt/.config
+        chmod +x $VLMCSD_SH && $VLMCSD_SH
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
         chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
@@ -232,11 +171,10 @@ jobs:
 
     - name: 生成发布标签
       id: tag
-      if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
+      if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        VERSION1="${REPO_BRANCH#*-}"
-        echo -e "🎉 Allwinner平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
-        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_allwinner")" >> $GITHUB_OUTPUT
+        echo -e "🎉 allwinner平台\n✅ 主线源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
+        echo "release_tag=$(date +"%Y.%m.%d_Allwinner")" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: 上传固件到发布
