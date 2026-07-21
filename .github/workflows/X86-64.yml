@@ -81,8 +81,8 @@ jobs:
       id: check-cache
       uses: actions/cache@main
       with:
-        key: x86-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
-        restore-keys: x86-${{env.REPO_BRANCH}}
+        key: x86-64-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
+        restore-keys: x86-64-${{env.REPO_BRANCH}}
         path: |
           ./openwrt/.ccache
           ./openwrt/staging_dir/host*
