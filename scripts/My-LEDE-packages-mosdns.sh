@@ -13,6 +13,7 @@ rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
 # git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
 
+
 #克隆的源码放在small文件夹
 mkdir package/small
 pushd package/small
@@ -60,7 +61,7 @@ git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
 # git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
-git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
+# git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 
 # homeproxy
 # git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
