@@ -28,16 +28,16 @@ git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
 
 # homeproxy
-# git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
+git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
 
 # lucky
-# git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
+git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 
 # smartdns
-# git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
-# git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
-# sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
-# sed -n '33p' smartdns/package/openwrt/Makefile
+git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
+git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
+sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
+sed -n '33p' smartdns/package/openwrt/Makefile
 
 # ssrp
 git clone -b master --depth 1 https://github.com/fw876/helloworld.git
@@ -58,13 +58,13 @@ git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
 
 # openclash
-# git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
+git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
 
 # OpenWrt-nikki
-# git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
+git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
 
 # OpenWrt-momo
-# git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
+git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
 
 # daed
 git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
