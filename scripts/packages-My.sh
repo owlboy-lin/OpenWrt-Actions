@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # 删除feeds中的插件
-rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky}
+rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky,adguardhome}
 rm -rf ./feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
 rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smartdns}
 
 rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
-rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns}
+rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns,luci-app-adguardhome}
 rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
 # 克隆依赖插件
@@ -18,6 +18,40 @@ git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-package
 mkdir package/small
 pushd package/small
 
+# kz8-small
+# git clone -b main --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+# mv package/kz8-small/adguardhome package/adguardhome
+# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+# mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
+# mv package/kz8-small/luci-app-partexp package/luci-app-partexp
+# mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
+# mv package/kz8-small/wrtbwmon package/wrtbwmon
+# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+# mv package/kz8-small/netspeedtest package/netspeedtest
+# mv package/kz8-small/homebox package/homebox
+# mv package/kz8-small/speedtest-cli package/speedtest-cli
+# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
+# mv package/kz8-small/quickstart package/quickstart
+# mv package/kz8-small/luci-app-store package/luci-app-store
+# mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
+# mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
+# mv package/kz8-small/taskd package/taskd
+# mv package/kz8-small/luci-app-nikki package/luci-app-nikki
+# mv package/kz8-small/nikki package/nikki
+# rm -rf package/kz8-small
+
+# ssrp
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+
+
+# iStore
+# git clone --depth=1 -b main https://github.com/linkease/istore.git 
+
+# mosdns
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+
 # luci-theme-aurora
 git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
 
@@ -26,6 +60,8 @@ git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
+# git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 
 # homeproxy
 git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
@@ -38,9 +74,6 @@ git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
 git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
 sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
 sed -n '33p' smartdns/package/openwrt/Makefile
-
-# ssrp
-git clone -b master --depth 1 https://github.com/fw876/helloworld.git
 
 # VIKINGYFY/packages
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
