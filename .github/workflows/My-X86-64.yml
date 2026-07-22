@@ -187,18 +187,26 @@ jobs:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
-    - name: 生成发布标签
-      id: tag
-      if: steps.compile.outputs.status == 'success' && !cancelled()
-      run: |
-        echo -e "🎉 X86-64平台\n✅ 主线源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
-        echo "release_tag=$(date +"%Y.%m.%d_X86-64")" >> $GITHUB_OUTPUT
-        echo "status=success" >> $GITHUB_OUTPUT
+    # - name: 生成发布标签
+    #   id: tag
+    #   if: steps.compile.outputs.status == 'success' && !cancelled()
+    #   run: |
+    #     echo -e "🎉 X86-64平台\n✅ 主线源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
+    #     echo "release_tag=$(date +"%Y.%m.%d_X86-64")" >> $GITHUB_OUTPUT
+    #     echo "status=success" >> $GITHUB_OUTPUT
 
-    - name: 上传固件到发布
-      uses: softprops/action-gh-release@master
-      if: steps.tag.outputs.status == 'success' && !cancelled()
+    # - name: 上传固件到发布
+    #   uses: softprops/action-gh-release@master
+    #   if: steps.tag.outputs.status == 'success' && !cancelled()
+    #   with:
+    #     tag_name: ${{ steps.tag.outputs.release_tag }}
+    #     body_path: release.txt
+    #     files: ${{ env.FIRMWARE }}/*
+
+    - name: 删除运行记录
+      uses: Mattraks/delete-workflow-runs@main
+      if: steps.compile.outputs.status == 'success' && !cancelled()
+      continue-on-error: true
       with:
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*
+        retain_days: 10     #保留最后多少记录不删除
+        keep_minimum_runs: 0
