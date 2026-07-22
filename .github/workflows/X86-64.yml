@@ -108,7 +108,7 @@ jobs:
         fi
 
         if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
-          CACHE_LIST=$(gh cache list --key "x86-$REPO_BRANCH" | cut -f 1)
+          CACHE_LIST=$(gh cache list --key "x86-64-$REPO_BRANCH" | cut -f 1)
           for CACHE_KEY in $CACHE_LIST; do
             gh cache delete $CACHE_KEY
           done
