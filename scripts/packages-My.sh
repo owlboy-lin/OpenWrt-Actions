@@ -75,6 +75,9 @@ git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
 sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
 sed -n '33p' smartdns/package/openwrt/Makefile
 
+# ssrp
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+
 # VIKINGYFY/packages
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
 
@@ -108,4 +111,3 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 popd
 
 echo "packages executed successfully!"
- 
