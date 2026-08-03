@@ -42,8 +42,8 @@ pushd package/small
 # rm -rf package/kz8-small
 
 # ssrp
-# git clone -b master --depth 1 https://github.com/fw876/helloworld.git
-# find ./ | grep Makefile | grep mosdns | xargs rm -f
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+find ./ | grep Makefile | grep mosdns | xargs rm -f
 
 
 # iStore
@@ -61,7 +61,7 @@ git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
 # git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
-# git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
+git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 
 # homeproxy
 # git clone -b master --depth 1 https://github.com/immortalwrt/homeproxy.git
@@ -89,7 +89,7 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 
 # luci-app-netspeedtest
 # git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
-# git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
+git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 
 # openclash
 # git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
