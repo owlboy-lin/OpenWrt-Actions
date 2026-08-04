@@ -110,6 +110,10 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
 # git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
+#luci-app-wolplus
+git clone -b main --depth 1 https://github.com/animegasan/luci-app-wolplus.git
+
+
 # kz8-small
 # git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 # mv package/kz8-small/adguardhome package/adguardhome
@@ -132,6 +136,7 @@ git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
 # rm -rf package/kz8-small
+
 
 popd
 
