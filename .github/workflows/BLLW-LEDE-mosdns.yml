@@ -36,7 +36,6 @@ env:
   CONFIG_FILE: configs/My-Packages-mosdns.txt
   SETTINGS_SH: scripts/BLLW-init-settings.sh
   PACKAGES_SH: scripts/My-LEDE-packages-mosdns.sh
-  INSTALL5G_SH: scripts/install-5G.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   VLMCSD_SH: scripts/vlmcsd.sh
   UPLOAD_BIN_DIR: false
