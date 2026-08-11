@@ -6,7 +6,7 @@
 # Copyright (C) 2020 KFERMercer
 # chmod +x /etc/init.d/netspeedtest
 
-name: JBT-LEDE-mosdns
+name: BLLW-LEDE-mosdns
 
 permissions: write-all
 #开启写权限，防止无法上传到release
