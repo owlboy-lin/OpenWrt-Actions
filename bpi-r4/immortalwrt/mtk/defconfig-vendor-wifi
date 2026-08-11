@@ -1,10 +1,9 @@
-# ImmortalWrt openwrt-24.10 defconfig for BananaPi BPI-R4.
-# This keeps the upstream MTK WiFi 7 target block, but trims package
-# selections to what the current workflow and diy feed script actually provide.
+# chasey-dev 25.12-dev-wifi7 / BPI-R4
 
 CONFIG_TARGET_mediatek=y
 CONFIG_TARGET_mediatek_filogic=y
 CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y
+CONFIG_PACKAGE_kmod-mediatek_hnat=y
 CONFIG_DEVEL=y
 CONFIG_CCACHE=y
 CONFIG_TOOLCHAINOPTS=y
@@ -17,36 +16,59 @@ CONFIG_IPV6=y
 CONFIG_DRIVER_11AC_SUPPORT=y
 CONFIG_DRIVER_11AX_SUPPORT=y
 CONFIG_DRIVER_11BE_SUPPORT=y
+# Keep the upstream mt76/mt7996 path out of the vendor WiFi7 build.
+# CONFIG_PACKAGE_kmod-mt7996-firmware is not set
+# CONFIG_PACKAGE_kmod-mt7996-233-firmware is not set
 
-# Keep the nftables firewall / IPv6 userspace explicit.
+# nftables firewall
 CONFIG_PACKAGE_firewall4=y
 CONFIG_PACKAGE_odhcp6c=y
 CONFIG_PACKAGE_odhcpd-ipv6only=y
+CONFIG_PACKAGE_iptables-nft=y
+CONFIG_PACKAGE_ip6tables-nft=y
+CONFIG_PACKAGE_ppp=y
+CONFIG_PACKAGE_ppp-mod-pppoe=y
 
-# MTK property packages retained from the upstream 24.10 device profile.
-CONFIG_PACKAGE_datconf=y
-CONFIG_PACKAGE_datconf-lua=y
+# --- WiFi7 ---
+CONFIG_PACKAGE_kmod-cfg80211=y
+# CONFIG_PACKAGE_kmod-mac80211 is not set
+CONFIG_PACKAGE_mt_wifi7=y
+CONFIG_PACKAGE_mt_hwifi=y
+CONFIG_PACKAGE_warp=y
+CONFIG_PACKAGE_wifi-profile=y
+CONFIG_PACKAGE_wifi-dats=y
+CONFIG_first_card=y
+CONFIG_first_card_name="MT7990"
+CONFIG_second_card=y
+CONFIG_second_card_name="MT7990"
+CONFIG_PACKAGE_nand-utils=y
+# CONFIG_PACKAGE_kmod-mt7996-firmware is not set
+# CONFIG_PACKAGE_kmod-mt7992-firmware is not set
+
+# --- HNAT ---
+CONFIG_PACKAGE_kmod-mediatek_hnat=y
+CONFIG_KERNEL_NET_MEDIATEK_HNAT=y
+CONFIG_KERNEL_MEDIATEK_NETSYS_V3=y
+# CONFIG_KERNEL_MEDIATEK_NETSYS_V2 is not set
+
+# --- Platform tools ---
 CONFIG_PACKAGE_mii_mgr=y
-CONFIG_PACKAGE_mtk-smp=y
-CONFIG_PACKAGE_mtkhqos_util=y
 CONFIG_PACKAGE_regs=y
 CONFIG_PACKAGE_switch=y
-CONFIG_PACKAGE_kmod-cfg80211=y
-CONFIG_PACKAGE_kmod-mac80211=y
-CONFIG_PACKAGE_kmod-mtk_wed=y
-# Use the upstream mac80211/mt76 mt7996e stack together with mtk_wed.
-# Keep vendor WiFi7/mt_wifi packages out of the build to avoid conflicting
-# driver paths while layering only the local mt7996/mt7990 packaging tweaks.
+CONFIG_PACKAGE_pce=y
+CONFIG_PACKAGE_mtkhnat_util=y
+CONFIG_PACKAGE_ethswbox=y
+CONFIG_PACKAGE_flowtable=y
+CONFIG_PACKAGE_tops-tool=y
 
 # 5G / WWAN / SFP bring-up and diagnostics.
 CONFIG_MODEMMANAGER_WITH_MBIM=y
 CONFIG_MODEMMANAGER_WITH_QMI=y
 CONFIG_MODEMMANAGER_WITH_QRTR=y
 CONFIG_PACKAGE_kmod-eeprom-at24=y
-CONFIG_PACKAGE_kmod-hwmon-pwmfan=y
 CONFIG_PACKAGE_aqr10g-phy-fw=y
+CONFIG_PACKAGE_kmod-hwmon-pwmfan=y
 CONFIG_PACKAGE_kmod-i2c-mux-pca954x=y
-CONFIG_PACKAGE_kmod-leds-gpio=y
 CONFIG_PACKAGE_kmod-phy-aquantia=y
 CONFIG_PACKAGE_kmod-phy-marvell-10g=y
 CONFIG_PACKAGE_kmod-phy-realtek=y
@@ -89,8 +111,6 @@ CONFIG_PACKAGE_kmod-nls-cp932=y
 CONFIG_PACKAGE_kmod-nls-cp936=y
 CONFIG_PACKAGE_kmod-nls-cp950=y
 CONFIG_PACKAGE_kmod-nls-utf8=y
-CONFIG_PACKAGE_kmod-nft-flow-offload=y
-CONFIG_PACKAGE_kmod-mediatek_hnat=y
 CONFIG_PACKAGE_parted=y
 CONFIG_PACKAGE_smartmontools=y
 CONFIG_PACKAGE_kmod-nvme=y
@@ -101,6 +121,7 @@ CONFIG_PACKAGE_alsa-utils=y
 CONFIG_PACKAGE_aria2=y
 CONFIG_PACKAGE_ariang=y
 CONFIG_PACKAGE_bash=y
+CONFIG_PACKAGE_autocore-arm=y
 CONFIG_PACKAGE_block-mount=y
 CONFIG_PACKAGE_ca-bundle=y
 CONFIG_PACKAGE_ca-certificates=y
@@ -118,8 +139,8 @@ CONFIG_PACKAGE_dockerd=y
 CONFIG_PACKAGE_fibocom-dial=y
 CONFIG_PACKAGE_frpc=y
 CONFIG_PACKAGE_geoview=y
-CONFIG_PACKAGE_haproxy=y
 CONFIG_PACKAGE_htop=y
+CONFIG_PACKAGE_haproxy=y
 CONFIG_PACKAGE_hysteria=y
 CONFIG_PACKAGE_ip-full=y
 CONFIG_PACKAGE_ipset=y
@@ -128,13 +149,6 @@ CONFIG_PACKAGE_jq=y
 CONFIG_PACKAGE_jsonfilter=y
 CONFIG_PACKAGE_kmod-dummy=y
 CONFIG_PACKAGE_kmod-inet-diag=y
-CONFIG_PACKAGE_kmod-mt76-connac=y
-CONFIG_PACKAGE_kmod-mt76-core=y
-CONFIG_PACKAGE_kmod-mt7990-firmware=y
-CONFIG_PACKAGE_kmod-mt7996-233-firmware=y
-CONFIG_PACKAGE_kmod-mt7996-firmware=y
-CONFIG_PACKAGE_kmod-mt7996-firmware-common=y
-CONFIG_PACKAGE_kmod-mt7996e=y
 CONFIG_PACKAGE_kmod-nft-socket=y
 CONFIG_PACKAGE_kmod-nft-tproxy=y
 CONFIG_PACKAGE_kmod-tun=y
@@ -150,7 +164,6 @@ CONFIG_PACKAGE_miniupnpd-nftables=y
 CONFIG_PACKAGE_modemband=y
 CONFIG_PACKAGE_modemmanager=y
 CONFIG_PACKAGE_mosdns=y
-CONFIG_PACKAGE_naiveproxy=y
 CONFIG_PACKAGE_netdata=y
 CONFIG_PACKAGE_nikki=y
 CONFIG_PACKAGE_nlbwmon=y
@@ -185,8 +198,8 @@ CONFIG_PACKAGE_softethervpn5-bridge=y
 CONFIG_PACKAGE_softethervpn5-client=y
 CONFIG_PACKAGE_softethervpn5-server=y
 CONFIG_PACKAGE_sqm-scripts=y
-CONFIG_PACKAGE_tcping=y
 CONFIG_PACKAGE_tar=y
+CONFIG_PACKAGE_tcping=y
 CONFIG_PACKAGE_ttyd=y
 CONFIG_PACKAGE_tuic-client=y
 CONFIG_PACKAGE_umbim=y
@@ -200,8 +213,8 @@ CONFIG_PACKAGE_v2ray-geosite=y
 CONFIG_PACKAGE_v2ray-plugin=y
 CONFIG_PACKAGE_vlmcsd=y
 CONFIG_PACKAGE_wget-ssl=y
-CONFIG_PACKAGE_wireless-tools=y
 CONFIG_PACKAGE_wsdd2=y
+CONFIG_PACKAGE_wireless-tools=y
 CONFIG_PACKAGE_wrtbwmon=y
 CONFIG_PACKAGE_xz-utils=y
 CONFIG_PACKAGE_xray-core=y
@@ -220,10 +233,13 @@ CONFIG_PACKAGE_luci-app-dockerman=y
 CONFIG_PACKAGE_luci-app-filemanager=y
 CONFIG_PACKAGE_luci-app-firewall=y
 CONFIG_PACKAGE_luci-app-modemband=y
+CONFIG_PACKAGE_luci-app-mtwifi-cfg=y
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 CONFIG_PACKAGE_luci-app-samba4=y
 CONFIG_PACKAGE_luci-app-sqm=y
 CONFIG_PACKAGE_luci-app-ttyd=y
+CONFIG_PACKAGE_luci-app-eqos-mtk=y
+CONFIG_PACKAGE_luci-app-turboacc-mtk=y
 CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-wol=y
 CONFIG_PACKAGE_luci-app-zerotier=y
@@ -237,7 +253,7 @@ CONFIG_PACKAGE_luci-proto-vpnc=y
 CONFIG_PACKAGE_luci-proto-vxlan=y
 CONFIG_PACKAGE_luci-proto-wireguard=y
 
-# Community LuCI apps supplied by diy-part1.sh.
+# Community LuCI apps supplied by diy-part5.sh.
 CONFIG_PACKAGE_luci-theme-argon=y
 CONFIG_PACKAGE_luci-app-argon-config=y
 CONFIG_PACKAGE_luci-app-adguardhome=y

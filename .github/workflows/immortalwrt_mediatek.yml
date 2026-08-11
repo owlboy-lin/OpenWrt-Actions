@@ -1,17 +1,20 @@
 name: immortalwrt_mediatek
 
 on:
-  # schedule:
-  #   - cron: 0 17 * * *
+  schedule:
+    - cron: 0 17 * * *
   workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
-  CONFIG_FILE: immortalwrt/mediatek/defconfig
-  DIY_P1_SH: immortalwrt/diy-part1.sh
-  DIY_P2_SH: immortalwrt/diy-part2.sh
-  CACHE_TOOLCHAIN: true
+  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig
+  DIY_P1_SH: bpi-r4/immortalwrt/diy-part1.sh
+  DIY_P2_SH: bpi-r4/immortalwrt/diy-part2.sh
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -21,188 +24,123 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Before freeing up disk space
-        run: |
-          echo "Before freeing up disk space"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
-  
-      - name: "Optimize Disk Space"
-        uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
-        with:
-          operate_sudo: "True"
-          general_include: ".+"
-          general_exclude: |-
-            ^GCC$
-            ^G\+\+$
-            Clang
-            LLVM
-          docker_include: ".+"
-          docker_prune: "True"
-          docker_clean: "True"
-          apt_prune: "True"
-          apt_clean: "True"
-          homebrew_prune: "True"
-          homebrew_clean: "True"
-          npm_prune: "True"
-          npm_clean: "True"
-          os_swap: "True"
-  
-      - name: Freeing up disk space
-        uses: easimon/maximize-build-space@master
-        with: 
-          root-reserve-mb: 3072
-          swap-size-mb: 1
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-          remove-docker-images: 'true'
-  
-      - name: Free up disk space complete
-        run: |
-          echo "Free up disk space complete"
-          echo "=============================================================================="
-          df -hT
-          echo "=============================================================================="
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@v10
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        
+    - name: Check out the project branch
+      uses: actions/checkout@v6.0.2       
+ 
+    - name: Initialize the compilation environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        ( sudo -E apt-get -qq update
+        sudo -E apt-get -qq install build-essential clang flex g++ gawk gcc-multilib gettext \
+        git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion qemu-utils ccache rename libelf-dev
+        sudo -E apt-get -qq purge azure-cli ghc* zulu* hhvm llvm* firefox powershell openjdk* dotnet* google* mysql* php* android* rename speedtest-cli
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean ) &
+        sudo timedatectl set-timezone "$TZ" || true
+        
+       
+    - name: Download firmware source code
+      run: |
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        cd openwrt
+        echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
+        cd ..
 
-      - name: Check out the project branch
-        uses: actions/checkout@main
+    - name: Update base feed indexes
+      working-directory: ./openwrt
+      run: |
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+        
+    - name: Load feeds.conf.default
+      run: |
+        chmod +x $OPENWRT_NAME/*.sh
+        cd openwrt
+        $GITHUB_WORKSPACE/$DIY_P1_SH
 
-      - name: Initialize the compilation environment
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          ( sudo -E apt-get -qq update
-          sudo -E apt-get -qq install build-essential clang flex g++ gawk gcc-multilib gettext \
-          git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion qemu-utils ccache rename libelf-dev
-          sudo -E apt-get -qq purge azure-cli ghc* zulu* hhvm llvm* firefox powershell openjdk* dotnet* google* mysql* php* android* rename speedtest-cli
-          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-          sudo -E apt-get -qq autoremove --purge
-          sudo -E apt-get -qq clean ) &
-          sudo timedatectl set-timezone "$TZ"
+    - name: Load config
+      run: |
+        [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
+        chmod +x $OPENWRT_NAME/*.sh && cd openwrt
+        $GITHUB_WORKSPACE/$DIY_P2_SH
 
-      - name: Initialize Environment and Display System Info
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          chmod +x $OPENWRT_NAME/*.sh
-          $GITHUB_WORKSPACE/$OPENWRT_NAME/system-Information.sh
+    - name: Download the installation package
+      id: package
+      run: |
+        cd openwrt
+        make defconfig
+        cat .config
+        make download -j$(nproc) 2>&1
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+             
+    - name: Compile the firmware
+      id: compile
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j$(($(nproc)/2 + 1)) || make -j1 V=s
+        echo "date1=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+        echo "date2=$(date "+%Y年%m月%d日")" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: Download firmware source code
-        run: |
-          git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-          cd openwrt
-          echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
-          cd ..
+    - name: Organize and Rename Files
+      id: organize
+      if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
+      run: |
+        cd openwrt/bin/targets/mediatek/filogic
+        rm -rf packages *mt798* *.config *.buildinfo *.json sha256sums 
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
+        
+    - name: Upload the firmware to github
+      uses: actions/upload-artifact@v7.0.1
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      with:
+        name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
+        path: ${{ env.FIRMWARE }}
 
-      - name: Cache Toolchain
-        if: env.CACHE_TOOLCHAIN == 'true'
-        uses: HiGarfield/cachewrtbuild@main
-        with:
-          ccache: false
-          mixkey: ${{ env.REPO_URL }}-${{ env.REPO_BRANCH }}-mtk-r4
-          prefix: ${{ env.OPENWRT_PATH }}
+    - name: Generate release tags
+      id: tag
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        echo "release_tag=${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
+        touch release.txt
+        echo "📥 固件下载" >> release.txt
+        echo "status=success" >> $GITHUB_OUTPUT
+        
+    - name: Publish to release
+      uses: softprops/action-gh-release@v3
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+      with:
+        files: ${{ env.FIRMWARE }}/*
+        name: ${{ steps.tag.outputs.release_tag }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+    
+    - name: 删除旧的Releases
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      uses: MedyMa/delete-older-releases@v0.3.4
 
-      - name: Update & install feeds
-        working-directory: ./openwrt
-        run: |
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
-
-      - name: Load feeds.conf.default
-        run: |
-          chmod +x $OPENWRT_NAME/*.sh
-          cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
-
-      - name: Load config
-        run: |
-          [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-          chmod +x $OPENWRT_NAME/*.sh && cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P2_SH
-
-      - name: Download the installation package
-        id: package
-        run: |
-          cd openwrt
-          make defconfig
-          cat .config
-          make download -j$(nproc)
-          find dl -size -1024c -exec ls -l {} \;
-          find dl -size -1024c -exec rm -f {} \;
-
-      - name: Compile the firmware
-        id: compile
-        run: |
-          cd openwrt
-          echo -e "$(nproc) thread compile"
-          sed -i 's/--set=llvm.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' package/feeds/packages/rust/Makefile
-          make -j$(nproc) || make -j1 || make -j1 V=s
-          echo "date1=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
-          echo "date2=$(date "+%Y-%m-%d")" >> $GITHUB_ENV
-          echo "status=success" >> $GITHUB_OUTPUT
-
-      - name: Organize and Rename Files
-        id: organize
-        if: ${{ env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
-        run: |
-          cd openwrt/bin/targets/mediatek/filogic
-          rm -rf packages *mt798* *.config *.buildinfo *.json sha256sums 
-          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-          echo "status=success" >> $GITHUB_OUTPUT
-
-      - name: Upload the firmware to github
-        uses: actions/upload-artifact@main
-        if: steps.organize.outputs.status == 'success' && !cancelled()
-        with:
-          name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}
-          path: ${{ env.FIRMWARE }}
-
-      - name: Generate release tags
-        id: tag
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-        run: |
-          echo "release_tag=${{ env.date2 }}" >> $GITHUB_OUTPUT
-          touch release.txt
-          echo "📥 固件下载" >> release.txt
-          echo "status=success" >> $GITHUB_OUTPUT
-
-      - name: Publish to release
-        uses: softprops/action-gh-release@v1
-        if: steps.tag.outputs.status == 'success' && !cancelled()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          files: ${{ env.FIRMWARE }}/*
-          name: ${{ env.date3 }}
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          body_path: release.txt
-          
-      - name: Delete releases and workflows runs
-        uses: ophub/delete-releases-workflows@main
-        with:
-          delete_releases: true
-          releases_keep_latest: 3
-          delete_tags: true
-          delete_workflows: true
-          workflows_keep_day: 3
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          retain_days: 1
-          keep_minimum_runs: 3
-
-      - name: Remove old Releases
-        uses: dev-drprasad/delete-older-releases@v0.1.0
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-        with:
-          keep_latest: 3
-          delete_tags: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        keep_latest: 3
+        delete_tags: true
+        delete_tag_pattern: '^.*-immortalwrt_openwrt-24\.10$'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
