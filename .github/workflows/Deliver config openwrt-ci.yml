@@ -22,7 +22,7 @@ on:
       #   description: 'SSH connection to Actions'
       #   required: true
       #   default: 'false'
-      # ssh:
+      ssh:
         description: '使用 ssh 连接到编译环境 (Connect to the build environment using ssh)'
         type: boolean
         default: false
