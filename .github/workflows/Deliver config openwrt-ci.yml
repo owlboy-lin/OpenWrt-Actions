@@ -151,10 +151,10 @@ jobs:
       #   uses: mxschmitt/action-tmate@v3
       #   timeout-minutes: 15
 
-      # - name: 开启 SSH 服务 (Start SSH service)
-      #   uses: lhotari/action-upterm@v1
-      #   with:
-      #     wait-timeout-minutes: 20
+      - name: 开启 SSH 服务 (Start SSH service)
+        uses: lhotari/action-upterm@v1
+        with:
+          wait-timeout-minutes: 20
 
       - name: 下载固件包
         id: package
