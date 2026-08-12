@@ -200,8 +200,6 @@ jobs:
           path: openwrt/artifact/buildinfo/
 
           
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
 
       - name: 生成发布标签
         id: tag
