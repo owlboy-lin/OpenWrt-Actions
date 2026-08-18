@@ -231,8 +231,8 @@ jobs:
         uses: Mattraks/delete-workflow-runs@v2
         continue-on-error: true
         with:
-          retain_days: 3     #保留最后多少记录不删除
-          keep_minimum_runs: 0
+          retain_days: 5     #保留最后多少记录不删除
+          keep_minimum_runs: 10
 
       - name: 删除自动发布的旧固件
         uses: dev-drprasad/delete-older-releases@v0.3.3

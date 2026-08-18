@@ -26,7 +26,7 @@
             required: false
             default: 'false'
             type: boolean
-            
+
           CACHE_BUILD:
             description: '缓存加速'
             required: false
@@ -189,7 +189,7 @@
         - name: 删除运行记录
           uses: Mattraks/delete-workflow-runs@v2
           with:
-            retain_days: 3     #保留最后多少记录不删除
+            retain_days: 5     #保留最后多少记录不删除
             keep_minimum_runs: 0
 
     #    - name: Remove old Releases
