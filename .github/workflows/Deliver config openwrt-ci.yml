@@ -154,11 +154,11 @@ jobs:
       #     timeout-minutes: 60 # 最长60分钟调试编译
       #     limit-access-to-actor: true # 仅自己能登录，安全
 
-      # - name: 开启 SSH 服务 (Start SSH service)
-      #   uses: lhotari/action-upterm@v1
-      #   if: ${{inputs.ssh == true}}
-      #   with:
-      #     wait-timeout-minutes: 20
+      - name: 开启 SSH 服务 (Start SSH service)
+        uses: lhotari/action-upterm@v1
+        if: ${{inputs.ssh == true}}
+        with:
+          wait-timeout-minutes: 20
 
       # - name: SSH connection to Actions
       #   uses: owenthereal/action-upterm@v1.15.0
@@ -185,12 +185,12 @@ jobs:
           fi
           df -hT  
 
-      - name: SSH connection to Actions
-        uses: P3TERX/ssh2actions@main
-        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-        env:
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      # - name: SSH connection to Actions
+      #   uses: P3TERX/ssh2actions@main
+      #   if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      #   env:
+      #     TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      #     TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
       - name: 整理固件文件
         run: |
