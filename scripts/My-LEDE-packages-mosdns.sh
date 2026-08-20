@@ -18,7 +18,7 @@ git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-package
 mkdir package/small
 pushd package/small
 
-kz8-small
+# kz8-small
 git clone -b main --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
