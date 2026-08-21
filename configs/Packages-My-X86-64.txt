@@ -1,7 +1,12 @@
 #全量版插件（插件太多 容易编译失败，按需自己克隆修改）
 # 后面的y是编译..... n就是不编译
 
+CONFIG_PACKAGE_default-settings-chn=y
+
 # 主题调整
+CONFIG_PACKAGE_luci-theme-argon=y
+CONFIG_PACKAGE_luci-app-argon-config=y
+CONFIG_PACKAGE_luci-theme-aurora=y
 CONFIG_PACKAGE_luci-theme-design=y
 
 # 科学插件调整
