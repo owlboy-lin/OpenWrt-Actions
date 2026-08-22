@@ -50,7 +50,7 @@ find ./ | grep Makefile | grep mosdns | xargs rm -f
 # git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # mosdns
-# git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-theme-aurora
 git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
