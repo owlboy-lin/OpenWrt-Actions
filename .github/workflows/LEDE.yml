@@ -44,8 +44,8 @@ env:
   UPLOAD_PACKAGE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
-  Firmware_Name: LEDE
-
+  
+  
 jobs:
   build:
     runs-on: ubuntu-latest
