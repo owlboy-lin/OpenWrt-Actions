@@ -135,19 +135,19 @@ jobs:
           cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
 
       - name: Upload buildinfo
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@main
         with:
           name: OpenWrt_buildinfo
           path: openwrt/artifact/buildinfo/
 
       - name: Upload package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@main
         with:
           name: OpenWrt_package
           path: openwrt/artifact/package/
 
       - name: Upload firmware
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@main
         with:
           name: OpenWrt_firmware
           path: openwrt/bin/targets/
