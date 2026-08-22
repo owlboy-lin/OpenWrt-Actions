@@ -31,6 +31,7 @@ env:
   ENV_SH: scripts/environment-LEDE.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
+  Firmware_Name: JBT-LEDE
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/Packages-LEDE.txt
   CONFIG_5G: configs/Packages-5G.txt
@@ -42,7 +43,7 @@ env:
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
-  Firmware_Name: JBT-LEDE
+  
 
 jobs:
   build:
