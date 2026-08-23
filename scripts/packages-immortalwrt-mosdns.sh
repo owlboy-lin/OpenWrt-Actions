@@ -24,8 +24,8 @@ git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
-git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
-# git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
+# git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 
 # lucky
 git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
