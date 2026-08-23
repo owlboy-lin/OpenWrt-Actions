@@ -43,7 +43,7 @@ env:
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/Packages-LEDE.txt
   SETTINGS_SH: scripts/BLLW-init-settings.sh
-  PACKAGES_SH: scripts/packages-LEDE.sh
+  PACKAGES_SH: scripts/packages-LEDE-test.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   VLMCSD_SH: scripts/vlmcsd.sh
   UPLOAD_BIN_DIR: false
