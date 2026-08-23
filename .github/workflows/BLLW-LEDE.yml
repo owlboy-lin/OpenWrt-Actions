@@ -57,284 +57,217 @@ env:
   TZ: Asia/Shanghai  
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
 
-  build_openwrt:
-
-
-    name: BLLW-LEDE
-    
-    runs-on: Ubuntu-24.04
-    
     steps:
-      - name: 检查
-        uses: actions/checkout@main
+    - name: 检查代码
+      uses: actions/checkout@main
 
-      - name: 检测 /dev/sda1 分区是否存在（Overlay部分）
-        id: overlay
-        run: |
-          if [ ! -b /dev/sda1 ]; then
-            echo "错误：/dev/sda1 分区不存在，无法继续执行 OverlayFS 相关操作，退出 Actions！"
-            exit 1  # 退出并标记 Actions 执行失败
-          fi
-            echo "成功检测到 /dev/sda1 分区，继续执行后续步骤。"
+    - name: 初始化环境
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        chmod +x $FREE_DISK_SH && $FREE_DISK_SH
+        chmod +x $ENV_SH && $ENV_SH
+        sudo rm -rf /etc/apt/sources.list.d/*
+        sudo rm -rf /var/lib/apt/lists/*
+        # 设置时区
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
 
-      - name: 初始化环境
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          chmod +x $FREE_DISK_SH && $FREE_DISK_SH
-          chmod +x $ENV_SH && $ENV_SH
-          sudo rm -rf /etc/apt/sources.list.d/*
-          sudo rm -rf /var/lib/apt/lists/*
-          # 设置时区
-          sudo timedatectl set-timezone "$TZ"
-          sudo mkdir -p /workdir
-          sudo chown $USER:$GROUPS /workdir
+    - name: 更新时区、编译时间
+      id: date
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
+        echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
+        echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
+        echo "编译开始时间..."
+        START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+        echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
-      - name: 检查空间使用情况1
-        if: (!cancelled())
-        run: df -hT
+    - name: 检查空间使用情况（清理情况）
+      if: (!cancelled())
+      run: df -hT
 
+    - name: 克隆源码
+      working-directory: /workdir
+      run: |
+        git clone $REPO_URL --depth 1 -b $REPO_BRANCH openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-      - name: 更新时区、编译时间
-        id: date
-        run: |
-          sudo timedatectl set-timezone "$TZ"
-          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-          echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
-          echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
-          echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
-          echo "编译开始时间..."
-          START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
-          echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
+        cd ./openwrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
-      - name: 创建 OverlayFS 目录结构（Overlay部分）
-        run: |
-          sudo mkdir -p /overlay/lower
-          sudo mkdir -p /mnt/overlay/upper
-          sudo mkdir -p /mnt/overlay/work
-          # 下面1行去除Overlay需要还原到 初始化环境中
-          sudo mkdir -p /workdir
-          sudo chmod 777 /overlay/lower
-          sudo chmod 777 /mnt/overlay/upper
+        # GitHub Action 移除国内下载源
+        PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
+        if [ -f "$PROJECT_MIRRORS_FILE" ]; then
+          sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
+        fi
 
-      - name: 挂载 OverlayFS 合并分区（Overlay部分）
-        run: |
-          sudo mount -t overlay overlay \
-          -o rw,lowerdir=/overlay/lower,upperdir=/mnt/overlay/upper,workdir=/mnt/overlay/work /workdir
-          mount | grep overlay
+    - name: 检查缓存
+      id: check-cache
+      uses: actions/cache@main
+      with:
+        key: ${{env.Firmware_Name}}-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
+        restore-keys: ${{env.Firmware_Name}}-${{env.REPO_BRANCH}}
+        path: |
+          ./openwrt/.ccache
+          ./openwrt/staging_dir/host*
+          ./openwrt/staging_dir/tool*
 
-      - name: 设置 /workdir 权限（Overlay部分）
-        run: |
-          # 下面1行去除Overlay需要还原到 初始化环境中
-          sudo chown $USER:$GROUPS /workdir
+    - name: 开启CCACHE配置
+      run: |
+        echo 'CONFIG_DEVEL=y' >> openwrt/.config
+        echo 'CONFIG_CCACHE=y' >> openwrt/.config
 
-      - name: 检查空间使用情况（OverlayFS是否生效）
-        if: (!cancelled())
-        run: df -hT
+    - name: 更新缓存
+      run: |
+        if [ -d "./openwrt/staging_dir" ]; then
+          find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
+            find "$DIR" -type f -exec touch {} +
+          done
 
-      - name: 克隆源码
-        working-directory: /workdir
-        run: |
-          git clone $REPO_URL --depth 1 -b $REPO_BRANCH openwrt
-          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+          mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
 
-          cd ./openwrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
+          echo "toolchain skiped done!"
+        else
+          echo "caches missed!"
+        fi
 
-          # GitHub Action 移除国内下载源
-          PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
-          if [ -f "$PROJECT_MIRRORS_FILE" ]; then
-            sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
-          fi
+        if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
+          CACHE_LIST=$(gh cache list --key "x86-$REPO_BRANCH" | cut -f 1)
+          for CACHE_KEY in $CACHE_LIST; do
+            gh cache delete $CACHE_KEY
+          done
 
+          echo "caches cleanup done!"
+        fi
 
-      - name: 检查缓存
-        id: check-cache
-        uses: actions/cache@main
-        with:
-          key: x86-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
-          restore-keys: x86-${{env.REPO_BRANCH}}
-          path: |
-            ./openwrt/.ccache
-            ./openwrt/staging_dir/host*
-            ./openwrt/staging_dir/tool*
+    - name: 安装 feeds
+      run: |
+        cd openwrt
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
 
-      - name: 开启CCACHE配置
-        run: |
-          echo 'CONFIG_DEVEL=y' >> openwrt/.config
-          echo 'CONFIG_CCACHE=y' >> openwrt/.config
+    - name: 导入补丁和配置 & 执行脚本
+      run: |
+        [ -d files ] && mv files openwrt/files || echo "files not found"
+        [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
+        [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
+        [ -f $CONFIG_5G ] && cat $CONFIG_5G >> openwrt/.config
+        chmod +x $VLMCSD_SH && $VLMCSD_SH
+        cd openwrt
+        chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
+        chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
+        chmod +x $GITHUB_WORKSPACE/$INSTALL5G_SH && $GITHUB_WORKSPACE/$INSTALL5G_SH
+        chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
 
-      - name: 更新缓存
-        run: |
-          if [ -d "./openwrt/staging_dir" ]; then
-            find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
-              find "$DIR" -type f -exec touch {} +
-            done
+    - name: 下载文件
+      run: |
+        cd openwrt
+        make defconfig
+        make download -j8 V=10
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
 
-            mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
+    - name: 空间使用情况（编译前）
+      if: (!cancelled())
+      run: df -hT
 
-            echo "toolchain skiped done!"
-          else
-            echo "caches missed!"
-          fi
+    - name: 编译固件
+      id: compile
+      run: |
+        cd openwrt
+        make defconfig
+        echo -e "$(nproc) thread compile"
+        make -j$(($(nproc)+1)) || make -j1 V=s
+        echo "status=success" >> $GITHUB_OUTPUT
 
-          if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
-            CACHE_LIST=$(gh cache list --key "x86-$REPO_BRANCH" | cut -f 1)
-            for CACHE_KEY in $CACHE_LIST; do
-              gh cache delete $CACHE_KEY
-            done
+    - name: 空间使用情况（编译占用）
+      if: (!cancelled())
+      run: df -hT
 
-            echo "caches cleanup done!"
-          fi
+    - name: 上传 bin 目录
+      uses: actions/upload-artifact@main
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      with:
+        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: openwrt/bin
 
-      - name: 安装 feeds
-        run: |
-          cd openwrt
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
+    - name: 整理文件
+      id: organize
+      if: steps.compile.outputs.status == 'success' && !cancelled()
+      run: |
+        cd openwrt
+        mkdir -p ./artifact/firmware
+        mkdir -p ./artifact/package
+        mkdir -p ./artifact/buildinfo
+        rm -rf $(find ./bin/targets/ -type d -name "packages")
+        cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
+        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+        cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+        cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
+        cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
+        cp -rf ./feeds.conf.default ./artifact/buildinfo/
+        cd artifact/firmware/
+        rename "s/openwrt/${{ env.Firmware_Name }}${{ env.FILE_DATE }}/" *
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: 导入补丁和配置 & 执行脚本
-        run: |
-            [ -d files ] && mv files openwrt/files || echo "files not found"
-            [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
-            [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
-            cd openwrt
-            chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
-            chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
-            chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH        
+    - name: 上传固件目录
+      uses: actions/upload-artifact@main
+      if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
+      with:
+        name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_${{ env.DEVICE_NAME }}_firmware_${{ env.FILE_DATE }}
+        path: ${{ env.FIRMWARE }}
 
-      - name: SSH connection to Actions
-        uses: P3TERX/ssh2actions@v1.0.0
-        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-        env:
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+    - name: 上传配置文件
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_BUILDINFO == 'true' && !cancelled()
+      uses: actions/upload-artifact@main
+      with:
+        name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_buildinfo${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: openwrt/artifact/buildinfo/
 
+    - name: 上传插件
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_PACKAGE == 'true' && !cancelled()
+      uses: actions/upload-artifact@main
+      with:
+        name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_package${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: openwrt/artifact/package/
 
-      
-      - name: 下载固件包
-        run: |
-            cd openwrt
-            make defconfig
-            make download -j8 V=10
-            find dl -size -1024c -exec ls -l {} \;
-            find dl -size -1024c -exec rm -f {} \;        
+    - name: 生成发布标签
+      id: tag
+      if: steps.compile.outputs.status == 'success' && !cancelled()
+      run: |
+        echo -e "🎉 X86-64平台\n✅ 主线源码\n❗️ ip地址 : 192.168.24.10" >> release.txt
+        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
+        echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: 空间使用情况（编译前）
-        if: (!cancelled())
-        run: df -hT
+    - name: 上传固件到发布
+      uses: softprops/action-gh-release@master
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: ${{ env.FIRMWARE }}/*
 
-      - name: 编译固件
-        id: compile
-        run: |
-          cd openwrt
-          make defconfig
-          echo -e "$(($(nproc)+1)) thread compile"
-          make -j$(($(nproc)+1)) || make -j1 V=s
-          echo "status=success" >> $GITHUB_OUTPUT
-          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
-          [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
-          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+    # - name: 删除运行记录
+    #   uses: Mattraks/delete-workflow-runs@main
+    #   if: steps.compile.outputs.status == 'success' && !cancelled()
+    #   continue-on-error: true
+    #   with:
+    #     retain_days: 10     #保留最后多少记录不删除
+    #     keep_minimum_runs: 0
 
-      - name: 整理文件
-        id: organize
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled()
-        run: |
-          cd openwrt/bin/targets/*/*
-          # rm -rf packages
-          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-          echo "status=success" >> $GITHUB_OUTPUT
-
-      - name: 上传完整固件目录
-        uses: actions/upload-artifact@main
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled()
-        with:
-          name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-          path: ${{ env.FIRMWARE }}
-          
-      - name: 整理固件文件
-        id: artifact
-        if: steps.compile.outputs.status == 'success' && !cancelled()
-        run: |
-          cd openwrt
-          mkdir -p ./artifact/firmware
-          mkdir -p ./artifact/package
-          mkdir -p ./artifact/buildinfo
-          rm -rf $(find ./bin/targets/ -type d -name "packages")
-          cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
-          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
-          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
-          cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
-          cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
-          cp -rf ./feeds.conf.default ./artifact/buildinfo/
-          cd artifact/firmware/
-          rename "s/openwrt/${{ env.Firmware_Name }}/" *
-          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-          echo "status=success" >> $GITHUB_OUTPUT
-       
-      - name: 上传固件目录
-        uses: actions/upload-artifact@main
-        if: env.UPLOAD_FIRMWARE == 'true' && steps.artifact.outputs.status == 'success' && !cancelled()
-        with:
-          name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_${{ env.DEVICE_NAME }}_firmware_${{ env.FILE_DATE }}
-          path: ${{ env.FIRMWARE }}
-
-      - name: 上传配置文件
-        if: steps.artifact.outputs.status == 'success' && env.UPLOAD_BUILDINFO == 'true' && !cancelled()
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_buildinfo${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-          path: openwrt/artifact/buildinfo/
-
-      - name: 上传插件
-        if: steps.artifact.outputs.status == 'success' && env.UPLOAD_PACKAGE == 'true' && !cancelled()
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_package${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-          path: openwrt/artifact/package/
-
-      - name: 生成发布标签
-        id: tag
-        if: env.UPLOAD_RELEASE == 'true' && steps.artifact.outputs.status == 'success' && !cancelled()
-        run: |
-          VERSION1="${REPO_BRANCH#*-}"
-
-          echo -e "
-          ★ 源码 : ${{ env.REPO_URL }} 
-          ★ 分支 : ${{ env.REPO_BRANCH }} 
-          ★ 感谢源码作者无私分享！
-
-          ⏰ 编译时间：${{ env.FILE_TIME1 }}
-          🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
-          echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
-          echo "status=success" >> $GITHUB_OUTPUT
-
-      - name: 上传固件到发布
-        uses: softprops/action-gh-release@master
-        if: steps.tag.outputs.status == 'success' && !cancelled()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
-        with:
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          body_path: release.txt
-          files: ${{ env.FIRMWARE }}/*
-
-      # - name: 删除运行记录
-      #   uses: Mattraks/delete-workflow-runs@v2
-      #   if: steps.compile.outputs.status == 'success' && !cancelled()
-      #   continue-on-error: true
-      #   with:
-      #     retain_days: 3     #保留最后多少记录不删除
-      #     keep_minimum_runs: 0
-
-      # - name: 删除自动发布的旧固件
-      #   uses: dev-drprasad/delete-older-releases@v0.3.3
-      #   continue-on-error: true
-      #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-      #   with:
-      #     keep_latest: 20        #保留多少个releases不删除
-      #     delete_tags: true
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
-  
+    # - name: 删除自动发布的旧固件
+    #   uses: dev-drprasad/delete-older-releases@v0.3.3
+    #   continue-on-error: true
+    #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #   with:
+    #     keep_latest: 20        #保留多少个releases不删除
+    #     delete_tags: true
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
