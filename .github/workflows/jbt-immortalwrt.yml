@@ -33,7 +33,7 @@ env:
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/My-Packages-mosdns.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
-  PACKAGES_SH: scripts/packages-immortalwrt-mosdns.sh
+  PACKAGES_SH: scripts/packages-immortalwrt.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   HANDLES_SH: scripts/Handles.sh
   UPLOAD_BIN_DIR: false
@@ -191,7 +191,7 @@ jobs:
         mkdir -p ./artifact/firmware
         find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ \;
         mkdir -p ./artifact/package
-        find ./bin/targets/ -type f -name "*.ipk" -exec cp {} ./artifact/package/ \;
+        find ./bin/packages/ -type f -name "*.ipk" -exec cp {} ./artifact/package/ \;
         mkdir -p ./artifact/buildinfo
         find ./bin/targets/ -type f \( -name "*.buildinfo" -o -name "*.manifest" \) -exec cp -fv {} ./artifact/buildinfo/ \;
         cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
