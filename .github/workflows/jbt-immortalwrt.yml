@@ -187,12 +187,12 @@ jobs:
       id: organize
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        cd openwrt/bin/targets/*/*
+        cd openwrt
         mkdir -p ./artifact/firmware
+        find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ +
         mkdir -p ./artifact/package
+        find ./bin/targets/ -type f -name "*.ipk" -exec cp {} ./artifact/package/ \;
         mkdir -p ./artifact/buildinfo
-        find . -type f -exec cp -f {} ./artifact/firmware/ \;
-        find .  -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ \;
         find ./bin/targets/ -type f \( -name "*.buildinfo" -o -name "*.manifest" \) -exec cp -fv {} ./artifact/buildinfo/ \;
         cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
         cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info

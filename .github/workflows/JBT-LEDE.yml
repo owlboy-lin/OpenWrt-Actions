@@ -195,6 +195,8 @@ jobs:
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
         rm -rf $(find ./bin/targets/ -type d -name "packages")
+        # find ./bin/targets -type d -name "packages"
+        # find ./bin/targets -type d -name "packages" -delete
         cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
         cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
