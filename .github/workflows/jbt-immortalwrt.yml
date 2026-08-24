@@ -189,7 +189,7 @@ jobs:
       run: |
         cd openwrt
         mkdir -p ./artifact/firmware
-        find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ +
+        find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ \;
         mkdir -p ./artifact/package
         find ./bin/targets/ -type f -name "*.ipk" -exec cp {} ./artifact/package/ \;
         mkdir -p ./artifact/buildinfo
