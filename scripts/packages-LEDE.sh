@@ -11,7 +11,7 @@ rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
 # 克隆依赖插件
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
-git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
+# git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 
 
 #克隆的源码放在small文件夹
@@ -60,7 +60,7 @@ git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
-git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+# git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
 # git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 
 # homeproxy
@@ -115,9 +115,9 @@ git clone -b main --depth 1 https://github.com/animegasan/luci-app-wolplus.git
 
 
 # kz8-small
-# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
 # mv package/kz8-small/adguardhome package/adguardhome
-# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 # mv package/kz8-small/luci-app-partexp package/luci-app-partexp
 # mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
@@ -135,7 +135,7 @@ git clone -b main --depth 1 https://github.com/animegasan/luci-app-wolplus.git
 # mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
-# rm -rf package/kz8-small
+rm -rf package/kz8-small
 
 
 popd
