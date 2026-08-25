@@ -17,8 +17,8 @@ mkdir package/small
 pushd package/small
 
 # kz8-small
-git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-mv package/kz8-small/adguardhome package/adguardhome
+# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+# mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 # mv package/kz8-small/luci-app-partexp package/luci-app-partexp
@@ -37,7 +37,7 @@ mv package/kz8-small/adguardhome package/adguardhome
 # mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
-rm -rf package/kz8-small
+# rm -rf package/kz8-small
 
 # luci-theme-aurora
 git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
