@@ -188,13 +188,13 @@ jobs:
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         cd openwrt
-        rm -rf $(find ./bin/targets/ -type d -name "packages")
+        find ./bin/targets/ -type d -name "packages" -delete
         mkdir -p ./artifact/firmware
-        find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ \;
+        find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ +
         mkdir -p ./artifact/package
-        find ./bin/targets/ -type f -name "*.ipk" -exec cp {} ./artifact/package/ \;
+        find ./bin/packages/ -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ +
         mkdir -p ./artifact/buildinfo
-        find ./bin/targets/ -type f \( -name "*.buildinfo" -o -name "*.manifest" \) -exec cp -fv {} ./artifact/buildinfo/ \;
+        find ./bin/targets/ -type f \( -name "*.buildinfo" -o -name "*.manifest" \) -exec cp -f {} ./artifact/buildinfo/ +
         cp -f ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
         cp -f ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
         cp -f ./feeds.conf.default ./artifact/buildinfo/
