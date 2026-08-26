@@ -188,8 +188,7 @@ jobs:
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         cd openwrt
-        # find ./bin/targets/ -type d -name "packages" -delete
-        rm -rf $(find ./bin/targets/ -type d -name "packages")
+        find ./bin/targets/ -type d -name "packages" -exec rm -rf {} +
         mkdir -p ./artifact/firmware
         find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ +
         mkdir -p ./artifact/package
