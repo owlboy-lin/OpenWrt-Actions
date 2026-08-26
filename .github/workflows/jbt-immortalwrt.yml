@@ -192,7 +192,7 @@ jobs:
         mkdir -p ./artifact/firmware
         find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ \;
         mkdir -p ./artifact/package
-        find ./bin/targets/*/*/packages -type f -name "*.ipk" -exec cp {} ./artifact/package/ \;
+        find ./bin/targets/ -type f -name "*.ipk" -exec cp {} ./artifact/package/ \;
         mkdir -p ./artifact/buildinfo
         find ./bin/targets/ -type f \( -name "*.buildinfo" -o -name "*.manifest" \) -exec cp -fv {} ./artifact/buildinfo/ \;
         cp -f ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
