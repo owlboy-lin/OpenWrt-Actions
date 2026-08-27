@@ -199,7 +199,7 @@ jobs:
         cd openwrt/bin/targets/*/*
         find ./packages/ -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ +
         find ./bin/targets/ -type d -name "packages" -exec rm -rf {} +
-        cd artifact/firmware/
+        cd openwrt/artifact/firmware/
         rename "s/openwrt/${{ env.Firmware_Name }}/" *
 
     - name: 上传固件目录
