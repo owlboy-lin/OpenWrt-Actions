@@ -188,16 +188,14 @@ jobs:
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         cd openwrt
-        find ./bin/targets/ -type d -name "packages" -exec rm -rf {} +
-        mkdir -p ./artifact/firmware
+        mkdir -p ./artifact/firmware ./artifact/buildinfo ./artifact/package
         find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ +
-        mkdir -p ./artifact/package
         find ./bin/packages/ -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ +
-        mkdir -p ./artifact/buildinfo
         find ./bin/targets/ -type f \( -name "*.buildinfo" -o -name "*.manifest" \) -exec cp -f {} ./artifact/buildinfo/ +
         cp -f ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
         cp -f ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
         cp -f ./feeds.conf.default ./artifact/buildinfo/
+        
         cd artifact/firmware/
         rename "s/openwrt/${{ env.Firmware_Name }}${{ env.FILE_DATE }}/" *
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
