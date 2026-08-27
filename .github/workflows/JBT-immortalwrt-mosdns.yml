@@ -196,11 +196,12 @@ jobs:
         cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
         cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
         cp -rf ./feeds.conf.default ./artifact/buildinfo/
-        cd openwrt/bin/targets/*/*
-        find ./packages/ -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ +
+        find ./bin/targets -path "*/packages/*" -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ +
         find ./bin/targets/ -type d -name "packages" -exec rm -rf {} +
-        cd openwrt/artifact/firmware/
+        cd artifact/firmware/
         rename "s/openwrt/${{ env.Firmware_Name }}/" *
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
 
     - name: 上传固件目录
       uses: actions/upload-artifact@main
@@ -208,6 +209,7 @@ jobs:
       with:
         name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_${{ env.DEVICE_NAME }}_firmware_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
+
 
     - name: 上传配置文件
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_BUILDINFO == 'true' && !cancelled()
