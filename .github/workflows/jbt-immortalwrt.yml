@@ -191,9 +191,26 @@ jobs:
         mkdir -p ./artifact/firmware
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
+        DEVICE_RAW=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' | head -n1)
+        if [ -n "$DEVICE_RAW" ]; then
+          echo "DEVICE_NAME=_${DEVICE_RAW}" >> $GITHUB_ENV
+        else
+          echo "DEVICE_NAME=" >> $GITHUB_ENV
+        fi
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ +
+        find ./bin/targets/ -type f \( -name "*.buildinfo" -o -name "*.manifest" \) -exec cp -f {} ./artifact/buildinfo/ +
+        cp -f ./.config "./artifact/buildinfo/${{ env.Firmware_Name }}${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}.info"
+        cp -f ./feeds.conf.default ./artifact/buildinfo/
         find ./bin/packages/ -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ \;
         find ./bin/targets -path "*/packages/*" -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ \;
         find ./bin/targets/ -type d -name "packages" -exec rm -rf {} \; -prune
+        cd ./artifact/firmware
+        NEW_PREFIX="${{ env.Firmware_Name }}${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}"
+        rename -n "s/openwrt/$NEW_PREFIX/" *
+        rename "s/openwrt/$NEW_PREFIX/" *
+        cd -
+
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
