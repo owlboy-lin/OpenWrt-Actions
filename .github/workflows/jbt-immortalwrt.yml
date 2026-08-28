@@ -204,8 +204,8 @@ jobs:
     - name: 打开Tmate SSH会话
       uses: mxschmitt/action-tmate@v3
       if: ${{inputs.ssh == true}}
+      timeout-minutes: 60 # 最长60分钟调试编译
       with:
-        timeout-minutes: 60 # 最长60分钟调试编译
         limit-access-to-actor: true # 仅自己能登录，安全
 
     - name: 整理文件
