@@ -198,7 +198,7 @@ jobs:
           echo "DEVICE_NAME=" >> $GITHUB_ENV
         fi
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        find ./bin/targets -path "*/packages/*" -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ \;
+        find ./bin -wholename './bin/*' -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ \;
         find ./bin/targets/ -type d -name "packages" -exec rm -rf {} \; -prune
         find ./bin/targets/ -type f -exec cp {} ./artifact/firmware/ \;
         find ./bin/targets/ -type f \( -name "*.buildinfo" -o -name "*.manifest" \) -exec cp -f {} ./artifact/buildinfo/ \;
