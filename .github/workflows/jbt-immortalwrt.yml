@@ -14,6 +14,14 @@ permissions: write-all
 on:
   repository_dispatch:
   workflow_dispatch:
+
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+        type: boolean
+
   schedule:
    - cron: 0 20 * * *
    #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
@@ -22,7 +30,9 @@ on:
   
   watch:
     types: [started]
-      
+
+
+
 env:
   FREE_DISK_SH: scripts/free_disk_space.sh
   ENV_SH: scripts/environment-imm.sh
@@ -182,6 +192,13 @@ jobs:
       with:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
+
+    - name: SSH connection to Actions
+      uses: P3TERX/ssh2actions@v1.0.0
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      env:
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}  
 
     - name: 整理文件
       id: organize
