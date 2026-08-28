@@ -17,10 +17,9 @@ on:
 
     inputs:
       ssh:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
+        description: '使用 ssh 连接到编译环境 (Connect to the build environment using ssh)'
         type: boolean
+        default: false
 
   schedule:
    - cron: 0 20 * * *
