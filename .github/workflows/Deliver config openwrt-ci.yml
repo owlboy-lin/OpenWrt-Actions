@@ -58,7 +58,7 @@ jobs:
     
     # if: github.event.repository.owner.id == github.event.sender.id
     
-    runs-on: Ubuntu-22.04
+    runs-on: ubuntu-latest
 
 
     steps:
