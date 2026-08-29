@@ -191,11 +191,15 @@ jobs:
         mkdir -p ./artifact/firmware
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
-        find ./bin/packages/ -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ \;
-        find ./bin/targets -path "*/packages/*" -type f -name "*.ipk" -exec cp -f {} ./artifact/package/ \;
-        find ./bin/targets/ -type d -name "packages" -exec rm -rf {} \; -prune
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "status=success" >> $GITHUB_OUTPUT
+        rm -rf $(find ./bin/targets/ -type d -name "packages")
+        cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
+        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+        cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+        cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
+        cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
+        cp -rf ./feeds.conf.default ./artifact/buildinfo/
+        cd artifact/firmware/
+        rename "s/openwrt/${{ env.Firmware_Name }}/" *
 
 
     - name: 上传固件目录
