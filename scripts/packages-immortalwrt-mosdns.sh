@@ -88,6 +88,9 @@ git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
 # daed
 git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 
+#luci-app-wolplus
+git clone -b main --depth 1 https://github.com/animegasan/luci-app-wolplus.git
+
 popd
 
 echo "packages executed successfully!"
