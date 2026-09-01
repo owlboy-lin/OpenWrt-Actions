@@ -88,7 +88,7 @@ git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
 
 
 # luci-app-netspeedtest
-git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
+# git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
 # git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 
 # openclash
