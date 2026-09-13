@@ -26,7 +26,7 @@ on:
 env:
   FREE_DISK_SH: scripts/free_disk_space.sh
   ENV_SH: scripts/environment-imm.sh
-  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: master
   Firmware_Name: BLLW-immortalwrt-mosdns
   # 修改 REPO_BRANCH 来达到更改编译版本
@@ -35,7 +35,7 @@ env:
   SETTINGS_SH: scripts/BLLW-init-settings.sh
   PACKAGES_SH: scripts/packages-immortalwrt-mosdns.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
-  VLMCSD_SH: scripts/Handles.sh
+  HANDLES_SH: scripts/Handles.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -193,7 +193,7 @@ jobs:
         mkdir -p ./artifact/buildinfo
         rm -rf $(find ./bin/targets/ -type d -name "packages")
         cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
-        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+        cp -rf $(find ./bin/packages/ -type f -name "*.apk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
         cp -f ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
         cp -f ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
@@ -203,12 +203,14 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
+
     - name: 上传固件目录
       uses: actions/upload-artifact@main
       if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
       with:
         name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_${{ env.DEVICE_NAME }}_firmware_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
+
 
     - name: 上传配置文件
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_BUILDINFO == 'true' && !cancelled()
