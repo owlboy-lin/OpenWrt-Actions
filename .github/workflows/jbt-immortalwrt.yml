@@ -240,6 +240,7 @@ jobs:
         NEW_PREFIX="${{ env.Firmware_Name }}${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}"
         rename -n "s/openwrt/$NEW_PREFIX/" *
         rename "s/openwrt/$NEW_PREFIX/" *
+        rename "s/immortalwrt/$NEW_PREFIX/" *
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
