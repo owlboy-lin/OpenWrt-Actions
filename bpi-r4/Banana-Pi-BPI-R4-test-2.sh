@@ -118,7 +118,7 @@ sed -i "s#192.168.1.1#192.168.24.9#g" $NET3                                     
 echo "
 
 # 额外组件
-CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
+# CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
 
 
 
@@ -135,7 +135,7 @@ CONFIG_PACKAGE_luci-app-autoreboot=y
 
 
 # openclash
-CONFIG_PACKAGE_luci-app-openclash=y
+# CONFIG_PACKAGE_luci-app-openclash=y
 
 
 # adguardhome

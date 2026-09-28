@@ -37,7 +37,7 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/OpenWrt-CI-small.info
+  CONFIG_FILE: config/OpenWrt-CI-test-1.info
   Firmware_Name: OpenWrt-CI-test
   DIY_P1_SH: smpackage/test-p.sh
   DIY_P2_SH: smpackage/test-p-2.sh
@@ -337,8 +337,8 @@ jobs:
           echo "release_date=$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "
-          ★ 源码 : https://github.com/coolsnowwolf/lede
-          ★ 分支 : master
+          ★ 源码 : ${{ env.REPO_URL }} 
+          ★ 分支 : ${{ env.REPO_BRANCH }} 
           ★ 感谢源码作者无私分享！
           
           ⏰ 编译时间：${{ env.FILE_TIME1 }}

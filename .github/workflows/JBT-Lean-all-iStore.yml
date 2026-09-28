@@ -39,16 +39,16 @@ env:
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/OpenWrt-CI.info
-  Firmware_Name: JBT-Lean-all-iStore
   DIY_P1_SH: smpackage/Lean-1.sh
-  DIY_P2_SH: smpackage/JBT-Lean-small-package-2.sh
+  DIY_P2_SH: smpackage/Lean-2.sh
+  Firmware_Name: JBT-Lean-all-iStore
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
   UPLOAD_PACKAGE: true
   UPLOAD_COWTRANSFER: false
   UPLOAD_WETRANSFER: false
-  UPLOAD_RELEASE: true
+  UPLOAD_RELEASE: false
   GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
   TZ: Asia/Shanghai  
 
@@ -56,8 +56,6 @@ jobs:
 
   build_openwrt:
 
-
-    name: JBT-Lean-all-iStore
     
     runs-on: Ubuntu-22.04
     
@@ -218,7 +216,7 @@ jobs:
         run: |
           cd openwrt
           make defconfig
-          make download -j$(($(nproc)+1))
+          make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;        
 
@@ -316,8 +314,8 @@ jobs:
           echo "release_date=$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "
-          ★ 源码 : https://github.com/coolsnowwolf/lede
-          ★ 分支 : master
+          ★ 源码 : ${{ env.REPO_URL }} 
+          ★ 分支 : ${{ env.REPO_BRANCH }} 
           ★ 感谢源码作者无私分享！
           
           ⏰ 编译时间：${{ env.FILE_TIME1 }}

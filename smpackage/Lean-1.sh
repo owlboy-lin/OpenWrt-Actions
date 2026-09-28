@@ -213,3 +213,5 @@ sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
 
 # echo "packages executed successfully!"
 
+# add feed
+echo "src-git nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git;main" >> "feeds.conf.default"

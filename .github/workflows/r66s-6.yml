@@ -34,9 +34,10 @@
     REPO_URL: https://github.com/coolsnowwolf/lede
     REPO_BRANCH: master
     FEEDS_CONF: feeds.conf.default
-    CONFIG_FILE: r66s/6.1/config/r66s.config
+    CONFIG_FILE: r66s/6.1/config/Lean-OpenWrt-FastRhino-r66s-6.1.info
     DIY_P1_SH: r66s/6.1/diy-part1.sh
     DIY_P2_SH: r66s/6.1/diy-part2.sh
+    Firmware_Name: OpenWrt-FastRhino-r66s-6.1 
     UPLOAD_BIN_DIR: false
     UPLOAD_FIRMWARE: true
     UPLOAD_BUILDINFO: true
@@ -126,7 +127,8 @@
         if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
         with:
           ccache: 'true'
-          mixkey: 'Lean-Mosdns(ALL)-1'
+          clean: 'false'
+          mixkey: '${{ env.Firmware_Name }}-${{ env.START_SECONDS }}'
           prefix: ${{ github.workspace }}/openwrt
 
       - name: patch1补丁和自定义设置
@@ -264,8 +266,8 @@
           echo "release_date=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "
-          ★ 源码 : https://github.com/coolsnowwolf/lede
-          ★ 分支 : master
+          ★ 源码 : ${{ env.REPO_URL }} 
+          ★ 分支 : ${{ env.REPO_BRANCH }} 
           ★ 感谢源码作者无私分享！
           
           ⏰ 编译时间：${{ env.FILE_TIME1 }}

@@ -95,7 +95,7 @@
 # svn export https://github.com/kiddin9/openwrt-packages/trunk/v2dat package/v2dat
 
 #添加TurboAcc
-curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
+# curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
 # sed -i 's/192.168.1.1/192.168.23.1/g' package/base-files/files/bin/config_generate
 # sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.23.1/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 # sed -i 's/ImmortalWrt/OpenWrt/g' package/base-files/files/bin/config_generate
@@ -103,15 +103,15 @@ curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turbo
 # sed -i 's#mirrors.vsean.net/openwrt#mirrors.pku.edu.cn/immortalwrt#g' package/emortal/default-settings/files/99-default-settings-chinese
 # mv $GITHUB_WORKSPACE/patch/banner $OPENWRT_PATH/package/base-files/files/etc/banner
 # mv $GITHUB_WORKSPACE/patch/immortalwrt-24.10/199-diy.sh package/base-files/files/etc/uci-defaults/199-diy.sh
-git clone --depth 1 -b core https://github.com/vernesong/OpenClash.git  package/openclash-core
-mv package/openclash-core/master/meta/clash-linux-amd64.tar.gz package/base-files/files/etc/clash-linux-amd64.tar.gz
-rm -rf package/openclash-core
+# git clone --depth 1 -b core https://github.com/vernesong/OpenClash.git  package/openclash-core
+# mv package/openclash-core/master/meta/clash-linux-amd64.tar.gz package/base-files/files/etc/clash-linux-amd64.tar.gz
+# rm -rf package/openclash-core
 
-#完全删除luci版本
-sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
-#添加编译日期
-sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/usr/lib/os-release
-sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/etc/openwrt_release
+# #完全删除luci版本
+# sed -i "s/+ ' \/ ' : '') + (luciversion ||/:/g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+# #添加编译日期
+# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/usr/lib/os-release
+# sed -i "s/%C/\/ Complied on $(date +"%Y.%m.%d")/g" package/base-files/files/etc/openwrt_release
 
 #下载5g模块
 # git clone --depth 1 https://github.com/Siriling/5G-Modem-Support.git package/5g-modem
@@ -123,10 +123,24 @@ git clone --depth=1 -b main https://github.com/linkease/istore.git package/istor
 # mv package/nas-packages/network/services/* package/nas-packages/
 # rm -rf package/nas-packages/network
 
+#删除feeds中的插件
+# rm -rf ./feeds/packages/net/v2ray-geodata
+# rm -rf feeds/packages/lang/golang
+# rm -rf ./feeds/packages/net/{geoview,shadowsocks-libev,chinadns-ng,mosdns}
+# rm -rf ./feeds/luci/applications/luci-app-mosdns
+#克隆依赖插件
+git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/pwpage
+# git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+
+# # #mosdns
+# git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git package/mosdns
+
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
+
 find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
 find ./ | grep Makefile | grep mosdns | xargs rm -f
+
 git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
@@ -142,19 +156,35 @@ git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git p
 git clone --depth 1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 git clone --depth 1 https://github.com/sirpdboy/luci-app-eqosplus.git package/luci-app-eqosplus
 
-rm -rf feeds/packages/net/adguardhome
+# rm -rf feeds/packages/net/adguardhome
 git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-mv package/kz8-small/adguardhome package/adguardhome
-mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+# mv package/kz8-small/adguardhome package/adguardhome
+# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 mv package/kz8-small/luci-app-partexp package/luci-app-partexp
 mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
 mv package/kz8-small/wrtbwmon package/wrtbwmon
 mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
+mv package/kz8-small/netspeedtest package/netspeedtest
 mv package/kz8-small/homebox package/homebox
 mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
+mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
+mv package/kz8-small/quickstart package/quickstart
+# mv package/kz8-small/luci-app-nikki package/luci-app-nikki
+# mv package/kz8-small/nikki package/nikki
 rm -rf package/kz8-small
 
+
+# OpenWrt-nikki
+git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git package/OpenWrt-nikki
+
+#adguardhome
+git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git package/luci-app-adguardhome
+
+#lucky
+git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git package/luci-app-lucky
+
+# #smartdns
 # git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/luci package/imm23luci
 # mv package/imm23luci/applications/luci-app-adbyby-plus package/luci-app-adbyby-plus
 # rm -rf package/imm23luci
@@ -166,15 +196,15 @@ rm -rf package/kz8-small
 
 # 自定义定制选项
 NET="package/base-files/files/bin/config_generate"
-sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.9/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
-NET3="package/base-files/luci2/bin/config_generate"
+sed -i "s/192\.168\.[0-9]*\.[0-9]*/192.168.24.8/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
+# NET3="package/base-files/luci2/bin/config_generate"
 # sed -i 's/192.168.1.1/192.168.24.1/g' package/base-files/luci2/bin/config_generate
 # ZZZ="package/emortal/default-settings/files/99-default-settings"
 
 
 #
-sed -i "s#192.168.1.1#192.168.24.9#g" $NET       
-sed -i "s#192.168.1.1#192.168.24.9#g" $NET3                                              # 定制默认IP
+sed -i "s#192.168.1.1#192.168.24.8#g" $NET       
+# sed -i "s#192.168.1.1#192.168.24.8#g" $NET3                                              # 定制默认IP
 # sed -i "s#ImmortalWrt#ImmortalWrt-X86#g" $NET                                          # 修改默认名称为 ImmortalWrt-X86
 # sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                          # 取消系统默认密码
 # echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                      # 设置默认主题(如果编译可会自动修改默认主题的，有可能会失效)
@@ -188,18 +218,18 @@ sed -i "s#192.168.1.1#192.168.24.9#g" $NET3                                     
 # ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # ========================性能跑分========================
-echo "rm -f /etc/uci-defaults/xxx-coremark" >> "$ZZZ"
-cat >> $ZZZ <<EOF
-cat /dev/null > /etc/bench.log
-echo " (CpuMark : 191219.823122" >> /etc/bench.log
-echo " Scores)" >> /etc/bench.log
-EOF
+# echo "rm -f /etc/uci-defaults/xxx-coremark" >> "$ZZZ"
+# cat >> $ZZZ <<EOF
+# cat /dev/null > /etc/bench.log
+# echo " (CpuMark : 191219.823122" >> /etc/bench.log
+# echo " Scores)" >> /etc/bench.log
+# EOF
 
 # ================ 网络设置 =======================================
 
-# cat >> $ZZZ <<-EOF
+cat >> $ZZZ <<-EOF
 # # 设置网络-旁路由模式
-# uci set network.lan.gateway='192.168.24.248'                     # 旁路由设置 IPv4 网关
+uci set network.lan.gateway='192.168.24.248'                     # 旁路由设置 IPv4 网关
 # uci set network.lan.dns='223.5.5.5 119.29.29.29'            # 旁路由设置 DNS(多个DNS要用空格分开)
 # uci set dhcp.lan.ignore='1'                                  # 旁路由关闭DHCP功能
 # uci delete network.lan.type                                  # 旁路由桥接模式-禁用
@@ -232,11 +262,13 @@ EOF
 # uci commit network
 # uci commit firewall
 
-# EOF
+EOF
 
 
 
 echo "
+
+
 
 # 额外组件
 CONFIG_GRUB_IMAGES=y
@@ -256,7 +288,7 @@ CONFIG_TARGET_KERNEL_PARTSIZE=1024
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
 
-# # Themes
+# themes
 CONFIG_PACKAGE_luci-theme-argon=y
 
 
@@ -289,6 +321,10 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-netspeedtest=y
 
 
+# nikki
+CONFIG_PACKAGE_luci-app-nikki=y
+
+
 # 宽带监控
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 
@@ -317,21 +353,26 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 
 
 # luci-app-turboacc
-CONFIG_PACKAGE_luci-app-turboacc=n
+CONFIG_PACKAGE_luci-app-turboacc=y
 
 
 # luci-app-uugamebooster
 CONFIG_PACKAGE_luci-app-uugamebooster=n
 
+CONFIG_PACKAGE_luci-app-upnp=y
 
 # luci-app-vssr
 CONFIG_PACKAGE_luci-app-vssr=y
 
+# luci-app-turboacc
+CONFIG_PACKAGE_luci-app-turboacc=y
 
 # luci-app-webadmin=y
 CONFIG_PACKAGE_luci-app-webadmin=y
 
+CONFIG_PACKAGE_luci-app-lucky=y
 
+CONFIG_PACKAGE_luci-app-netdata=y
 CONFIG_DEFAULT_autosamba=n
 CONFIG_PACKAGE_autosamba=n
 CONFIG_PACKAGE_autosamba_INCLUDE_KSMBD=n
@@ -340,7 +381,6 @@ CONFIG_PACKAGE_luci-app-accesscontrol=n
 CONFIG_PACKAGE_luci-app-arpbind=n
 CONFIG_PACKAGE_luci-app-ddns=n
 CONFIG_PACKAGE_luci-app-samba4=n
-CONFIG_PACKAGE_luci-app-upnp=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 CONFIG_PACKAGE_luci-app-wol=n
 
