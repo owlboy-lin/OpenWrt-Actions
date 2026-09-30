@@ -89,13 +89,13 @@ git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
 
 # luci-app-netspeedtest
 # 拉 librespeed-go
-# git clone --depth 1 https://github.com/fantastic-packages/packages.git package/fantastic
-# cp -r package/fantastic/net/librespeed-go package/
-# rm -rf package/fantastic
+git clone --depth 1 https://github.com/fantastic-packages/packages.git package/fantastic
+cp -r package/fantastic/net/librespeed-go package/librespeed-go
+rm -rf package/fantastic
 
-# git clone -b master --depth 1 https://github.com/muink/luci-app-netspeedtest.git
+git clone -b master --depth 1 https://github.com/muink/luci-app-netspeedtest.git
 # git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
-git clone --depth 1 https://github.com/sirpdboy/netspeedtest.git package/luci-app-netspeedtest
+# git clone --depth 1 https://github.com/sirpdboy/netspeedtest.git package/luci-app-netspeedtest
 
 # openclash
 # git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
