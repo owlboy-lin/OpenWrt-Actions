@@ -7,6 +7,9 @@ rm -rf feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev
 rm -rf feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core}
 rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-adguardhome}
 
+find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+
 #克隆依赖插件
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
 git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
@@ -45,6 +48,10 @@ git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
 # luci-app-nft-timecontrol
 git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
+# ssrp
+git clone -b master --depth 1 https://github.com/fw876/helloworld.git
+find ./ | grep Makefile | grep mosdns | xargs rm -f
+
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
 git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
@@ -57,9 +64,6 @@ git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
 # git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
 # git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
 
-# ssrp
-git clone -b master --depth 1 https://github.com/fw876/helloworld.git
-
 # VIKINGYFY/packages
 git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
 
@@ -71,6 +75,7 @@ git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall
 
 # mosdns
 git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+git clone -b master --depth 1 https://github.com/sbwml/v2ray-geodata.git
 
 # luci-app-netspeedtest
 git clone -b master --depth 1 https://github.com/muink/luci-app-netspeedtest.git
