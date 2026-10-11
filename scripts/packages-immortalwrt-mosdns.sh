@@ -2,10 +2,10 @@
 
 #删除feeds中的插件
 rm -rf feeds/packages/lang/golang
-rm -rf feeds/packages/net/{geoview,chinadns-ng,hysteria,v2ray-geodata}
+rm -rf feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata}
 rm -rf feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
 rm -rf feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core}
-rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-adguardhome}
+rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall}
 
 # find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
 # find ./ | grep Makefile | grep mosdns | xargs rm -f
