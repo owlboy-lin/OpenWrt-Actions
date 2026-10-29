@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # 删除feeds中的插件
-rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky}
-rm -rf ./feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
-rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smartdns}
+# rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky}
+# rm -rf ./feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
+# rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smartdns}
 
-rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
-rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns,luci-app-adguardhome}
-rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
+# rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
+# rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns,luci-app-adguardhome}
+# rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
 # 克隆依赖插件
-git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
-git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
+# git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
+# git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 
 
 #克隆的源码放在small文件夹
@@ -19,9 +19,9 @@ mkdir package/small
 pushd package/small
 
 # kz8-small
-git clone -b main --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-mv package/kz8-small/adguardhome package/adguardhome
-mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
+# git clone -b main --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
+# mv package/kz8-small/adguardhome package/adguardhome
+# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
 # mv package/kz8-small/luci-app-partexp package/luci-app-partexp
 # mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
@@ -39,7 +39,7 @@ mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
 # mv package/kz8-small/taskd package/taskd
 # mv package/kz8-small/luci-app-nikki package/luci-app-nikki
 # mv package/kz8-small/nikki package/nikki
-rm -rf package/kz8-small
+# rm -rf package/kz8-small
 
 # ssrp
 # git clone -b master --depth 1 https://github.com/fw876/helloworld.git
@@ -50,13 +50,13 @@ rm -rf package/kz8-small
 # git clone --depth=1 -b main https://github.com/linkease/istore.git 
 
 # mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
+# git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
 
 # luci-theme-aurora
-git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
+# git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
 
 # luci-app-nft-timecontrol
-git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
+# git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
@@ -88,8 +88,10 @@ git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
 
 
 # luci-app-netspeedtest
+# git clone -b master --depth 1 https://github.com/librespeed/speedtest-go
+# git clone -b master --depth 1 https://github.com/muink/luci-app-netspeedtest.git
+# git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 # git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
-git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 
 # openclash
 # git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
@@ -101,17 +103,17 @@ git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 # git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
 
 # daed
-git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
+# git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 
-#modem
+# modem
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
 
 # poweroff
 # git clone -b master --depth 1  git clone https://github.com/sirpdboy/luci-app-poweroffdevice
 # git clone -b main --depth 1 https://github.com/esirplayground/luci-app-poweroff.git
 
-#luci-app-wolplus
-git clone -b main --depth 1 https://github.com/animegasan/luci-app-wolplus.git
+# luci-app-wolplus
+# git clone -b main --depth 1 https://github.com/animegasan/luci-app-wolplus.git
 
 
 # kz8-small
