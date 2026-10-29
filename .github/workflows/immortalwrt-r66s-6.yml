@@ -1,0 +1,324 @@
+  #
+  # Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
+  #
+  # This is free software, licensed under the MIT License.
+  # See /LICENSE for more information.
+  #
+  # https://github.com/P3TERX/Actions-OpenWrt
+  # Description: Build OpenWrt using GitHub Actions
+  #
+
+  name: 编译immortalwrt固件r66s-6
+
+  on:
+    repository_dispatch:
+    workflow_dispatch:
+      inputs:
+        ssh:
+          description: 'SSH connection to Actions'
+          required: false
+          default: 'false'
+
+        CACHE_BUILD:
+          description: '缓存加速'
+          required: false
+          default: 'true'
+          type: boolean
+          
+  # 定时触发编译(每月1日早3点)
+    schedule:
+      - cron: 0 18 * * *
+
+
+  env:
+    FREE_DISK_SH: scripts/free_disk_space.sh
+    ENV_SH: scripts/environment.sh
+    REPO_URL: https://github.com/immortalwrt/immortalwrt
+    REPO_BRANCH: openwrt-24.10
+    PLATFORM_FILE: configs/My-rockchip.txt
+    CONFIG_FILE: configs/My-Packages.txt
+    SETTINGS_SH: scripts/init-settings.sh
+    PACKAGES_SH: scripts/packages.sh
+    CLASH_CORE_SH: scripts/preset-clash-core-arm64-L.sh
+    Firmware_Name: imm-FastRhino-r66s
+    UPLOAD_BIN_DIR: false
+    UPLOAD_FIRMWARE: true
+    UPLOAD_BUILDINFO: true
+    UPLOAD_PACKAGE: true
+    UPLOAD_COWTRANSFER: false
+    UPLOAD_WETRANSFER: false
+    UPLOAD_RELEASE: false
+    GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+    TZ: Asia/Shanghai  
+
+
+  jobs:
+    build:
+      runs-on: Ubuntu-24.04
+
+      steps:
+      - name: 检查
+        uses: actions/checkout@main
+
+      - name: 初始化环境
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          chmod +x $FREE_DISK_SH && $FREE_DISK_SH
+          sudo -E apt-get -qq update -y
+          sudo -E apt-get -qq full-upgrade -y
+          chmod +x $ENV_SH && $ENV_SH
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo timedatectl set-timezone "$TZ"
+          docker image prune -a -f
+          docker container prune -f
+          sudo mkdir -p /workdir
+          sudo chown $USER:$GROUPS /workdir
+
+      - name: 检查空间使用情况1
+        if: (!cancelled())
+        run: df -hT
+
+
+      - name: 更新时区、编译时间
+        id: date
+        run: |
+          sudo timedatectl set-timezone "$TZ"
+          echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
+          echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
+          echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
+          echo "编译开始时间..."
+          START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+          echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
+
+      - name: 克隆源码
+        working-directory: /workdir
+        run: |
+          git clone $REPO_URL --depth 1 -b $REPO_BRANCH openwrt
+          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+      - name: 设置 VERSION 环境变量
+        run: echo "VERSION=${REPO_BRANCH#*-}" >> $GITHUB_ENV
+
+      - name: 开启缓存
+        uses: klever1988/cachewrtbuild@main
+        with:
+          ccache: 'true'
+          mixkey: '${{ env.VERSION }}-rockchip'
+          prefix: ${{ github.workspace }}/openwrt
+
+
+      
+      - name: 安装 feeds
+        run: |
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: 导入补丁和配置 & 执行脚本
+        run: |
+          [ -d files ] && mv files openwrt/files || echo "files not found"
+          [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
+          [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
+          cd openwrt
+          chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
+          chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
+          chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
+
+      - name: 下载文件
+        run: |
+          cd openwrt
+          make defconfig
+          make download -j8 V=10
+          find dl -size -1024c -exec ls -l {} \;
+          find dl -size -1024c -exec rm -f {} \;
+
+      - name: 空间使用情况2
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 编译工具链
+        id: mtools
+        run: |
+          cd openwrt
+          make defconfig
+          echo -e "$(($(nproc)+1)) thread compile"
+          make tools/compile -j$(($(nproc)+1)) || make tools/compile -j1 V=s
+          make toolchain/compile -j$(($(nproc)+1)) || make toolchain/compile -j1 V=s
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: 空间使用情况3_1
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 清除工具链编译中间产物...
+        if: steps.mtools.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt
+          rm -rf dl/*
+          rm -rf build_dir/host/*
+          rm -rf build_dir/toolchain-*
+
+      - name: 空间使用情况3_2
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 编译内核
+        id: mkernel
+        if: steps.mtools.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt
+          echo -e "$(($(nproc)+1)) thread compile"
+          make target/linux/compile -j$(($(nproc)+1)) || make target/linux/compile -j1 V=s
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: 空间使用情况4
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 编译插件
+        id: mpackage
+        if: steps.mkernel.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt
+          echo -e "$(($(nproc)+1)) thread compile"
+          make package/compile -j$(($(nproc)+1)) || make package/compile -j1 V=s
+          make package/index
+          make package/install -j$(nproc) || make package/install -j1 V=s
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: 空间使用情况5
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 清除插件编译文件
+        id: cpackage
+        if: steps.mpackage.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt
+          rm -rf build_dir/target-*/host
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: 空间使用情况6
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 编译固件
+        id: compile
+        if: steps.cpackage.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt
+          echo -e "$(($(nproc)+1)) thread compile"
+          make target/install -j$(nproc) || make target/install -j1 V=s
+          make json_overview_image_info
+          make checksum
+          echo "status=success" >> $GITHUB_OUTPUT
+          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
+
+      - name: 空间使用情况7
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 上传 bin 目录
+        uses: actions/upload-artifact@main
+        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        with:
+          name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          path: openwrt/bin
+
+      - name: 整理固件文件
+        id: organize
+        if: steps.compile.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt
+          mkdir -p ./artifact/firmware
+          mkdir -p ./artifact/package
+          mkdir -p ./artifact/buildinfo
+          rm -rf $(find ./bin/targets/ -type d -name "packages")
+          cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
+          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+          cp -rf ./.config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
+          cp -rf ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
+          cp -rf ./feeds.conf.default ./artifact/buildinfo/
+          cd artifact/firmware/
+          # rename "s/openwrt/${{ env.Firmware_Name }}/" *
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      - name: 上传固件目录
+        uses: actions/upload-artifact@main
+        if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' 
+        with:
+          name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          path: ${{ env.FIRMWARE }}
+          
+      
+      - name: 获取内核版本号
+        if: steps.compile.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt/bin/targets/rockchip/armv8
+          KERNEL_VERSION=$(ls -l *openwrt-rockchip-armv8-generic-kernel.bin | awk '{print $9}' | cut -d '-' -f1)
+          echo "KERNEL_VERSION=$KERNEL_VERSION" >> $GITHUB_ENV
+
+      - name: 生成发布标签
+        id: tag
+        if: env.UPLOAD_RELEASE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
+        run: |
+          echo "release_tag=$(date +"%Y.%m.%d")-Lean" >> $GITHUB_OUTPUT
+          echo "release_date=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
+          touch release.txt
+          echo "
+          ★ 源码 : ${{ env.REPO_URL }} 
+          ★ 分支 : ${{ env.REPO_BRANCH }} 
+          ★ 感谢源码作者无私分享！
+          
+          ⏰ 编译时间：${{ env.FILE_TIME1 }}
+          
+          🎈 内核版本：${{ env.KERNEL_PATCHVER }}
+          
+          🎉 编译版本：${{ env.DISTRIB_REVISION }}
+          
+          🖥 管理地址：192.168.8.1 
+          
+          🌴 名称：root
+          
+          🛠 密码：password" >> release.txt
+          echo "status=success" >> $GITHUB_OUTPUT
+      
+      - name: 自动发布固件到 Releases
+        uses: softprops/action-gh-release@master
+        if: steps.tag.outputs.status == 'success' && !cancelled()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+        with:
+          name: ${{ steps.tag.outputs.release_date }} FastRhino-R66S-linux-固件下载
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          body_path: release.txt
+          files: ${{ env.FIRMWARE }}/*
+
+      # - name: 删除运行记录
+      #   uses: Mattraks/delete-workflow-runs@main
+      #   continue-on-error: true
+      #   with:
+      #     retain_days: 3     #保留最后多少记录不删除
+      #     keep_minimum_runs: 0
+
+      - name: 删除自动发布的旧固件
+        uses: dev-drprasad/delete-older-releases@master
+        #   continue-on-error: true
+        if: steps.tag.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+        with:
+          keep_latest: 20        #保留多少个releases不删除
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+
+      - name: 删除以前的工作流程
+        uses: Mattraks/delete-workflow-runs@v2
+        if: steps.tag.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 3
+          keep_minimum_runs: 3

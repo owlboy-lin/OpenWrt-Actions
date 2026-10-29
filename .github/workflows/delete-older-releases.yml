@@ -1,0 +1,20 @@
+name: delete-older-releases
+on:
+  workflow_dispatch:
+  # schedule:
+    # - cron: 0 16 * * *
+    
+jobs:
+  del_runs:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Delete releases and workflows runs
+      uses: ophub/delete-releases-workflows@main
+      with:
+        delete_releases: true
+        releases_keep_latest: 5
+        delete_tags: true
+        delete_workflows: true
+        workflows_keep_day: 10
+        gh_token: ${{ secrets.GITHUB_TOKEN }}
