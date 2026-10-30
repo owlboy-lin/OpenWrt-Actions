@@ -31,9 +31,9 @@ env:
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/My-Packages-mosdns.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
-  PACKAGES_SH: scripts/packages-immortalwrt-mosdns.sh
+  PACKAGES_SH: scripts/packages-immortalwrt.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
-  RUST_SH: scripts/rust.sh
+  RUST_SH: scripts/Handles.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -54,11 +54,7 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         chmod +x $FREE_DISK_SH && $FREE_DISK_SH
-        sudo -E apt-get -qq update -y
-        sudo -E apt-get -qq full-upgrade -y
         chmod +x $ENV_SH && $ENV_SH
-        sudo rm -rf /etc/apt/sources.list.d/*
-        sudo rm -rf /var/lib/apt/lists/*
         # 设置时区
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
@@ -132,6 +128,7 @@ jobs:
         [ -d files ] && mv files openwrt/files || echo "files not found"
         [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
         [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
+        [ -f $CONFIG_5G ] && cat $CONFIG_5G >> openwrt/.config
         chmod +x $RUST_SH && $RUST_SH
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
