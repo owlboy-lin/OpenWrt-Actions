@@ -33,7 +33,7 @@ env:
   SETTINGS_SH: scripts/JBT-init-settings.sh
   PACKAGES_SH: scripts/packages-immortalwrt.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
-  RUST_SH: scripts/Handles.sh
+  RUST_SH: scripts/rust.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
