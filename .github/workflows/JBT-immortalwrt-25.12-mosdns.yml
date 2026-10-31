@@ -31,7 +31,7 @@ env:
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/My-Packages-mosdns.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
-  PACKAGES_SH: scripts/packages-immortalwrt-mosdns.sh
+  PACKAGES_SH: scripts/packages-immortalwrt-mosdns-1.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   RUST_SH: scripts/rust.sh
   UPLOAD_BIN_DIR: false
