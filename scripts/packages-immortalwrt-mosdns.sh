@@ -12,7 +12,7 @@ find ./ | grep Makefile | grep mosdns | xargs rm -f
 
 #克隆依赖插件
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
-git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 27.x feeds/packages/lang/golang
 
 
 #克隆的源码放在small文件夹
