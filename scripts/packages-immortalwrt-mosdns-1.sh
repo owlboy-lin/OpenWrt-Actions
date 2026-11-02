@@ -48,6 +48,8 @@ clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -
 clone https://github.com/nikkinikki-org/OpenWrt-nikki.git luci-app-nikki -b main
 clone https://github.com/nikkinikki-org/OpenWrt-momo.git luci-app-momo -b main
 clone https://github.com/QiuSimons/luci-app-daed.git luci-app-daed -b master
+clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome -b main
+
 
 popd > /dev/null
 
