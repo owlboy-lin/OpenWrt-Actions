@@ -7,7 +7,7 @@ rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smart
 
 rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
 rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns,luci-app-adguardhome}
-rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
+rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo}
 
 # 克隆依赖插件
 git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
@@ -103,7 +103,7 @@ git clone -b master --depth 1 https://github.com/muink/luci-app-netspeedtest.git
 # git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
 
 # daed
-git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
+# git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
 
 #modem
 # git clone -b main --depth 1 https://github.com/FUjr/modem_feeds.git
