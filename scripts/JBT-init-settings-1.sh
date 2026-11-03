@@ -5,7 +5,7 @@
 #
 set -euo pipefail
 
-DEF_IP="192.168.24.1"
+DEF_IP="192.168.24.10"
 
 echo "==> 默认 LAN IP -> ${DEF_IP}"
 

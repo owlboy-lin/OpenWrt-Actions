@@ -36,7 +36,7 @@ mkdir -p package/small
 pushd package/small > /dev/null
 
 clone https://github.com/eamonxg/luci-theme-aurora.git luci-theme-aurora -b master
-clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
+# clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
 clone https://github.com/gdy666/luci-app-lucky.git luci-app-lucky -b main
 # smartdns
 clone https://github.com/pymumu/luci-app-smartdns.git luci-app-smartdns -b master
@@ -59,4 +59,4 @@ if [ -d package/feeds ]; then
 fi
 echo "悬空软链数量: $(find package/feeds -xtype l 2>/dev/null | wc -l)"
 
-echo "✅ packages.sh 完成"
+echo "✅ packages-immortalwrt-mosdns-1 完成"
