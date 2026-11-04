@@ -93,6 +93,10 @@ pushd package/small
 # git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 # git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
 
+# 网络测速
+clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
+
+
 # openclash
 # git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
 
