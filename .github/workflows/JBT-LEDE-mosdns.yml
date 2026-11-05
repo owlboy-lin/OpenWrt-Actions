@@ -31,7 +31,7 @@ env:
   Firmware_Name: JBT-LEDE-mosdns
   # 修改 REPO_BRANCH 来达到更改编译版本
   PLATFORM_FILE: configs/My-Target-X86.txt
-  CONFIG_FILE: configs/My-Packages-mosdns.txt
+  CONFIG_FILE: configs/My-Packages.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
   PACKAGES_SH: scripts/packages-LEDE-test.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
