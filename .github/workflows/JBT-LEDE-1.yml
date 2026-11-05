@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: JBT-LEDE
+name: JBT-LEDE-1
 
 permissions: write-all
 #开启写权限，防止无法上传到release
@@ -31,7 +31,7 @@ env:
   ENV_SH: scripts/environment-LEDE.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  Firmware_Name: JBT-LEDE
+  Firmware_Name: JBT-LEDE-1
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/My-Packages.txt
   CONFIG_5G: configs/Packages-5G.txt
