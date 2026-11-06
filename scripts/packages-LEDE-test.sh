@@ -6,7 +6,7 @@
 # rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smartdns}
 
 # rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
-# rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns,luci-app-adguardhome}
+rm -rf ./feeds/luci/applications/{luci-app-adguardhome}
 # rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
 # 克隆依赖插件
@@ -60,7 +60,7 @@ pushd package/small
 
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
-# git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
 # git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 
 # homeproxy
@@ -89,7 +89,7 @@ pushd package/small
 
 # luci-app-netspeedtest
 # git clone -b master --depth 1 https://github.com/librespeed/speedtest-go
-# git clone -b master --depth 1 https://github.com/muink/luci-app-netspeedtest.git
+git clone -b master --depth 1 https://github.com/muink/luci-app-netspeedtest.git
 # git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
 # git clone -b master --depth 1 https://github.com/sirpdboy/luci-app-netspeedtest.git
 

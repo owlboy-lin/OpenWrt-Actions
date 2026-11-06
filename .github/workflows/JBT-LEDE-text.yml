@@ -33,10 +33,10 @@ env:
   REPO_BRANCH: master
   Firmware_Name: JBT-LEDE-test
   PLATFORM_FILE: configs/My-Target-X86.txt
-  CONFIG_FILE: configs/My-Packages-mosdns.txt
+  CONFIG_FILE: configs/My-Packages.txt
   CONFIG_5G: configs/Packages-5G.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
-  PACKAGES_SH: scripts/packages-LEDE-1.sh
+  PACKAGES_SH: scripts/packages-LEDE-test.sh
   INSTALL5G_SH: scripts/install-5G.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   VLMCSD_SH: scripts/vlmcsd.sh
@@ -50,7 +50,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: 检查代码
