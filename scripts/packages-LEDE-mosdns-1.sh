@@ -16,7 +16,7 @@ echo "==> 删除 feeds 中被覆盖的插件"
 rm -rf feeds/packages/net/{mosdns,lucky}
 rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,v2ray-plugin,xray-plugin,geoview,shadow-tls,smartdns}
 # rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-homeproxy,luci-app-timecontrol}
-rm -rf feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-mosdns}
+rm -rf feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-mosdns，luci-app-adguardhome}
 # rm -rf feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
 echo "==> 克隆依赖插件"
@@ -43,6 +43,10 @@ clone https://github.com/pymumu/luci-app-smartdns.git luci-app-smartdns -b maste
 # clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
 # mosdns
 clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
+# adguardhome
+# git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
+git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+# git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 # 网络测速
 # clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
 # openclash
