@@ -15,7 +15,7 @@ nONFIG_PACKAGE_luci-app-passwall=n
 CONFIG_PACKAGE_luci-app-passwall2=n
 CONFIG_PACKAGE_luci-app-nikki=n
 CONFIG_PACKAGE_luci-app-momo=n
-CONFIG_PACKAGE_luci-app-daed=y
+CONFIG_PACKAGE_luci-app-daed=n
 CONFIG_PACKAGE_luci-app-ssr-plus=n
 
 # luci插件调整
