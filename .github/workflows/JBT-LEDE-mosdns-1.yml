@@ -28,10 +28,10 @@ env:
   ENV_SH: scripts/environment-LEDE-1.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  Firmware_Name: JBT-LEDE-mosdns-1
   # 修改 REPO_BRANCH 来达到更改编译版本
+  Firmware_Name: JBT-LEDE-mosdns-1
   PLATFORM_FILE: configs/My-Target-X86.txt
-  CONFIG_FILE: configs/Packages-LEDE.txt
+  CONFIG_FILE: configs/Packages-LEDE-mosdns.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
   PACKAGES_SH: scripts/packages-LEDE-mosdns.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
