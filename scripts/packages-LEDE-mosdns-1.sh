@@ -45,7 +45,7 @@ clone https://github.com/pymumu/luci-app-smartdns.git luci-app-smartdns -b maste
 clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
-git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome -b main
 # git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 # smartdns
 # git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
@@ -57,8 +57,9 @@ git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
 # openclash
 # clone https://github.com/vernesong/OpenClash.git OpenClash -b master
 # 透明代理系
-# clone https://github.com/nikkinikki-org/OpenWrt-nikki.git luci-app-nikki -b main
+clone https://github.com/nikkinikki-org/OpenWrt-nikki.git luci-app-nikki -b main
 clone https://github.com/nikkinikki-org/OpenWrt-momo.git luci-app-momo -b main
+clone https://github.com/QiuSimons/luci-app-daed.git luci-app-daed -b master
 # 流量监控（luci 前端 + bandix 核心包；核心是预编译二进制，按架构从 release 下载）
 clone https://github.com/timsaya/luci-app-bandix.git luci-app-bandix -b main
 clone https://github.com/timsaya/openwrt-bandix.git openwrt-bandix -b main
