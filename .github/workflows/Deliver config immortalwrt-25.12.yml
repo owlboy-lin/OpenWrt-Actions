@@ -1,0 +1,252 @@
+
+    #
+    # This is free software, lisence use MIT.
+    # 
+    # Copyright (C) 2019 P3TERX <https://p3terx.com>
+    # Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
+    # 
+    # <https://github.com/KFERMercer/OpenWrt-CI>
+    # 
+
+    name: Deliver config immortalwrt-25.12
+
+    permissions: write-all
+    #开启写权限，防止无法上传到release
+
+
+    on:
+      repository_dispatch:
+      workflow_dispatch:
+      schedule:
+       - cron: 0 20 * * 4
+   #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
+      release:
+        types: [published]
+        
+      watch:
+        types: [started]
+    
+      repository_dispatch:
+      workflow_dispatch:
+        inputs:
+          ssh:
+            description: '使用 ssh 连接到编译环境 (Connect to the build environment using ssh)'
+            type: boolean
+            default: false
+            
+          CACHE_BUILD:
+            description: '缓存加速'
+            required: false
+            default: 'true'
+            type: boolean
+
+
+            
+          
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  FREE_DISK_SH: scripts/free_disk_space.sh
+  ENV_SH: scripts/environment-imm.sh
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: openwrt-25.12
+  Firmware_Name: JBT-immortalwrt-25.12
+  # 修改 REPO_BRANCH 来达到更改编译版本
+  PLATFORM_FILE: configs/My-Target-X86.txt
+  CONFIG_FILE: configs/My-Packages-mosdns.txt
+  SETTINGS_SH: scripts/JBT-init-settings.sh
+  PACKAGES_SH: scripts/packages-immortalwrt.sh
+  CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
+  RUST_SH: scripts/rust.sh
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  UPLOAD_BUILDINFO: true
+  UPLOAD_PACKAGE: true
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检查代码
+      uses: actions/checkout@main
+
+    - name: 初始化环境
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        chmod +x $FREE_DISK_SH && $FREE_DISK_SH
+        chmod +x $ENV_SH && $ENV_SH
+        # 设置时区
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+        
+    - name: 更新时区、编译时间
+      id: date
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
+        echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
+        echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
+        echo "编译开始时间..."
+        START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+        echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
+
+    - name: 检查空间使用情况（清理情况）
+      if: (!cancelled())
+      run: df -hT
+
+    - name: 克隆源码
+      working-directory: /workdir
+      run: |
+        git clone $REPO_URL --depth 1 -b $REPO_BRANCH openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+        cd ./openwrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
+
+        # GitHub Action 移除国内下载源
+        PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
+        if [ -f "$PROJECT_MIRRORS_FILE" ]; then
+          sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
+        fi
+
+    - name: 检查缓存
+      id: check-cache
+      uses: actions/cache@main
+      with:
+        key: x86-${{env.Firmware_Name}}-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
+        restore-keys: x86-${{env.Firmware_Name}}-${{env.REPO_BRANCH}}
+        path: |
+          ./openwrt/.ccache
+          ./openwrt/staging_dir/host*
+          ./openwrt/staging_dir/tool*
+
+    - name: 开启CCACHE配置
+      run: |
+        echo 'CONFIG_DEVEL=y' >> openwrt/.config
+        echo 'CONFIG_CCACHE=y' >> openwrt/.config
+
+    - name: 更新缓存
+      run: |
+        if [ -d "./openwrt/staging_dir" ]; then
+          find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
+            find "$DIR" -type f -exec touch {} +
+          done
+
+          mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
+
+          echo "toolchain skiped done!"
+        else
+          echo "caches missed!"
+        fi
+
+        if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
+          CACHE_LIST=$(gh cache list --key "x86-$REPO_BRANCH" | cut -f 1)
+          for CACHE_KEY in $CACHE_LIST; do
+            gh cache delete $CACHE_KEY
+          done
+
+          echo "caches cleanup done!"
+        fi
+
+    - name: 安装 feeds
+      run: |
+        cd openwrt
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+
+    - name: 导入补丁和配置 & 执行脚本
+      run: |
+        [ -d files ] && mv files openwrt/files || echo "files not found"
+        [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
+        [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
+        chmod +x $RUST_SH && $RUST_SH
+        cd openwrt
+        chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
+        chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
+        chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
+
+    - name: 下载文件
+      run: |
+        cd openwrt
+        make defconfig
+     
+     
+        - name: SSH connection to Actions
+          uses: P3TERX/ssh2actions@main
+          if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+          env:
+            TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+            TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
+        # - name: patch2补丁和自定义设置
+        #   run: |
+        #     [ -e files ] && mv files openwrt/files
+        #     chmod +x $DIY_P2_SH
+        #     cd openwrt
+        #     $GITHUB_WORKSPACE/$DIY_P2_SH
+
+
+        # 你也可以使用这个，个人觉得它更好用 (You can use this, I personally think it is better)
+        # - name: 打开Tmate SSH会话
+        #   uses: mxschmitt/action-tmate@v3
+        #   if: ${{inputs.ssh == true}}
+        #   with:
+        #     timeout-minutes: 60 # 最长60分钟调试编译
+        #     limit-access-to-actor: true # 仅自己能登录，安全
+      
+        - name: Prepare artifact
+          run: |
+            cd openwrt
+            mkdir -p ./artifact/buildinfo
+            cp -rf .config ./artifact/buildinfo/${{ env.Firmware_Name }}.info
+      
+         
+        - name: Upload config
+          uses: actions/upload-artifact@v4
+          with:
+            name: ${{ env.Firmware_Name }}_${{ env.FILE_DATE }}
+            path: openwrt/artifact/buildinfo/
+         
+    #    - name: SSH connection to Actions
+    #      uses: P3TERX/ssh2actions@v1.0.0
+    #      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+    #      env:
+    #        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    #        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}     
+            
+        - name: Organize files
+          id: organize
+          run: |
+            cd openwrt/artifact/buildinfo/
+            echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+    #        echo "::set-output name=status::success"
+    #        echo "status=success" >> $GITHUB_OUTPUT
+
+        - name: Upload firmware to WeTransfer
+          id: wetransfer
+          if: env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+          run: |
+            curl -sL https://git.io/file-transfer | sh 
+            ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+            echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+    #        echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
+    #        echo "url=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_OUTPUT 
+     
+        - name: 删除运行记录
+          uses: Mattraks/delete-workflow-runs@v2
+          with:
+            retain_days: 3     #保留最后多少记录不删除
+            keep_minimum_runs: 0
+
+    #    - name: Remove old Releases
+    #      uses: dev-drprasad/delete-older-releases@v0.1.0
+    #      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #      with:
+    #        keep_latest: 3
+    #        delete_tags: true
+    #      env:
+    #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
