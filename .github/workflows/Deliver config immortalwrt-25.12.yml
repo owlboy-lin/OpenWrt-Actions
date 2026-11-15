@@ -15,6 +15,9 @@
 
 
     on:
+      schedule:
+       - cron: 0 20 * * 4
+   #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
       release:
         types: [published]
         
@@ -24,24 +27,13 @@
 
       repository_dispatch:
       workflow_dispatch:
-      schedule:
-       - cron: 0 20 * * 4
-   #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
-
         inputs:
           ssh:
             description: '使用 ssh 连接到编译环境 (Connect to the build environment using ssh)'
             type: boolean
             default: false
             
-          CACHE_BUILD:
-            description: '缓存加速'
-            required: false
-            default: 'true'
-            type: boolean
-
-
-            
+          
           
     env:
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
