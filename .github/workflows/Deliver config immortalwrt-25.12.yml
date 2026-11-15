@@ -39,12 +39,12 @@ env:
   REPO_BRANCH: openwrt-25.12
   # 修改 REPO_BRANCH 来达到更改编译版本
   Firmware_Name: JBT-immortalwrt-25.12
-  PLATFORM_FILE: configs/My-Target-X86.txt
-  CONFIG_FILE: configs/My-Packages-mosdns.txt
-  SETTINGS_SH: scripts/JBT-init-settings.sh
-  PACKAGES_SH: scripts/packages-immortalwrt.sh
-  CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
-  RUST_SH: scripts/rust.sh
+  # PLATFORM_FILE: configs/My-Target-X86.txt
+  # CONFIG_FILE: configs/My-Packages-mosdns.txt
+  # SETTINGS_SH: scripts/JBT-init-settings.sh
+  # PACKAGES_SH: scripts/packages-immortalwrt.sh
+  # CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
+  # RUST_SH: scripts/rust.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
@@ -145,16 +145,16 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-      - name: 导入补丁和配置 & 执行脚本
-        run: |
-          [ -d files ] && mv files openwrt/files || echo "files not found"
-          [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
-          [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
-          chmod +x $RUST_SH && $RUST_SH
-          cd openwrt
-          chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
-          chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
-          chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
+      # - name: 导入补丁和配置 & 执行脚本
+      #   run: |
+      #     [ -d files ] && mv files openwrt/files || echo "files not found"
+      #     [ -f $PLATFORM_FILE ] && cat $PLATFORM_FILE >> openwrt/.config
+      #     [ -f $CONFIG_FILE ] && cat $CONFIG_FILE >> openwrt/.config
+      #     chmod +x $RUST_SH && $RUST_SH
+      #     cd openwrt
+      #     chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
+      #     chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
+      #     chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
 
       - name: 下载文件
         run: |
