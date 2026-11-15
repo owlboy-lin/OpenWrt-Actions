@@ -15,19 +15,19 @@
 
 
     on:
-      repository_dispatch:
-      workflow_dispatch:
-      schedule:
-       - cron: 0 20 * * 4
-   #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
       release:
         types: [published]
         
       watch:
         types: [started]
-    
+
+
       repository_dispatch:
       workflow_dispatch:
+      schedule:
+       - cron: 0 20 * * 4
+   #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
+
         inputs:
           ssh:
             description: '使用 ssh 连接到编译环境 (Connect to the build environment using ssh)'
