@@ -1,117 +1,79 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# 处理 feeds 里的插件，并克隆需要覆盖/新增的第三方插件
+# 必须在 openwrt 源码根目录执行（build.yml 已保证）
+#
+set -euo pipefail
 
-#删除feeds中的插件
-rm -rf feeds/packages/lang/golang
-rm -rf feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata}
-rm -rf feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
-rm -rf feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core}
-rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-adguardhome}
+clone() {
+  local url="$1" dir="$2"
+  shift 2
+  echo "==> clone ${url} -> ${dir}"
+  git clone --depth 1 "$@" "$url" "$dir"
+}
 
-#克隆依赖插件
-git clone --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
-git clone --depth 1 https://github.com/sbwml/packages_lang_golang -b 27.x feeds/packages/lang/golang
+echo "==> 删除 feeds 中要被覆盖的插件"
+rm -rf feeds/packages/net/mosdns
+rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,v2ray-plugin,xray-plugin,geoview,shadow-tls,smartdns}
+rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-smartdns,luci-app-adguardhome}
 
+echo "==> 克隆依赖插件"
+# passwall 的依赖包（xray-core / sing-box / hysteria / geoview ...）
+clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
 
-#克隆的源码放在small文件夹
-mkdir package/small
-pushd package/small
+mkdir -p package/small
+pushd package/small > /dev/null
 
-# kz8-small
-# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-# mv package/kz8-small/adguardhome package/adguardhome
-# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
-# mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
-# mv package/kz8-small/luci-app-partexp package/luci-app-partexp
-# mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
-# mv package/kz8-small/wrtbwmon package/wrtbwmon
-# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
-# mv package/kz8-small/netspeedtest package/netspeedtest
-# mv package/kz8-small/homebox package/homebox
-# mv package/kz8-small/speedtest-cli package/speedtest-cli
-# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
-# mv package/kz8-small/quickstart package/quickstart
-# mv package/kz8-small/luci-app-store package/luci-app-store
-# mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
-# mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
-# mv package/kz8-small/taskd package/taskd
-# mv package/kz8-small/luci-app-nikki package/luci-app-nikki
-# mv package/kz8-small/nikki package/nikki
-# rm -rf package/kz8-small
-
-# luci-theme-aurora
-git clone -b master --depth 1 https://github.com/eamonxg/luci-theme-aurora.git
-
-# luci-app-nft-timecontrol
-git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
-
+# 主题
+clone https://github.com/eamonxg/luci-theme-aurora.git luci-theme-aurora -b master
+# 定时控制
+# clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
+# homeproxy（immortalwrt 版本，规则文件由 scripts/homeproxy.sh 在后面补）
+# clone https://github.com/immortalwrt/homeproxy.git homeproxy -b master
+# lucky
+clone https://github.com/gdy666/luci-app-lucky.git luci-app-lucky -b main
+# smartdns
+clone https://github.com/pymumu/luci-app-smartdns.git luci-app-smartdns -b master
+# VIKINGYFY/packages（一堆 luci 依赖）
+# clone https://github.com/VIKINGYFY/packages.git VIKINGYFY-packages -b main
+# passwall / passwall2
+# clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
+# clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
+# mosdns
+clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 # adguardhome
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
-git clone -b main --depth 1  https://github.com/kenzok78/luci-app-adguardhome
+clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome -b main
 # git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
-
-# lucky
-# git clone -b main --depth 1 https://github.com/gdy666/luci-app-lucky.git
-
 # smartdns
 # git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
 # git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
-
-# ssrp
-# git clone -b master --depth 1 https://github.com/fw876/helloworld.git
-
-# VIKINGYFY/packages
-git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
-
-# passwall
-# git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall.git
-
-# passwall2
-# git clone -b main --depth 1 https://github.com/Openwrt-Passwall/openwrt-passwall2.git
-
-# mosdns
-git clone -b v5 --depth 1 https://github.com/sbwml/luci-app-mosdns.git
-
-# luci-app-netspeedtest
-git clone -b master --depth 1 https://github.com/muink/luci-app-netspeedtest.git
-# git clone -b main --depth 1  https://github.com/sirpdboy/netspeedtest.git
-
+# sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
+# sed -n '33p' smartdns/package/openwrt/Makefile
+# 网络测速
+# clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
 # openclash
-# git clone -b master --depth 1 https://github.com/vernesong/OpenClash.git
+# clone https://github.com/vernesong/OpenClash.git OpenClash -b master
+# 透明代理系
+clone https://github.com/nikkinikki-org/OpenWrt-nikki.git luci-app-nikki -b main
+clone https://github.com/nikkinikki-org/OpenWrt-momo.git luci-app-momo -b main
+clone https://github.com/QiuSimons/luci-app-daed.git luci-app-daed -b master
+# 流量监控（luci 前端 + bandix 核心包；核心是预编译二进制，按架构从 release 下载）
+clone https://github.com/timsaya/luci-app-bandix.git luci-app-bandix -b main
+clone https://github.com/timsaya/openwrt-bandix.git openwrt-bandix -b main
+# 温度显示（状态页）
+clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
+# 网盘（alist 的继任者，取代已失效的 aliyundrive-webdav）
+clone https://github.com/sbwml/luci-app-openlist2.git luci-app-openlist2 -b main
+#luci-app-wolplus
+clone https://github.com/animegasan/luci-app-wolplus.git luci-app-wolplus -b main
 
-# OpenWrt-nikki
-# git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git
+popd > /dev/null
 
-# OpenWrt-momo
-# git clone -b main --depth 1 https://github.com/nikkinikki-org/OpenWrt-momo.git
+echo "==> 清理悬空软链（feeds 目录已删除、又没有补回来的那些包）"
+if [ -d package/feeds ]; then
+  find package/feeds -xtype l -delete
+fi
+echo "悬空软链数量: $(find package/feeds -xtype l 2>/dev/null | wc -l)"
 
-# daed
-git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
-
-# kz8-small
-# git clone --depth=1 https://github.com/kenzok8/small-package.git package/kz8-small
-# mv package/kz8-small/adguardhome package/adguardhome
-# mv package/kz8-small/luci-app-adguardhome package/luci-app-adguardhome
-# mv package/kz8-small/luci-app-ikoolproxy package/luci-app-ikoolproxy
-# mv package/kz8-small/luci-app-partexp package/luci-app-partexp
-# mv package/kz8-small/luci-app-wrtbwmon package/luci-app-wrtbwmon
-# mv package/kz8-small/wrtbwmon package/wrtbwmon
-# mv package/kz8-small/luci-app-netspeedtest package/luci-app-netspeedtest
-# mv package/kz8-small/netspeedtest package/netspeedtest
-# mv package/kz8-small/homebox package/homebox
-# mv package/kz8-small/speedtest-cli package/speedtest-cli
-# mv package/kz8-small/luci-app-poweroff package/luci-app-poweroff
-# mv package/kz8-small/luci-app-quickstart package/luci-app-quickstart
-# mv package/kz8-small/quickstart package/quickstart
-# mv package/kz8-small/luci-app-store package/luci-app-store
-# mv package/kz8-small/luci-lib-taskd package/luci-lib-taskd
-# mv package/kz8-small/luci-lib-xterm package/luci-lib-xterm
-# mv package/kz8-small/taskd package/taskd
-# mv package/kz8-small/luci-app-nikki package/luci-app-nikki
-# mv package/kz8-small/nikki package/nikki
-# rm -rf package/kz8-small
-
-
-popd
-
-echo "packages executed successfully!"
+echo "✅ packages.sh 完成"
