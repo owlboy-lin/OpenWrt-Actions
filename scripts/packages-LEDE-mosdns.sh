@@ -67,6 +67,8 @@ clone https://github.com/timsaya/openwrt-bandix.git openwrt-bandix -b main
 clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
 # 网盘（alist 的继任者，取代已失效的 aliyundrive-webdav）
 clone https://github.com/sbwml/luci-app-openlist2.git luci-app-openlist2 -b main
+#luci-app-wolplus
+clone https://github.com/animegasan/luci-app-wolplus.git luci-app-wolplus -b main
 
 popd > /dev/null
 
