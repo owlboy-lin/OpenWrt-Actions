@@ -16,7 +16,7 @@ echo "==> 删除 feeds 中被覆盖的插件"
 rm -rf feeds/packages/net/{mosdns,lucky}
 rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,v2ray-plugin,xray-plugin,geoview,shadow-tls,smartdns}
 # rm -rf feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-homeproxy,luci-app-timecontrol}
-rm -rf feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-mosdnsluci-app-adguardhome}
+rm -rf feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-mosdns,luci-app-adguardhome}
 # rm -rf feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
 
 echo "==> 克隆依赖插件"
