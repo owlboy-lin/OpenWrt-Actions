@@ -29,7 +29,7 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   # 修改 REPO_BRANCH 来达到更改编译版本
-  Firmware_Name: BLLW-LEDE-mosdns
+  Firmware_Name: BLLW-LEDE-mosdns-test
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/Packages-LEDE-mosdns.txt
   SETTINGS_SH: scripts/BLLW-init-settings.sh
