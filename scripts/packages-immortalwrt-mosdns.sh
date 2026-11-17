@@ -15,7 +15,7 @@ clone() {
 echo "==> 删除 feeds 中要被覆盖的插件"
 rm -rf feeds/packages/net/mosdns
 rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,v2ray-plugin,xray-plugin,geoview,shadow-tls,smartdns}
-rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-smartdns}
+rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-smartdns,luci-app-adguardhome}
 
 echo "==> 克隆依赖插件"
 # passwall 的依赖包（xray-core / sing-box / hysteria / geoview ...）
