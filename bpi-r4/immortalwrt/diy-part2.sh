@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Modify default IP
-sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.89.1/g' package/base-files/files/bin/config_generate
 
 # Apply the mt76 Makefile patch standalone (tracked via patch(1))
 perl -0pi -e 's/\r\n/\n/g; s/\r/\n/g' \
