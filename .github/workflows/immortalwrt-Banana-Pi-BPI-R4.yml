@@ -46,15 +46,18 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Maximize build space
-      uses: easimon/maximize-build-space@master
+      uses: easimon/maximize-build-space@v10
       with:
         root-reserve-mb: 512
         swap-size-mb: 1024
         remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
 
     - name: Check out the project branch
       uses: actions/checkout@main
@@ -70,7 +73,7 @@ jobs:
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean ) &
-        sudo timedatectl set-timezone "$TZ"
+        sudo timedatectl set-timezone "$TZ" || true
         
     - name: Initialize Environment and Display System Info
       env:
@@ -81,18 +84,31 @@ jobs:
         
     - name: Download firmware source code
       run: |
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        git clone --filter=blob:none --single-branch -c core.abbrev=7 $REPO_URL -b $REPO_BRANCH openwrt
+        cd openwrt
+        git log --pretty=tformat:"%h" -n1 tools toolchain || echo "No toolchain history"
 
 
-    - name: 缓存
-      uses: klever1988/cachewrtbuild@main
-      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+    - name: Generate cache keys
+      id: cache-key
+      run: |
+        echo "ccache_period=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+    - name: Restore toolchain cache
+      uses: klever1988/cachewrtbuild@54ed4fe2f7d8b5cfbc0b928c159266ee892c2d3d
       with:
-        ccache: 'true'
-        clean: 'false'
-        mixkey: '${{ env.Firmware_Name }}-${{ env.START_SECONDS }}'
+        ccache: 'false'
         prefix: ${{ github.workspace }}/openwrt
+        mixkey: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}
 
+    - name: Restore ccache
+      id: ccache-restore
+      uses: actions/cache/restore@v5.0.5
+      with:
+        path: openwrt/.ccache
+        key: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
+        restore-keys: |
+          ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
 
     - name: Update & install feeds
       working-directory: ./openwrt
@@ -117,8 +133,12 @@ jobs:
       run: |
         cd openwrt
         make defconfig
+        grep -qx 'CONFIG_PACKAGE_rpcd-mod-router-status=y' .config || {
+          echo 'Independent router status package is missing from the resolved firmware configuration' >&2
+          exit 1
+        }
         cat .config
-        make download -j$(nproc)
+        make download -j$(nproc) 2>&1
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
@@ -133,9 +153,10 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
-        cd openwrt
         echo -e "$(nproc) thread compile"
-        make -j$(($(nproc) + 1)) || make -j$(($(nproc) + 1)) V=s
+        make -j$(nproc) || make -j$(($(nproc)/2 + 1)) || make -j1 V=s
+        CCACHE_DIR="$PWD/.ccache" staging_dir/host/bin/ccache --show-stats
+        du -sh .ccache
         echo "status=success" >> $GITHUB_OUTPUT
               
     - name: Set the current date
@@ -148,6 +169,149 @@ jobs:
         echo "date1=$(date +'%Y.%m.%d-%H.%M')" >> $GITHUB_ENV
         echo "date2=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: Save ccache
+      if: steps.compile.outputs.status == 'success' && steps.ccache-restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5.0.5
+      with:
+        path: openwrt/.ccache
+        key: ${{ steps.ccache-restore.outputs.cache-primary-key }}
+
+    - name: Prune old caches
+      if: steps.compile.outputs.status == 'success' && !cancelled()
+      continue-on-error: true
+      uses: actions/github-script@v8
+      env:
+        CACHE_SCOPE: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}
+        CCACHE_PREFIX: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+        TOOLCHAIN_PREFIX: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
+        CURRENT_CCACHE_KEY: ${{ steps.ccache-restore.outputs.cache-primary-key }}
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+          const scope = process.env.CACHE_SCOPE;
+          const ccachePrefix = process.env.CCACHE_PREFIX;
+          const toolchainPrefix = process.env.TOOLCHAIN_PREFIX;
+          const currentCcacheKey = process.env.CURRENT_CCACHE_KEY;
+
+          const caches = [];
+          for (let page = 1; ; page += 1) {
+            const response = await github.request('GET /repos/{owner}/{repo}/actions/caches', {
+              owner,
+              repo,
+              per_page: 100,
+              page,
+            });
+
+            const pageCaches = response.data.actions_caches || [];
+            caches.push(...pageCaches);
+            if (pageCaches.length < 100) {
+              break;
+            }
+          }
+
+          const byNewest = (left, right) => {
+            const leftTime = new Date(left.last_accessed_at || left.created_at || 0).getTime();
+            const rightTime = new Date(right.last_accessed_at || right.created_at || 0).getTime();
+            return rightTime - leftTime;
+          };
+
+          const ccacheCaches = caches
+            .filter((cache) => (cache.key || '').startsWith(ccachePrefix))
+            .sort(byNewest);
+          const staleCcacheCaches = ccacheCaches.filter((cache) => cache.key !== currentCcacheKey);
+
+          const toolchainCaches = caches
+            .filter((cache) => {
+              const key = cache.key || '';
+              return key.startsWith(toolchainPrefix);
+            })
+            .sort(byNewest);
+          const staleToolchainCaches = toolchainCaches.slice(1);
+
+          const staleCaches = [...staleCcacheCaches, ...staleToolchainCaches];
+          if (staleCaches.length === 0) {
+            core.info(
+              `No stale caches to delete for prefixes: ${ccachePrefix} , ${toolchainPrefix}`
+            );
+            return;
+          }
+
+          const deletedPrefixes = [...new Set(
+            staleCaches.map((cache) => {
+              const key = cache.key || '';
+              if (key.startsWith(ccachePrefix)) {
+                return ccachePrefix;
+              }
+              if (key.startsWith(toolchainPrefix)) {
+                return toolchainPrefix;
+              }
+              return `unmatched:${scope}`;
+            })
+          )];
+
+          core.info(`Deleting stale caches for key prefixes: ${deletedPrefixes.join(', ')}`);
+
+          for (const cache of staleCaches) {
+            const prefix = (cache.key || '').startsWith(ccachePrefix) ? ccachePrefix : toolchainPrefix;
+            core.info(`Deleting cache with prefix ${prefix}: ${cache.key} (${cache.id})`);
+            await github.request('DELETE /repos/{owner}/{repo}/actions/caches/{cache_id}', {
+              owner,
+              repo,
+              cache_id: cache.id,
+            });
+          }
+
+          core.info(
+            `Deleted ${staleCaches.length} stale cache(s). ` +
+            `Kept ccache key: ${currentCcacheKey || 'none'}. ` +
+            `Kept toolchain cache count: ${toolchainCaches.length > 0 ? 1 : 0}. ` +
+            `Tracked prefixes: ${ccachePrefix}, ${toolchainPrefix}.`
+          );
+
+    - name: 清理旧的CI运行记录
+      if: ${{ !cancelled() }}
+      continue-on-error: true
+      uses: actions/github-script@v8
+      env:
+        KEEP_RUNS: '15'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const keepRuns = parseInt(process.env.KEEP_RUNS || '15', 10);
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+          const thisRunId = context.runId;
+          const wfPath = `.github/workflows/${context.workflow}`;
+
+          // List completed runs of this workflow, newest first.
+          const runs = [];
+          for (let page = 1; ; page += 1) {
+            const response = await github.request(
+              'GET /repos/{owner}/{repo}/actions/runs?per_page=100&page={page}',
+              { owner, repo, page }
+            );
+            const pageRuns = (response.data.workflow_runs || [])
+              .filter((run) => run.path === wfPath && run.status === 'completed')
+              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            runs.push(...pageRuns);
+            if ((response.data.workflow_runs || []).length < 100) break;
+          }
+
+          const toDelete = runs.filter((run) => run.id !== thisRunId).slice(keepRuns);
+          core.info(
+            `[run-cleanup] ${runs.length} completed runs of this workflow; keeping newest ${keepRuns}, deleting ${toDelete.length}`
+          );
+          for (const run of toDelete) {
+            core.info(`[run-cleanup] deleting run ${run.id} (${run.name}) from ${run.created_at}`);
+            await github.request('DELETE /repos/{owner}/{repo}/actions/runs/{run_id}', {
+              owner,
+              repo,
+              run_id: run.id,
+            });
+          }
 
     - name: Organize and Rename Files
       id: organize
@@ -216,7 +380,7 @@ jobs:
         echo "status=success" >> $GITHUB_OUTPUT
         
     - name: Publish to release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
