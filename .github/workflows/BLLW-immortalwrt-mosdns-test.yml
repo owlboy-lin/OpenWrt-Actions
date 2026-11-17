@@ -39,7 +39,7 @@ env:
   REPO_BRANCH: master
   Firmware_Name: BLLW-immortalwrt-mosdns-test
   # 修改 REPO_BRANCH 来达到更改编译版本
-  PLATFORM_FILE: configs/My-Target-X86.txt
+  PLATFORM_FILE: configs/My-Target-X86-Actions-immortalwrt.txt
   CONFIG_FILE: configs/Packages-immortalwrt-mosdns.txt
   SETTINGS_SH: scripts/BLLW-init-settings-test.sh
   PACKAGES_SH: scripts/packages-immortalwrt-mosdns-test.sh
