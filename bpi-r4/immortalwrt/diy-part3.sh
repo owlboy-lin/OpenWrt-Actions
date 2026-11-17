@@ -1,13 +1,12 @@
 #!/bin/bash
 
-# Merge_package
 function merge_package(){
     repo=`echo $1 | rev | cut -d'/' -f 1 | rev`
     pkg=`echo $2 | rev | cut -d'/' -f 1 | rev`
     # find package/ -follow -name $pkg -not -path "package/openwrt-packages/*" | xargs -rt rm -rf
     git clone --depth=1 --single-branch $1
-    [ -d package/openwrt-packages ] || mkdir -p package/openwrt-packages
-    mv $2 package/openwrt-packages/
+    mkdir -p "${3:-package/openwrt-packages}"
+    mv "$2" "${3:-package/openwrt-packages}/"
     rm -rf $repo
 }
 
@@ -32,49 +31,6 @@ patch_makefile_dep() {
     }
 }
 
-apply_workspace_patch() {
-    local patch_file="$1"
-
-    [ -f "$patch_file" ] || return 0
-
-    if git apply --recount --ignore-space-change --ignore-whitespace --reverse --check "$patch_file" >/dev/null 2>&1; then
-        return 0
-    fi
-
-    git apply --recount --ignore-space-change --ignore-whitespace "$patch_file"
-}
-
-install_kernel_patch() {
-    local patch_file="$1"
-    local patch_name="$2"
-    local patch_dir="target/linux/mediatek/patches-6.6"
-    local target_patch="$patch_dir/$patch_name"
-
-    [ -f "$patch_file" ] || return 0
-    [ -d "$patch_dir" ] || return 0
-
-    if [ -f "$target_patch" ] && cmp -s "$patch_file" "$target_patch"; then
-        return 0
-    fi
-
-    install -m 0644 "$patch_file" "$target_patch"
-}
-
-install_mtwifi_patch() {
-    local patch_file="$1"
-    local patch_dir="package/mtk/drivers/mt_wifi7/patches"
-    local target_patch="$patch_dir/$(basename "$patch_file")"
-
-    [ -f "$patch_file" ] || return 0
-    [ -d "$patch_dir" ] || return 0
-
-    if [ -f "$target_patch" ] && cmp -s "$patch_file" "$target_patch"; then
-        return 0
-    fi
-
-    install -m 0644 "$patch_file" "$target_patch"
-}
-
 patch_bpi_r4_sysupgrade_itb_check() {
     local platform_sh="target/linux/mediatek/filogic_a73/base-files/lib/upgrade/platform.sh"
 
@@ -88,76 +44,35 @@ patch_bpi_r4_sysupgrade_itb_check() {
     ' "$platform_sh"
 }
 
-create_aqr10g_phy_fw_package() {
-    local pkg_dir="package/kernel/aqr10g-phy-fw"
-
-    mkdir -p "$pkg_dir"
-    cat > "$pkg_dir/Makefile" <<'EOF'
-include $(TOPDIR)/rules.mk
-
-PKG_NAME:=aqr10g-phy-fw
-PKG_RELEASE:=1
-PKG_LICENSE:=LicenseRef-Redistributable
-PKG_MAINTAINER:=BananaPi-R4 community
-
-include $(INCLUDE_DIR)/package.mk
-
-define Package/aqr10g-phy-fw
-  SECTION:=firmware
-  CATEGORY:=Firmware
-  TITLE:=Aquantia AQR113C/CUX3410 10G PHY firmware
-endef
-
-define Package/aqr10g-phy-fw/description
-  Firmware blobs referenced by the MT7988 AQR113C and CUX3410 DTS
-  overlays. They allow the Aquantia driver to reload firmware after a
-  software reset, which is needed for reliable warm reboot recovery.
-endef
-
-define Build/Prepare
-	$(INSTALL_DIR) $(PKG_BUILD_DIR)
-	wget -qO $(PKG_BUILD_DIR)/Rhe-05.06-Candidate9-AQR_Mediatek_23B_P5_ID45824_LCLVER1.cld \
-		https://raw.githubusercontent.com/shiyu1314/immortalwrt-mt798x-6.12/25.12-dev/package/kernel/aqr10g-phy-fw/files/Rhe-05.06-Candidate9-AQR_Mediatek_23B_P5_ID45824_LCLVER1.cld
-	wget -qO $(PKG_BUILD_DIR)/AQR-G4_v5.7.0-AQR_EVB_Generic_X3410_StdCfg_MDISwap_USX_ID46316_VER2148.cld \
-		https://raw.githubusercontent.com/shiyu1314/immortalwrt-mt798x-6.12/25.12-dev/package/kernel/aqr10g-phy-fw/files/AQR-G4_v5.7.0-AQR_EVB_Generic_X3410_StdCfg_MDISwap_USX_ID46316_VER2148.cld
-	echo "19d73393d575fbe4018c1685fbdea2ae6fb59be3c995f608920a417c7e3f8d1c  $(PKG_BUILD_DIR)/Rhe-05.06-Candidate9-AQR_Mediatek_23B_P5_ID45824_LCLVER1.cld" | sha256sum -c
-	echo "1c9a67faffe50da1a0efa374ec084a956b6ec64ca9d97d3ad6b1a8708d490a44  $(PKG_BUILD_DIR)/AQR-G4_v5.7.0-AQR_EVB_Generic_X3410_StdCfg_MDISwap_USX_ID46316_VER2148.cld" | sha256sum -c
-endef
-
-define Build/Compile
-endef
-
-define Package/aqr10g-phy-fw/install
-	$(INSTALL_DIR) $(1)/lib/firmware
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/*.cld $(1)/lib/firmware/
-endef
-
-$(eval $(call BuildPackage,aqr10g-phy-fw))
-EOF
-}
 
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf feeds/luci/applications/luci-app-argon-config
 rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-modemband
 rm -rf package/mtk/applications/luci-app-turboacc-mtk
+rm -rf package/mtk/applications/luci-app-hqos-mtk
 rm -rf feeds/packages/net/adguardhome
+rm -rf feeds/packages/net/samba4
 rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
 
-# Clone community packages to package/community
+# Clone community packages
 mkdir -p package/community
 pushd package/community
 git clone --depth=1 -b dev https://github.com/fw876/helloworld
 # rm -rf helloworld/{naiveproxy,shadowsocks-libev,shadowsocksr-libev,shadow-tls,simple-obfs,tcping,tuic-client,v2ray-plugin,xray-core,xray-plugin}
 git clone --depth=1 -b main https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git
-[ -f openwrt-passwall-packages/haproxy/Makefile ] && sed -i '/^[[:space:]]*ADDON+=USE_QUIC=1$/d' openwrt-passwall-packages/haproxy/Makefile
 git clone --depth=1 -b main https://github.com/Openwrt-Passwall/openwrt-passwall.git
 git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki
+# The selected helloworld/mihomo core satisfies Nikki's +mihomo dependency.
+# Drop unused alternative providers whose mutual CONFLICTS cause a Kconfig cycle.
+[ -f helloworld/mihomo/Makefile ] || exit 1
+rm -rf OpenWrt-nikki/mihomo-alpha OpenWrt-nikki/mihomo-meta
 [ -f OpenWrt-nikki/nikki/Makefile ] && perl -0pi -e 's/define Build\/Compile\r?\n\r?\nendef/define Build\/Compile\n\nendef\n\ndefine Build\/InstallDev\n\nendef/' OpenWrt-nikki/nikki/Makefile
 git clone --depth=1 https://github.com/1522042029/luci-app-socat
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config
 merge_package https://github.com/kenzok8/jell jell/adguardhome
+merge_package "-b master https://github.com/immortalwrt/packages" packages/net/samba4 ../../feeds/packages/net
 merge_package "-b main https://github.com/linkease/ddnsto-openwrt-package" ddnsto-openwrt-package/ddnsto
 merge_package "-b main https://github.com/linkease/ddnsto-openwrt-package" ddnsto-openwrt-package/luci-app-ddnsto
 merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-fan
@@ -165,33 +80,35 @@ merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-adgu
 merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-modemband
 merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-sfp-status
 merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-turboacc-mtk
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-traffic
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-hqos-mtk
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/rpcd-mod-router-status
+if [ ! -f package/openwrt-packages/rpcd-mod-router-status/Makefile ] || \
+   [ ! -f package/openwrt-packages/rpcd-mod-router-status/root/etc/init.d/router-status ]; then
+    echo "Independent router status package was not fetched" >&2
+    exit 1
+fi
 popd
 
-# add luci-app-mosdns
+xray_cronet_patch="$GITHUB_WORKSPACE/patches/filogic/packages/1000-xray-core-cronet-cgo-archive.patch"
+if ! git -C package/community/helloworld apply --reverse --check "$xray_cronet_patch" >/dev/null 2>&1; then
+    git -C package/community/helloworld apply "$xray_cronet_patch" || exit 1
+fi
+
 rm -rf feeds/packages/lang/golang
-git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 27.x feeds/packages/lang/golang
 rm -rf feeds/packages/net/mosdns
 git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 
-create_aqr10g_phy_fw_package
+# The AQR firmware recipe is owned by the source tree, not generated by DIY.
+[ -f package/kernel/aqr10g-phy-fw/Makefile ] || {
+    echo 'MT7988 source AQR firmware recipe is missing' >&2
+    exit 1
+}
 
-# BPI-R4 HNAT: segment CPU-to-WiFi GSO packets before PPE reinjection.
-install_kernel_patch \
-    "${GITHUB_WORKSPACE:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}/patches/filogic/mtwifi-6.6/999-9101-hnat-cpu-wifi-fix.patch" \
-    "999-9101-hnat-cpu-wifi-fix.patch"
+# Kernel and vendor WiFi fixes are versioned in the selected source tree.
+# Do not copy a second patch queue from this build repository.
 
-# Apply after 9996-ext-hnat.patch: preserve PPE routing for every QDMA SG
-# descriptor and reset PPD state for every packet in the NAPI RX loop.
-install_kernel_patch \
-    "${GITHUB_WORKSPACE:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}/patches/filogic/mtwifi-6.6/9996-zz-hnat-mtk-eth-sg-ppd-fix.patch" \
-    "9996-zz-hnat-mtk-eth-sg-ppd-fix.patch"
-
-# All countries: full 5G band (36-48, 52-64, 100-144, 149-177) with
-# 160MHz capability on every complete 5G block.
-install_mtwifi_patch \
-    "${GITHUB_WORKSPACE:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}/patches/filogic/mtwifi-6.6/1010-mtwifi-6.6-5g-160mhz-all-countries.patch"
-
-# add luci-app-OpenClash
 mkdir -p package/OpenClash
 pushd package/OpenClash
 git clone --depth=1  https://github.com/vernesong/OpenClash
@@ -202,12 +119,10 @@ popd
 sed -i 's|24.10-SNAPSHOT|24.10.6|g' include/version.mk
 sed -i 's|24.10-SNAPSHOT|24.10.6|g' package/base-files/image-config.in
 
-# padavanonly filogic_a73 upgrades these boards via fit_do_upgrade, but
-# platform_check_image still checked them like tar sysupgrade.bin images.
+# padavanonly filogic_a73 upgrades via fit_do_upgrade; fix platform_check_image
 patch_bpi_r4_sysupgrade_itb_check
 
-# Belt-and-suspenders: uci-defaults script that writes the correct distfeeds.conf
-# on first boot, in case any other post-install script reverts it.
+# uci-defaults fallback that rewrites distfeeds.conf on first boot
 mkdir -p files/etc/uci-defaults
 cat > files/etc/uci-defaults/99-fix-distfeeds <<'UCIEOF'
 #!/bin/sh
@@ -225,23 +140,31 @@ UCIEOF
 chmod +x files/etc/uci-defaults/99-fix-distfeeds
 
 rm -rf feeds/luci
-./scripts/feeds update -a
+./scripts/feeds update luci
+./scripts/feeds update -i packages
 
-# Fix non-deterministic PKG_MIRROR_HASH in helloworld/shadowsocks-libev
-patch_makefile_dep \
-    package/community/helloworld/shadowsocks-libev/Makefile \
-    'PKG_MIRROR_HASH:=b3898ad0a557bc8b0bbb2f3888101d461944239b0b7d4d4c6f164d73694a4595' \
-    'PKG_MIRROR_HASH:=skip'
+# helloworld shadowsocks-libev: skip the non-deterministic PKG_MIRROR_HASH
+for f in \
+    package/community/helloworld/shadowsocks-libev/Makefile; do
+    [ -f "$f" ] && sed -i '/^PKG_MIRROR_HASH:=/s/:=.*/:=skip/' "$f"
+done
 
-# shadowsocksr-libev: replace brittle LTO with no-lto
-[ -f package/community/openwrt-passwall-packages/shadowsocksr-libev/Makefile ] && {
-    sed -i '/^[[:space:]]*TARGET_CFLAGS += -flto$/c\PKG_BUILD_FLAGS+=no-lto' \
-        package/community/openwrt-passwall-packages/shadowsocksr-libev/Makefile
-    patch_makefile_dep \
-        package/community/openwrt-passwall-packages/shadowsocksr-libev/Makefile \
-        '146fa4511a52da2aaa1e11ea0294cfb450e62643156c5da3b10e037ef43961f6' \
-        'skip'
-}
+# This upstream patch lacks its final LF, which needs fuzz 1 to apply.
+# Restore the line ending so the source tree can keep PATCHFUZZ=0.
+obfs_patch=package/community/helloworld/simple-obfs/patches/001-convert-arguments-of-isdigit-to-int.patch
+if [ -s "$obfs_patch" ] && [ "$(tail -c 1 "$obfs_patch" | wc -l)" -eq 0 ]; then
+    printf '\n' >> "$obfs_patch"
+fi
+
+# containerd's vendored cpuid v2.0.4 hits Go's >= 1.23 linkname check. MAKE_FLAGS is
+# frozen by the BuildPackage eval, so the line must be injected before it.
+f=feeds/packages/utils/containerd/Makefile
+if [ ! -f "$f" ]; then
+    echo "[DIY] containerd Makefile missing: $f" >&2
+elif ! grep -q 'checklinkname=0' "$f"; then
+    awk -v ins="MAKE_FLAGS += EXTRA_LDFLAGS='-s -w -checklinkname=0'" '{print} /^Build\/Compile=/ {print ins}' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+    echo "[DIY] containerd: -checklinkname=0 injected=$(grep -c 'checklinkname=0' "$f")"
+fi
 
 # GCC 14 + musl fortify workaround for mbedtls
 if ! grep -q '_FORTIFY_SOURCE=0' package/libs/mbedtls/Makefile; then
@@ -252,7 +175,7 @@ if ! grep -q '_FORTIFY_SOURCE=0' package/libs/mbedtls/Makefile; then
   fi
 fi
 
-# Search multiple path variants: base package dir, feeds/base, and the feeds-installed symlink target.
+# locate libcrypt-compat references across all feed path variants
 _purge_libcrypt_compat() {
     local pattern='+USE_GLIBC:libcrypt-compat'
     local paths=(
@@ -263,8 +186,7 @@ _purge_libcrypt_compat() {
         package/system/rpcd/Makefile
         package/network/services/uhttpd/Makefile
     )
-    # Alternative locations after feeds update/install.
-    # The base feed may preserve the full "package/" prefix or strip it.
+    # feed copies may keep or strip the "package/" prefix
     for basedir in feeds/base package/feeds/base; do
         for pfx in '' 'package/'; do
             paths+=(
@@ -303,51 +225,15 @@ patch_makefile_dep \
     'libnetsnmp-ssl' \
     'libnetsnmp'
     
-# Shrink the BPI-R4 U-Boot autoboot wait so boot time is not dominated by a 30s delay.
-patch_makefile_dep \
-    package/boot/uboot-mediatek/patches/450-add-bpi-r4.patch \
-    'CONFIG_BOOTDELAY=30' \
-    'CONFIG_BOOTDELAY=10'
-
 patch_makefile_dep \
     package/emortal/autocore/Makefile \
     '+(TARGET_mediatek||TARGET_mvebu):mhz' \
     '+(TARGET_mediatek||TARGET_mvebu):mhz \
-    +TARGET_mediatek:wireless-tools'
+    +TARGET_mediatek:wireless-tools \
+    +TARGET_mediatek:coreutils-timeout'
 
-[ -d target/linux/mediatek/files-6.6 ] && {
-	# Enable LVTS thermal sensor
-	sed -i '/lvts: lvts@1100a000 {/,/^[[:space:]]*};/ { /status = "disabled";/d; }' \
-		target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-
-	# MDIO drive 8mA -> 10mA for AQR113C 10G PHY (MTK 1010)
-	sed -i '/groups = "mdc_mdio0";/{N; s/drive-strength = <MTK_DRIVE_8mA>/drive-strength = <MTK_DRIVE_10mA>/}' \
-		target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-
-	# Keep the BPI-R4 SFP I2C mux from leaving an SFP channel selected across
-	# idle periods. This helps warm-reboot SFP reprobe reliability.
-	for dts in \
-		mt7988a-bananapi-bpi-r4.dtsi \
-		mt7988a-bananapi-bpi-r4-pro.dts
-	do
-		dts_path="target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/$dts"
-		[ -f "$dts_path" ] && ! grep -q 'i2c-mux-idle-disconnect;' "$dts_path" && \
-			sed -i '/compatible = "nxp,pca9545";/a\
-		i2c-mux-idle-disconnect;' "$dts_path"
-	done
-
-	# Do not force mediatek,pnswap-rx on BPI-R4. The board DTS does not set it
-	# upstream, and forcing PCS RX polarity can break RTL8672/RTL9601C copper
-	# or GPON SFP modules during EEPROM/PHY probe.
-	bpi_dtsi="target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi"
-	if [ -f "$bpi_dtsi" ] && grep -q 'mediatek,pnswap-rx' "$bpi_dtsi"; then
-		# Match each &usxgmiisys{0,1} pnswap-rx block independently so the
-		# removal succeeds even when comments or blank lines separate the two
-		# blocks (the original regex required them to be adjacent and would
-		# silently fail to match if they weren't, leaving pnswap-rx in place).
-		perl -0pi -e 's/\n[ \t]*&usxgmiisys[01][ \t]*\{[ \t]*\n[ \t]*mediatek,pnswap-rx;[ \t]*\n[ \t]*\};[ \t]*(?:\r?\n)?//g' "$bpi_dtsi"
-	fi
-}
+# MT7988 DTS, SFP recovery and pstore integration are owned by the source tree.
+# Do not mutate kernel inputs or copy SFP scripts from this build repository.
 
 [ -f "$GITHUB_WORKSPACE/scripts/cpuinfo" ] && \
 	install -m 0755 "$GITHUB_WORKSPACE/scripts/cpuinfo" package/emortal/autocore/files/generic/cpuinfo
@@ -360,12 +246,13 @@ patch_makefile_dep \
 # Re-patch libcrypt-compat after feeds install in case feed symlinks/copies brought it back
 _purge_libcrypt_compat
 
-# Downgrade the usign SHA-512 padding warning from ERROR_MESSAGE (red/scary) 
+# Downgrade the usign SHA-512 padding warning from ERROR_MESSAGE
 sed -i 's/ERROR_MESSAGE,WARNING: Applying padding in/MESSAGE,WARNING: Applying padding in/' package/Makefile
 
-# LuCI and mtwifi patches for padavanonly/immortalwrt-mt798x-6.6 only.
-[ -f feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js ] && \
-    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/mtwifi-6.6/1000-mtwifi-6.6-luci-status-overview-wifi7-mlo.patch"
-
-[ -f feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js ] && \
-    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/mtwifi-6.6/1002-mtwifi-6.6-luci-status-overview-rate-mhz-hi.patch"
+# Apply source-owned LuCI feed integration only after feeds are installed.
+# The source entrypoint checks its inputs and accepts an already-applied state.
+[ -f scripts/mt7988-apply-feed-patches.sh ] || {
+    echo 'MT7988 source feed-patch entrypoint is missing' >&2
+    exit 1
+}
+bash scripts/mt7988-apply-feed-patches.sh || exit $?
