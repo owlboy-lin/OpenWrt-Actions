@@ -37,8 +37,8 @@ clone https://github.com/pymumu/luci-app-smartdns.git luci-app-smartdns -b maste
 # VIKINGYFY/packages（一堆 luci 依赖）
 # clone https://github.com/VIKINGYFY/packages.git VIKINGYFY-packages -b main
 # passwall / passwall2
-# clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
-# clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
+clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
+clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
 # mosdns
 clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 # adguardhome
@@ -61,12 +61,12 @@ clone https://github.com/QiuSimons/luci-app-daed.git luci-app-daed -b master
 # 流量监控（luci 前端 + bandix 核心包；核心是预编译二进制，按架构从 release 下载）
 clone https://github.com/timsaya/luci-app-bandix.git luci-app-bandix -b main
 clone https://github.com/timsaya/openwrt-bandix.git openwrt-bandix -b main
-# 温度显示（状态页）
-clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
 # 网盘（alist 的继任者，取代已失效的 aliyundrive-webdav）
 clone https://github.com/sbwml/luci-app-openlist2.git luci-app-openlist2 -b main
 #luci-app-wolplus
 clone https://github.com/animegasan/luci-app-wolplus.git luci-app-wolplus -b main
+# 温度显示（状态页）
+clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
 
 popd > /dev/null
 
