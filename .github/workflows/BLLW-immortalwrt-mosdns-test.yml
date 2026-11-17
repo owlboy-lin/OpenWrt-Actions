@@ -41,7 +41,7 @@ env:
   # 修改 REPO_BRANCH 来达到更改编译版本
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/Packages-immortalwrt-mosdns.txt
-  SETTINGS_SH: scripts/JBT-init-settings.sh
+  SETTINGS_SH: scripts/BLLW-init-settings-test.sh
   PACKAGES_SH: scripts/packages-immortalwrt-mosdns-test.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   HANDLES_SH: scripts/Handles.sh
