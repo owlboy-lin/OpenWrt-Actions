@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: BLLW-immortalwrt-25.12-mosdns-1
+name: BLLW-immortalwrt-25.12-mosdns-test
 
 permissions: write-all
 #开启写权限，防止无法上传到release
@@ -22,16 +22,16 @@ on:
   
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  FREE_DISK_SH: scripts/free_disk_space-1.sh
-  ENV_SH: scripts/environment-imm-1.sh
+  FREE_DISK_SH: scripts/free_disk_space.sh
+  ENV_SH: scripts/environment-imm.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-25.12
   # 修改 REPO_BRANCH 来达到更改编译版本
-  Firmware_Name: BLLW-immortalwrt-25.12-mosdns-1  
-  PLATFORM_FILE: configs/My-Target-X86.txt
-  CONFIG_FILE: configs/My-Packages-mosdns.txt
+  Firmware_Name: BLLW-immortalwrt-25.12-mosdns-test
+  PLATFORM_FILE: configs/My-Target-X86-Actions-immortalwrt.txt
+  CONFIG_FILE: configs/Packages-immortalwrt-25.12-mosdns.txt
   SETTINGS_SH: scripts/BLLW-init-settings.sh
-  PACKAGES_SH: scripts/packages-immortalwrt-mosdns-1.sh
+  PACKAGES_SH: scripts/packages-immortalwrt-mosdns.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   RUST_SH: scripts/Handles.sh
   UPLOAD_BIN_DIR: false
