@@ -1,4 +1,4 @@
-name: immortalwrt_mediatek
+name: immortalwrt-Banana-Pi-BPI-R4-test
 
 on:
   schedule:
