@@ -1,4 +1,4 @@
-name: immortalwrt-Banana-Pi-BPI-R4-test
+name: immortalwrt-Banana-Pi-BPI-R4
 
 on:
   schedule:
@@ -30,7 +30,7 @@ env:
   CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig
   DIY_P1_SH: immortalwrt/diy-part1.sh
   DIY_P2_SH: immortalwrt/diy-part2-1.sh
-  Firmware_Name: immortalwrt-Banana-Pi-BPI-R4-test
+  Firmware_Name: immortalwrt-Banana-Pi-BPI-R4
   DIR: bpi-r4
   OPENWRT_NAME: immortalwrt
   OPENWRT_DEVICE: mediatek
