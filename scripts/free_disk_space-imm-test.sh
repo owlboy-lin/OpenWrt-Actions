@@ -3,7 +3,6 @@
 # 在 GitHub 托管 runner 上腾出约 25~30GB 空间
 # OpenWrt 全量编译 + 多设备镜像动辄 40GB，不清理基本必然在半路 No space left on device
 #
-# 注意：这里不用 set -e —— 任何一步（比如没装 firefox、没有 docker）失败都不该让整个 job 挂掉
 set -uo pipefail
 
 echo "==> 清理前："
