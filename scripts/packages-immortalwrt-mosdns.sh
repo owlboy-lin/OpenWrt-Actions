@@ -48,11 +48,6 @@ clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
 clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome -b main
 # git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
-# smartdns
-# git clone -b master --depth 1 https://github.com/pymumu/luci-app-smartdns.git
-# git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
-# sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
-# sed -n '33p' smartdns/package/openwrt/Makefile
 # 网络测速
 clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
 # openclash
@@ -69,7 +64,7 @@ clone https://github.com/sbwml/luci-app-openlist2.git luci-app-openlist2 -b main
 #luci-app-wolplus
 clone https://github.com/animegasan/luci-app-wolplus.git luci-app-wolplus -b main
 # 温度显示（状态页）
-clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
+# clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
 
 popd > /dev/null
 
