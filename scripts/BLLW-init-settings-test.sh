@@ -1,34 +1,42 @@
 #!/usr/bin/env bash
 #
-# 改默认 LAN IP + 修正内置配置权限
-# 必须在 openwrt 源码根目录执行（build.yml 已保证）
+# 在 GitHub 托管 runner 上腾出约 25~30GB 空间
+# OpenWrt 全量编译 + 多设备镜像动辄 40GB，不清理基本必然在半路 No space left on device
 #
-set -euo pipefail
+# 注意：这里不用 set -e —— 任何一步（比如没装 firefox、没有 docker）失败都不该让整个 job 挂掉
+set -uo pipefail
 
-DEF_IP="192.168.89.10"
+echo "==> 清理前："
+df -h /
 
-echo "==> 默认 LAN IP -> ${DEF_IP}"
+echo "==> 卸载用不到的大型预装包"
+sudo apt-get -y purge firefox 2>/dev/null || true
+sudo apt-get -y remove '^dotnet-.*' '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' 2>/dev/null || true
+sudo apt-get -y remove azure-cli google-cloud-sdk hhvm google-chrome-stable powershell mono-devel 2>/dev/null || true
+sudo apt-get -y autoremove --purge 2>/dev/null || true
+sudo apt-get -y autoclean 2>/dev/null || true
+sudo apt-get -y clean 2>/dev/null || true
 
-# 1. LuCI「系统 -> 备份/升级」页里显示的示例地址
-mapfile -t FLASH_JS < <(find feeds/luci/modules/luci-mod-system -type f -name flash.js 2>/dev/null || true)
-if [ "${#FLASH_JS[@]}" -gt 0 ]; then
-  sed -i "s/192\.168\.[0-9]\+\.[0-9]\+/${DEF_IP}/g" "${FLASH_JS[@]}"
-else
-  echo "::warning::没找到 luci-mod-system/flash.js，跳过（LuCI 版本变了？）"
-fi
+echo "==> 删除大目录（每个只用一次，去重了原脚本里重复的条目）"
+for dir in \
+  /usr/share/dotnet \
+  /usr/local/graalvm \
+  /usr/local/.ghcup \
+  /usr/local/share/powershell \
+  /usr/local/share/chromium \
+  /usr/local/lib/android \
+  /usr/local/lib/node_modules \
+  /opt/ghc \
+  /usr/local/share/boost \
+  /opt/hostedtoolcache ; do
+  if [ -e "$dir" ]; then
+    echo "  - $dir"
+    sudo rm -rf "$dir"
+  fi
+done
 
-# 2. base-files 里生成的默认 LAN 配置
-CONFIG_GENERATE="package/base-files/files/bin/config_generate"
-if [ -f "$CONFIG_GENERATE" ]; then
-  sed -i "s/192\.168\.[0-9]\+\.[0-9]\+/${DEF_IP}/g" "$CONFIG_GENERATE"
-else
-  echo "::error::$CONFIG_GENERATE 不存在，默认 IP 改不了"
-  exit 1
-fi
+echo "==> 清理 docker 镜像/卷"
+sudo docker system prune -af --volumes 2>/dev/null || true
 
-# 3. 随固件下发的 files/etc/config/* 统一 644，避免权限 600 时 LuCI 读不到
-if compgen -G "files/etc/config/*" > /dev/null; then
-  chmod 644 files/etc/config/*
-fi
-
-echo "✅ init-settings.sh 完成"
+echo "==> 清理后："
+df -h /

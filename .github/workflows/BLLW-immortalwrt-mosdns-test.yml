@@ -33,7 +33,7 @@ on:
 
 
 env:
-  FREE_DISK_SH: scripts/free_disk_space.sh
+  FREE_DISK_SH: scripts/free_disk_space-test.sh
   ENV_SH: scripts/environment-imm.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: master
