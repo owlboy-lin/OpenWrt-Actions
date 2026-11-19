@@ -15,6 +15,6 @@ sudo apt-get -qq install -y \
   libmpfr-dev libncurses-dev libpython3-dev libreadline-dev libssl-dev libtool \
   lrzsz mkisofs ninja-build p7zip-full patch pkgconf python3 python3-pyelftools \
   python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig \
-  texinfo uglifyjs upx-ucl unzip wget xmlto xxd zlib1g-dev rename
+  texinfo uglifyjs upx-ucl unzip wget xmlto xxd zlib1g-dev
 
 echo "✅ 构建依赖安装完成"
