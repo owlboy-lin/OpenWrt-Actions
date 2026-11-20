@@ -1,0 +1,261 @@
+#!/bin/bash
+
+merge_package(){
+    repo=`echo $1 | rev | cut -d'/' -f 1 | rev`
+    pkg=`echo $2 | rev | cut -d'/' -f 1 | rev`
+    git clone --depth=1 --single-branch $1
+    [ -d package/openwrt-packages ] || mkdir -p package/openwrt-packages
+    mv $2 package/openwrt-packages/
+    rm -rf $repo
+}
+
+patch_makefile_dep() {
+    local file_path="$1"
+    local old_text="$2"
+    local new_text="$3"
+    local perl_status
+
+    [ -f "$file_path" ] || return 0
+    grep -qF "$old_text" "$file_path" || return 0
+
+    PATCH_OLD_TEXT="$old_text" PATCH_NEW_TEXT="$new_text" \
+        perl -0pi -e 'BEGIN { $old = $ENV{"PATCH_OLD_TEXT"}; $new = $ENV{"PATCH_NEW_TEXT"}; }
+            $count = s/\Q$old\E/$new/g;
+            END { exit($count > 0 ? 0 : 2); }' "$file_path"
+    perl_status=$?
+
+    [ "$perl_status" -eq 0 ] || {
+        echo "Failed to apply literal patch to $file_path" >&2
+        return "$perl_status"
+    }
+}
+
+apply_workspace_patch() {
+    local patch_file="$1"
+
+    [ -f "$patch_file" ] || return 0
+
+    if git apply --recount --ignore-space-change --ignore-whitespace --reverse --check "$patch_file" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    git apply --recount --ignore-space-change --ignore-whitespace "$patch_file"
+}
+
+_autocore_makefile="package/emortal/autocore/Makefile"
+if [ -f "$_autocore_makefile" ] && [ -f package/emortal/autocore/files/tempinfo ]; then
+    install -m 0755 "$GITHUB_WORKSPACE/scripts/tempinfo" \
+        package/emortal/autocore/files/tempinfo || exit 1
+    _temp_deps=""
+    for _temp_dep in wireless-tools coreutils-timeout; do
+        if ! grep -qF "+TARGET_mediatek:$_temp_dep" "$_autocore_makefile"; then
+            _temp_deps="${_temp_deps:+$_temp_deps }+TARGET_mediatek:$_temp_dep"
+        fi
+    done
+    if [ -n "$_temp_deps" ]; then
+        if ! awk -v deps="$_temp_deps" '
+            /^define Package\/autocore$/ { in_package = 1 }
+            in_package && /^endef$/ {
+                print "  DEPENDS+=" deps
+                in_package = 0
+                inserted++
+            }
+            { print }
+            END { if (inserted != 1) exit 1 }
+        ' "$_autocore_makefile" > "$_autocore_makefile.tempinfo"; then
+            rm -f "$_autocore_makefile.tempinfo"
+            echo 'Cannot locate the autocore package dependency block' >&2
+            exit 1
+        fi
+        mv -f "$_autocore_makefile.tempinfo" "$_autocore_makefile" || exit 1
+    fi
+    for _temp_dep in wireless-tools coreutils-timeout; do
+        grep -qF "+TARGET_mediatek:$_temp_dep" "$_autocore_makefile" || {
+            echo "Failed to add autocore temperature dependency: $_temp_dep" >&2
+            exit 1
+        }
+    done
+fi
+
+rm -rf feeds/luci/themes/luci-theme-argon
+rm -rf feeds/luci/applications/luci-app-argon-config
+rm -rf feeds/luci/applications/luci-app-passwall
+rm -rf feeds/luci/applications/luci-app-modemband
+rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
+
+mkdir -p package/community
+pushd package/community
+git clone --depth=1 -b dev https://github.com/fw876/helloworld
+git clone --depth=1 -b main https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git
+git clone --depth=1 -b main https://github.com/Openwrt-Passwall/openwrt-passwall.git
+git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki
+git clone --depth=1 https://github.com/1522042029/luci-app-socat
+git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-fan
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-sfp-status
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-adguardhome
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-modemband
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/luci-app-traffic
+merge_package https://github.com/MedyMa/luci-app luci-app/Luci-app/rpcd-mod-router-status
+if [ ! -f package/openwrt-packages/rpcd-mod-router-status/Makefile ] || \
+   [ ! -f package/openwrt-packages/rpcd-mod-router-status/root/etc/init.d/router-status ]; then
+    echo "Independent router status package was not fetched" >&2
+    exit 1
+fi
+merge_package https://github.com/kenzok8/jell jell/wrtbwmon
+merge_package "-b main https://github.com/linkease/ddnsto-openwrt-package" ddnsto-openwrt-package/ddnsto
+merge_package "-b main https://github.com/linkease/ddnsto-openwrt-package" ddnsto-openwrt-package/luci-app-ddnsto
+popd
+
+sh "$GITHUB_WORKSPACE/scripts/fix-mihomo-source.sh" || exit 1
+
+_go_values="feeds/packages/lang/golang/golang-values.mk"
+_go_feed_default="$(sed -n 's/^GO_DEFAULT_VERSION:=[[:space:]]*//p' "$_go_values" 2>/dev/null)"
+_go_default="$_go_feed_default"
+case "$_go_default" in
+    1.[0-9]|1.1[0-9]|1.2[0-6]) _go_default=1.27 ;;
+esac
+case "$_go_default" in
+    ''|*[!0-9.]*)
+        echo 'The 25.12 packages feed must provide its native versioned Go helpers' >&2
+        exit 1
+        ;;
+esac
+if ! grep -qxF "PKG_NAME:=golang$_go_default" "feeds/packages/lang/golang/golang$_go_default/Makefile"; then
+    echo "Missing native Go $_go_default toolchain in the packages feed" >&2
+    exit 1
+fi
+if [ "$_go_default" != "$_go_feed_default" ]; then
+    sed -i "s/^GO_DEFAULT_VERSION:=.*/GO_DEFAULT_VERSION:=$_go_default/" "$_go_values" || exit 1
+fi
+rm -rf feeds/packages/net/mosdns
+git clone --depth=1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+
+mkdir -p package/OpenClash
+pushd package/OpenClash
+git clone --depth=1 https://github.com/vernesong/OpenClash
+popd
+
+for f in \
+    package/community/helloworld/simple-obfs/Makefile \
+    package/community/helloworld/shadowsocks-libev/Makefile; do
+    [ -f "$f" ] && sed -i '/^PKG_MIRROR_HASH:=/s/:=.*/:=skip/' "$f"
+done
+
+f=feeds/packages/utils/containerd/Makefile
+if [ ! -f "$f" ]; then
+    echo "[DIY] containerd Makefile missing: $f" >&2
+elif ! grep -q 'checklinkname=0' "$f"; then
+    awk -v ins="MAKE_FLAGS += EXTRA_LDFLAGS='-s -w -checklinkname=0'" '{print} /^Build\/Compile=/ {print ins}' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+    echo "[DIY] containerd: -checklinkname=0 injected=$(grep -c 'checklinkname=0' "$f")"
+fi
+
+if ! grep -q '_FORTIFY_SOURCE=0' package/libs/mbedtls/Makefile; then
+    if grep -q '\$(if \$(findstring cortex-a53,\$(CONFIG_CPU_TYPE)),-march=armv8-a)' package/libs/mbedtls/Makefile; then
+        sed -i '/$(if $(findstring cortex-a53,$(CONFIG_CPU_TYPE)),-march=armv8-a)/a TARGET_CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0' package/libs/mbedtls/Makefile
+  else
+    echo 'TARGET_CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0' >> package/libs/mbedtls/Makefile
+  fi
+fi
+
+rm -rf feeds/packages/net/onionshare-cli
+
+[ -f feeds/luci/applications/luci-app-package-manager/root/usr/libexec/package-manager-call ] && \
+    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1004-luci-package-manager-apk-upload-untrusted-master.patch"
+
+if grep -q 'mkdir $(PKG_BUILD_DIR)/bin' feeds/packages/net/vpnc/Makefile 2>/dev/null; then
+    sed -i '/mkdir $(PKG_BUILD_DIR)\/bin/s/mkdir /mkdir -p /' feeds/packages/net/vpnc/Makefile
+fi
+
+./scripts/feeds install -a
+
+./scripts/feeds install c-ares udns
+
+for f in \
+    package/base-files/files/etc/apk/repositories \
+    package/base-files/files/etc/apk/repositories.d/* \
+    package/utils/alpine-repositories/files/repositories; do
+    [ -f "$f" ] && grep -q 'kiddin9' "$f" 2>/dev/null && sed -i '/kiddin9/d' "$f" 2>/dev/null || true
+done
+
+rm -f package/base-files/files/etc/uci-defaults/99-apk-untrusted
+[ -d package/base-files/files/etc/uci-defaults ] && \
+    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1005-base-files-apk-manager-fixes-master.patch"
+
+if [ ! -f package/libs/mbedtls/Makefile ]; then
+  echo "WARNING: package/libs/mbedtls/Makefile not found" >&2
+elif ! grep -q 'define Package/libmbedtls' package/libs/mbedtls/Makefile; then
+  echo "WARNING: package/libs/mbedtls/Makefile does not define libmbedtls" >&2
+fi
+
+export GOEXPERIMENT=
+export GOPROXY=https://proxy.golang.org,direct
+
+_rust_makefile="feeds/packages/lang/rust/Makefile"
+if [ -f "$_rust_makefile" ]; then
+    if grep -qF -- '--set=llvm.download-ci-llvm=false' "$_rust_makefile"; then
+        echo "[DIY] rust: llvm.download-ci-llvm already false"
+    elif grep -qF -- '--set=llvm.download-ci-llvm=true' "$_rust_makefile"; then
+        sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' "$_rust_makefile"
+        grep -qF -- '--set=llvm.download-ci-llvm=false' "$_rust_makefile" || {
+            echo 'Failed to disable Rust CI LLVM download' >&2
+            exit 1
+        }
+        echo "[DIY] rust: llvm.download-ci-llvm=false (build LLVM from source)"
+    else
+        echo 'WARNING: rust Makefile has no llvm.download-ci-llvm flag' >&2
+    fi
+fi
+
+_ssl_makefile="feeds/luci/collections/luci-ssl-openssl/Makefile"
+if [ -f "$_ssl_makefile" ] && \
+    grep -qF -- '+px5g-openssl' "$_ssl_makefile" && \
+    [ ! -d package/utils/px5g-openssl ]; then
+    sed -i 's/+px5g-openssl/+px5g-standalone/' "$_ssl_makefile"
+    grep -qF -- '+px5g-standalone' "$_ssl_makefile" || {
+        echo 'Failed to switch luci-ssl-openssl to px5g-standalone' >&2
+        exit 1
+    }
+    echo "[DIY] luci-ssl-openssl: dep px5g-openssl -> px5g-standalone"
+fi
+
+rm -f target/linux/generic/backport-6.12/436-v7.3-mtd-spinand-fmsh-*.patch \
+      target/linux/generic/backport-6.12/437-v7.3-mtd-spinand-fmsh-*.patch
+echo "[DIY] removed fmsh backport patches 436/437 (broken against kernel 6.12.103)"
+
+patch_makefile_dep \
+    feeds/packages/lang/python/python-ubus/Makefile \
+    'PKG_BUILD_DEPENDS:=python-setuptools/host' \
+    'PKG_BUILD_DEPENDS:=python3/host'
+patch_makefile_dep \
+    package/feeds/packages/python-ubus/Makefile \
+    'PKG_BUILD_DEPENDS:=python-setuptools/host' \
+    'PKG_BUILD_DEPENDS:=python3/host'
+
+patch_makefile_dep \
+    feeds/packages/admin/zabbix/Makefile \
+    'libnetsnmp-ssl' \
+    'libnetsnmp'
+patch_makefile_dep \
+    package/feeds/packages/zabbix/Makefile \
+    'libnetsnmp-ssl' \
+    'libnetsnmp'
+
+patch_makefile_dep \
+    package/boot/uboot-mediatek/patches/450-add-bpi-r4.patch \
+    'CONFIG_BOOTDELAY=30' \
+    'CONFIG_BOOTDELAY=10'
+
+apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1005-luci-dockerman-docker-menu.patch" || exit 1
+apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1006-luci-argon-docker-menu-layout.patch" || exit 1
+
+apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1007-luci-dhcpv4-hide-empty-identifiers.patch" || exit 1
+
+[ -f feeds/luci/modules/luci-base/root/usr/share/rpcd/ucode/luci ] && \
+    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1000-luci-rpcd-getWifiStationHints-master.patch" || true
+
+[ -f feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js ] && \
+    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1000-luci-status-60wifi-master.patch" || true
+
+[ -f feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js ] && \
+    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1001-luci-wireless-combined-master.patch" || true
