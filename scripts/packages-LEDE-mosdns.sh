@@ -39,8 +39,8 @@ clone https://github.com/pymumu/luci-app-smartdns.git luci-app-smartdns -b maste
 # VIKINGYFY/packages（一堆 luci 依赖）
 # clone https://github.com/VIKINGYFY/packages.git VIKINGYFY-packages -b main
 # passwall / passwall2
-# clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
-# clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
+clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
+clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
 # mosdns
 clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 # adguardhome
@@ -55,7 +55,7 @@ clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome 
 # 网络测速
 # clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
 # openclash
-# clone https://github.com/vernesong/OpenClash.git OpenClash -b master
+clone https://github.com/vernesong/OpenClash.git OpenClash -b master
 # 透明代理系
 clone https://github.com/nikkinikki-org/OpenWrt-nikki.git luci-app-nikki -b main
 clone https://github.com/nikkinikki-org/OpenWrt-momo.git luci-app-momo -b main

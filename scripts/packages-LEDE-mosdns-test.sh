@@ -55,7 +55,7 @@ clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome 
 # 网络测速
 # clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
 # openclash
-# clone https://github.com/vernesong/OpenClash.git OpenClash -b master
+clone https://github.com/vernesong/OpenClash.git OpenClash -b master
 # 透明代理系
 clone https://github.com/nikkinikki-org/OpenWrt-nikki.git luci-app-nikki -b main
 clone https://github.com/nikkinikki-org/OpenWrt-momo.git luci-app-momo -b main
