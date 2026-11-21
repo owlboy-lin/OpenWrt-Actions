@@ -20,6 +20,7 @@ rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-smart
 echo "==> 克隆依赖插件"
 # # passwall 的依赖包（xray-core / sing-box / hysteria / geoview ...）
 # clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
+clone https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang -b 27.x 
 
 # mkdir -p package/small
 # pushd package/small > /dev/null
