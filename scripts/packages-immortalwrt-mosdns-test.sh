@@ -37,16 +37,16 @@ clone https://github.com/eamonxg/luci-theme-aurora.git luci-theme-aurora -b mast
 # # VIKINGYFY/packages（一堆 luci 依赖）
 # # clone https://github.com/VIKINGYFY/packages.git VIKINGYFY-packages -b main
 # # passwall / passwall2
-# clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
-# clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
+clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
+clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
 # # ssrp
 # clone https://github.com/fw876/helloworld.git luci-app-ssr-plus -b dev
 # # find ./ | grep Makefile | grep mosdns | xargs rm -f
 # # mosdns
-# clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
+clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 # # adguardhome
 # # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
-# clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome -b main
+clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome -b main
 # # git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 # # 网络测速
 # clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
@@ -57,12 +57,12 @@ clone https://github.com/eamonxg/luci-theme-aurora.git luci-theme-aurora -b mast
 # clone https://github.com/nikkinikki-org/OpenWrt-momo.git luci-app-momo -b main
 # clone https://github.com/QiuSimons/luci-app-daed.git luci-app-daed -b master
 # # 流量监控（luci 前端 + bandix 核心包；核心是预编译二进制，按架构从 release 下载）
-# clone https://github.com/timsaya/luci-app-bandix.git luci-app-bandix -b main
-# clone https://github.com/timsaya/openwrt-bandix.git openwrt-bandix -b main
+clone https://github.com/timsaya/luci-app-bandix.git luci-app-bandix -b main
+clone https://github.com/timsaya/openwrt-bandix.git openwrt-bandix -b main
 # # 网盘（alist 的继任者，取代已失效的 aliyundrive-webdav）
 # clone https://github.com/sbwml/luci-app-openlist2.git luci-app-openlist2 -b main
 # #luci-app-wolplus
-# clone https://github.com/animegasan/luci-app-wolplus.git luci-app-wolplus -b main
+clone https://github.com/animegasan/luci-app-wolplus.git luci-app-wolplus -b main
 # # 温度显示（状态页）
 # # clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
 
