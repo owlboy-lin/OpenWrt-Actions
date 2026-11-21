@@ -22,7 +22,7 @@ on:
   
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  FREE_DISK_SH: scripts/free_disk_space.sh
+  FREE_DISK_SH: scripts/free_disk_space-imm25.12.sh
   ENV_SH: scripts/environment-imm.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-25.12
