@@ -41,7 +41,6 @@ clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall
 clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
 # ssrp
 clone https://github.com/fw876/helloworld.git luci-app-ssr-plus -b dev
-find ./ | grep Makefile | grep mosdns | xargs rm -f
 # mosdns
 clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 # adguardhome
