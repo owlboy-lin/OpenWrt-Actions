@@ -64,7 +64,7 @@ clone https://github.com/sbwml/luci-app-openlist2.git luci-app-openlist2 -b main
 #luci-app-wolplus
 clone https://github.com/animegasan/luci-app-wolplus.git luci-app-wolplus -b main
 # 温度显示（状态页）
-# clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
+clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
 
 popd > /dev/null
 
