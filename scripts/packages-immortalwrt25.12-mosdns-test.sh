@@ -15,35 +15,34 @@ clone() {
 echo "==> 删除 feeds 中要被覆盖的插件"
 rm -rf feeds/packages/net/mosdns
 rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,v2ray-plugin,xray-plugin,geoview,shadow-tls,smartdns}
-rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-smartdns,luci-app-adguardhome}
+rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-smartdns}
 
 echo "==> 克隆依赖插件"
-# # passwall 的依赖包（xray-core / sing-box / hysteria / geoview ...）
+# passwall 的依赖包（xray-core / sing-box / hysteria / geoview ...）
 clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
-# clone https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang -b 27.x 
 
 mkdir -p package/small
 pushd package/small > /dev/null
 
-# # 主题
+# 主题
 clone https://github.com/eamonxg/luci-theme-aurora.git luci-theme-aurora -b master
-# # 定时控制
-# # clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
-# # homeproxy（immortalwrt 版本，规则文件由 scripts/homeproxy.sh 在后面补）
-# # clone https://github.com/immortalwrt/homeproxy.git homeproxy -b master
-# # lucky
+# 定时控制
+# clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
+# homeproxy（immortalwrt 版本，规则文件由 scripts/homeproxy.sh 在后面补）
+# clone https://github.com/immortalwrt/homeproxy.git homeproxy -b master
+# lucky
 # clone https://github.com/gdy666/luci-app-lucky.git luci-app-lucky -b main
-# # smartdns
+# smartdns
 # clone https://github.com/pymumu/luci-app-smartdns.git luci-app-smartdns -b master
-# # VIKINGYFY/packages（一堆 luci 依赖）
-# # clone https://github.com/VIKINGYFY/packages.git VIKINGYFY-packages -b main
-# # passwall / passwall2
+# VIKINGYFY/packages（一堆 luci 依赖）
+# clone https://github.com/VIKINGYFY/packages.git VIKINGYFY-packages -b main
+# passwall / passwall2
 clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
 clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
-# # ssrp
-# clone https://github.com/fw876/helloworld.git luci-app-ssr-plus -b master
+# ssrp
+clone https://github.com/fw876/helloworld.git luci-app-ssr-plus -b master
 # find ./ | grep Makefile | grep mosdns | xargs rm -f
-# # mosdns
+ # mosdns
 clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 # # adguardhome
 # # git clone -b 2024.09.05 --depth 1 https://github.com/XiaoBinin/luci-app-adguardhome.git
@@ -54,7 +53,7 @@ clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome 
 # # git clone -b master --depth 1 https://github.com/pymumu/smartdns.git
 # # sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
 # # sed -n '33p' smartdns/package/openwrt/Makefile
-# # 网络测速
+# 网络测速
 clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
 # # openclash
 # # clone https://github.com/vernesong/OpenClash.git OpenClash -b master
