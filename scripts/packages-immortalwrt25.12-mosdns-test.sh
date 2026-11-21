@@ -19,14 +19,14 @@ rm -rf feeds/luci/applications/{luci-app-mosdns,luci-app-passwall,luci-app-smart
 
 echo "==> 克隆依赖插件"
 # # passwall 的依赖包（xray-core / sing-box / hysteria / geoview ...）
-# clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
+clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/pwpage
 # clone https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang -b 27.x 
 
-# mkdir -p package/small
-# pushd package/small > /dev/null
+mkdir -p package/small
+pushd package/small > /dev/null
 
 # # 主题
-# clone https://github.com/eamonxg/luci-theme-aurora.git luci-theme-aurora -b master
+clone https://github.com/eamonxg/luci-theme-aurora.git luci-theme-aurora -b master
 # # 定时控制
 # # clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
 # # homeproxy（immortalwrt 版本，规则文件由 scripts/homeproxy.sh 在后面补）
