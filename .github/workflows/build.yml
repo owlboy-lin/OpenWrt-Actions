@@ -15,7 +15,7 @@ on:
   workflow_call:
     inputs:
       platform:
-        description: "平台标识（x86-64 / allwinner / rockchip / mt7621 / filogic），用于缓存 key、产物整理和 Release 命名"
+        description: "平台标识（BLLW-X86-64 / x86-64 / allwinner / rockchip / mt7621 / filogic），用于缓存 key、产物整理和 Release 命名"
         required: true
         type: string
       branch:

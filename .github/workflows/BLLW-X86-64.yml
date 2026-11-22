@@ -1,0 +1,33 @@
+#
+# X86-64 平台
+# 定时：每周四 20:00 UTC = 每周五 04:00 (Asia/Shanghai)
+#
+name: BLLW-X86-64
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 20 * * 4"
+
+permissions:
+  contents: write
+  actions: write
+
+# 同一平台串行：并发会互相打掉 cache，还可能撞上同一天的 Release tag
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: BLLW-X86-64
+      branch: openwrt-25.12
+      configs: configs/My-Target-X86-Actions-immortalwrt.txt,configs/Packages-immortalwrt-mosdns.txt,configs/Packages-5G.txt
+      clash_core: amd64
+      rust: true
+      golang: true
+      with_5g: true
+      build_mode: single
