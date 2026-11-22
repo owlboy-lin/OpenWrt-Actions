@@ -117,7 +117,7 @@ jobs:
           echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
       - name: 准备完成
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 下载源代码
         working-directory: /workdir

@@ -41,7 +41,7 @@ jobs:
           remove-codeql: 'true'
 
       - name: Check out the project branch
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7
 
       - name: Initialize the compilation environment
         run: |

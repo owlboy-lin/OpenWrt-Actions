@@ -67,7 +67,7 @@ jobs:
           sudo chown $USER:$GROUPS /workdir   
 
       - name: Checkout OpenWrt
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
