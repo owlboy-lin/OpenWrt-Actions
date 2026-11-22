@@ -149,7 +149,7 @@ jobs:
         run: df -hT
 
       - name: 上传bin完整目录
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: OpenWrt_bin_X86_${{ env.REPO_BRANCH }}_${{ github.sha }}
@@ -165,7 +165,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: 上传固件artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7
         if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
         with:
           name: OpenWrt_img_X86_${{ env.REPO_BRANCH }}_${{ github.sha }}

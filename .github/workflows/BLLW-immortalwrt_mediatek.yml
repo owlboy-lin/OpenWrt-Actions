@@ -232,7 +232,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Upload the firmware to github artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
           name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
