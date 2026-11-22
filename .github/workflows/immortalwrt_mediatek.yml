@@ -60,7 +60,7 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         chmod +x $OPENWRT_NAME/*.sh
-        $GITHUB_WORKSPACE/$OPENWRT_NAME/bpi-r4/system-Information.sh
+        $GITHUB_WORKSPACE/$OPENWRT_NAME/stem-Information.sh
 
     - name: Download firmware source code
       run: |
