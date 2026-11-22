@@ -144,7 +144,7 @@ jobs:
       - name: Prune old caches
         if: steps.compile.outputs.status == 'success' && !cancelled()
         continue-on-error: true
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           CCACHE_PREFIX: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
           TOOLCHAIN_PREFIX: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
@@ -186,7 +186,7 @@ jobs:
       - name: 清理旧的CI运行记录
         if: ${{ !cancelled() }}
         continue-on-error: true
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           KEEP_RUNS: '15'
         with:
