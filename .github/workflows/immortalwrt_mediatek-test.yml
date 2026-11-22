@@ -58,8 +58,9 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          chmod +x $OPENWRT_NAME/*.sh
-          $GITHUB_WORKSPACE/$OPENWRT_NAME/system-Information.sh
+          chmod +x $DIR/$OPENWRT_NAME/*.sh
+          $GITHUB_WORKSPACE/$DIR/$OPENWRT_NAME/system-Information.sh
+
 
       - name: Download firmware source code
         run: |
@@ -96,14 +97,14 @@ jobs:
 
       - name: Load feeds.conf.default
         run: |
-          chmod +x $OPENWRT_NAME/*.sh
+          chmod +x $DIR/$OPENWRT_NAME/*.sh
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P1_SH
 
       - name: Load config
         run: |
           [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-          chmod +x $OPENWRT_NAME/*.sh && cd openwrt
+          chmod +x $DIR/$OPENWRT_NAME/*.sh && cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
 
       - name: Download the installation package
