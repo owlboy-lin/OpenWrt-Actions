@@ -12,7 +12,8 @@ permissions:
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
-  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig
+  DIR: bpi-r4
+  CONFIG_FILE: immortalwrt/mediatek/defconfig
   DIY_P1_SH: immortalwrt/diy-part1.sh
   DIY_P2_SH: immortalwrt/diy-part2.sh
   UPLOAD_FIRMWARE: true
@@ -59,8 +60,8 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        chmod +x $OPENWRT_NAME/*.sh
-        $GITHUB_WORKSPACE/$OPENWRT_NAME/stem-Information.sh
+        chmod +x $DIR/*.sh
+        $GITHUB_WORKSPACE/$DIR/stem-Information.sh
 
     - name: Download firmware source code
       run: |
@@ -97,15 +98,15 @@ jobs:
 
     - name: Load feeds.conf.default
       run: |
-        chmod +x $OPENWRT_NAME/*.sh
+        chmod +x $DIR/*.sh
         cd openwrt
-        $GITHUB_WORKSPACE/bpi-r4/$DIY_P1_SH
+        $GITHUB_WORKSPACE/$DIR/$DIY_P1_SH
 
     - name: Load config
       run: |
         [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-        chmod +x $OPENWRT_NAME/*.sh && cd openwrt
-        $GITHUB_WORKSPACE/bpi-r4/$DIY_P2_SH
+        chmod +x $DIR/*.sh && cd openwrt
+        $GITHUB_WORKSPACE/$DIR/$DIY_P2_SH
 
     - name: Download the installation package
       id: package
