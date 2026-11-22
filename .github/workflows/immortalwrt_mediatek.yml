@@ -60,9 +60,9 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        chmod +x $DIR/$OPENWRT_NAME/*.sh
+        chmod +x $GITHUB_WORKSPACE/$DIR/$OPENWRT_NAME/*.sh
         ls
-        $GITHUB_WORKSPACE/$OPENWRT_NAME/stem-Information.sh
+        $GITHUB_WORKSPACE/$DIR/$OPENWRT_NAME/system-Information.sh
 
     - name: Download firmware source code
       run: |
