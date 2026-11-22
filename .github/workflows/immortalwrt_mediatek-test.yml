@@ -80,16 +80,16 @@ jobs:
         with:
           ccache: 'false'
           prefix: ${{ github.workspace }}/openwrt
-          mixkey: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}
+          mixkey: ${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}
 
       - name: Restore ccache
         id: ccache-restore
         uses: actions/cache/restore@v5.0.5
         with:
           path: openwrt/.ccache
-          key: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
+          key: ccache-${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
           restore-keys: |
-            ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+            ccache-${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
 
       - name: Update base feed indexes
         working-directory: ./openwrt
@@ -146,9 +146,9 @@ jobs:
         continue-on-error: true
         uses: actions/github-script@v8
         env:
-          CCACHE_PREFIX: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
-          TOOLCHAIN_PREFIX: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
-          CURRENT_CCACHE_KEY: ${{ steps.ccache-restore.outputs.cache-primary-key }}
+          CCACHE_PREFIX: ccache-${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+          TOOLCHAIN_PREFIX: ${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
+          CURRENT_CCACHE_KEY: ${{ env.FIRMWARE_NAME }}-${{ steps.ccache-restore.outputs.cache-primary-key }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
