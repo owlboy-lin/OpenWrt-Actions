@@ -1,0 +1,32 @@
+#
+# Rockchip 平台
+# 定时：每周二 20:00 UTC = 每周三 04:00 (Asia/Shanghai)
+#
+name: rockchip
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 20 * * 2"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: rockchip
+      branch: openwrt-25.12
+      configs: configs/Target-rockchip.txt,configs/Packages.txt,configs/Packages-5G.txt
+      clash_core: arm64
+      rust: true
+      golang: true
+      with_5g: true
+      build_mode: single

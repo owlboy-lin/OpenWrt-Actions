@@ -1,0 +1,32 @@
+#
+# master 分支 X86-64（手动触发）
+# 分步编译：tools -> toolchain -> kernel -> package -> target，中间清磁盘
+#
+name: master-X86
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: x86-64
+      branch: master
+      configs: configs/Target-X86.txt,configs/Packages.txt,configs/Packages-5G.txt
+      clash_core: amd64
+      # master 分支上暂无可靠验证过的 rust 替换，先关掉；
+      # 如果编译 shadowsocks-rust 报错，把它改成 true 试试。
+      rust: false
+      golang: true
+      with_5g: true
+      build_mode: staged
