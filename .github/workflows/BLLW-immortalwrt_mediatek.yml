@@ -1,4 +1,4 @@
-name: immortalwrt_mediatek_bpi-r4
+name: BLLW-immortalwrt_mediatek_bpi-r4
 
 on:
   schedule:
