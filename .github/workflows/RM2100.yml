@@ -334,7 +334,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: 自动发布固件到 Releases
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
