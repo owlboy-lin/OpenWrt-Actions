@@ -31,7 +31,7 @@ configure_wifi7() {
             echo 'The selected source does not provide mtwifi-scripts' >&2
             exit 1
         }
-        for package in mtwifi-cfg wifi-scripts luci-app-mtwifi-cfg \
+        for package in be14-ucg luci-app-unifi luci-i18n-unifi-zh-cn mtwifi-dot1x mtwifi-cfg wifi-scripts luci-app-mtwifi-cfg \
             luci-i18n-mtwifi-cfg-zh-cn; do
             symbol="CONFIG_PACKAGE_${package}"
             sed -i "/^${symbol}=/d; /^# ${symbol} is not set$/d" "$cfg"
@@ -63,7 +63,8 @@ verify_ucode_wifi7() {
             return 1
         }
     done
-    for symbol in CONFIG_PACKAGE_mtwifi-cfg CONFIG_PACKAGE_wifi-scripts \
+    for symbol in CONFIG_PACKAGE_be14-ucg CONFIG_PACKAGE_luci-app-unifi CONFIG_PACKAGE_luci-i18n-unifi-zh-cn \
+        CONFIG_PACKAGE_mtwifi-dot1x CONFIG_PACKAGE_mtwifi-cfg CONFIG_PACKAGE_wifi-scripts \
         CONFIG_PACKAGE_luci-app-mtwifi-cfg CONFIG_PACKAGE_luci-i18n-mtwifi-cfg-zh-cn \
         CONFIG_PACKAGE_wifi-profile CONFIG_PACKAGE_wifi-script \
         CONFIG_PACKAGE_kmod-mt7996e CONFIG_PACKAGE_kmod-en_npu; do
@@ -75,46 +76,83 @@ verify_ucode_wifi7() {
     echo '[DIY] verified: vendor OSAL/cfg80211, shared wpad and ucode management'
 }
 
+verify_wext_wifi7() {
+    local cfg="$1" symbol
+    [ -r "$cfg" ] || { echo "Cannot read config: $cfg" >&2; return 1; }
+    for symbol in CONFIG_PACKAGE_be14-ucg CONFIG_PACKAGE_luci-app-unifi CONFIG_PACKAGE_luci-i18n-unifi-zh-cn \
+        CONFIG_PACKAGE_mtwifi-dot1x CONFIG_PACKAGE_mtwifi-cfg CONFIG_PACKAGE_wifi-scripts \
+        CONFIG_PACKAGE_wireless-tools CONFIG_PACKAGE_luci-app-mtwifi-cfg \
+        CONFIG_PACKAGE_luci-i18n-mtwifi-cfg-zh-cn CONFIG_PACKAGE_luci-lib-uqr \
+        CONFIG_PACKAGE_luci-mod-network CONFIG_PACKAGE_rpcd-mod-iwinfo \
+        CONFIG_PACKAGE_wifi-dats CONFIG_PACKAGE_kmod-mt_wifi7 \
+        CONFIG_PACKAGE_kmod-mt_hwifi CONFIG_PACKAGE_kmod-mt_wifi_osal \
+        CONFIG_MTK_WIFI7_OSAL_SUPPORT CONFIG_MTK_WIFI7_LED_CONTROL_SUPPORT \
+        CONFIG_MTK_HWIFI_FW_BE14000_20260721; do
+        grep -qx "${symbol}=y" "$cfg" || {
+            echo "Resolved WEXT firmware configuration is missing ${symbol}=y" >&2
+            return 1
+        }
+    done
+    for symbol in CONFIG_PACKAGE_mtwifi-scripts CONFIG_WIFI_SCRIPTS_UCODE \
+        CONFIG_MTK_WIFI7_CFG80211_SUPPORT CONFIG_MTK_WIFI_OSAL_CFG80211_SUPPORT \
+        CONFIG_MTK_WIFI7_IWCOMMAND_CFG80211_SUPPORT CONFIG_MTK_WIFI7_CFG80211_FULL_OPS_SUPPORT \
+        CONFIG_MTK_WIFI7_HOSTAPD_MBSS_SUPPORT CONFIG_MTK_WIFI7_APCLI_SUPPLICANT_SUPPORT \
+        CONFIG_MTK_WIFI7_MAP_HOSTAPD_SUPPORT CONFIG_PACKAGE_wifi-profile CONFIG_PACKAGE_wifi-script \
+        CONFIG_PACKAGE_kmod-mt_wifi_cmn CONFIG_PACKAGE_kmod-mt7996e CONFIG_PACKAGE_kmod-en_npu; do
+        if grep -Eq "^${symbol}=[ym]$" "$cfg"; then
+            echo "Conflicting WEXT firmware option: ${symbol}" >&2
+            return 1
+        fi
+    done
+    echo '[DIY] verified: vendor OSAL/WEXT, mtwifi-cfg and dedicated LuCI'
+}
+
 configure_luci() {
     local LC_ALL=C
     local build_root="${GITHUB_WORKSPACE:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}"
     local patch_dir="$build_root/patches/feeds/luci"
     local overview="$patch_dir/1019-luci-system-acceleration-row.patch"
     local index
-    local -a wireless=("$patch_dir"/102[0-8]-luci-mtwifi-*.patch)
+    local -a wireless=("$patch_dir"/102[0-9]-luci-mtwifi-*.patch)
 
     if ! git apply --reverse --check "$overview" >/dev/null 2>&1; then
         git apply "$overview"
     fi
     grep -qx 'CONFIG_PACKAGE_mtwifi-scripts=y' .config || return 0
-    [ -f "${wireless[0]}" ] || {
-        echo 'MTK wireless LuCI patches are missing' >&2
+    [ "${#wireless[@]}" -eq 10 ] || {
+        echo 'Incomplete MTK wireless LuCI patch series' >&2
         return 1
     }
 
-    # Later patches may change earlier context. Resume after the latest match.
-    for ((index=${#wireless[@]}-1; index>=0; index--)); do
-        if git apply --reverse --check "${wireless[index]}" >/dev/null 2>&1; then
+    # Reverse-check the complete prefix because the individual patches overlap.
+    for ((index=${#wireless[@]}; index>0; index--)); do
+        if git apply --reverse --check - < <(cat "${wireless[@]:0:index}") 2>/dev/null; then
             break
         fi
     done
-    for ((index+=1; index<${#wireless[@]}; index++)); do
-        git apply "${wireless[index]}"
+    for ((; index<${#wireless[@]}; index++)); do
+        if ! git apply --reverse --check "${wireless[index]}" >/dev/null 2>&1; then
+            git apply "${wireless[index]}" || return 1
+        fi
     done
+    git apply --reverse --check - < <(cat "${wireless[@]}")
 }
 
 case "${1:-}" in
     --configure)
         configure_wifi7 "${2:-.config}"
         if [ "${2:-.config}" = '.config' ]; then
+            verifier=verify_wext_wifi7
             if grep -qx 'CONFIG_PACKAGE_mtwifi-scripts=y' .config; then
-                make defconfig
-                verify_ucode_wifi7 .config
+                verifier=verify_ucode_wifi7
             fi
+            make defconfig
+            "$verifier" .config
             configure_luci
         fi
         exit ;;
     --verify-ucode) verify_ucode_wifi7 "${2:-.config}"; exit ;;
+    --verify-wext) verify_wext_wifi7 "${2:-.config}"; exit ;;
     "") ;;
     *) echo "Unknown DIY mode: $1" >&2; exit 2 ;;
 esac
@@ -185,7 +223,7 @@ git clone --depth=1 --single-branch --branch main https://github.com/MedyMa/luci
 echo "MedyMa LuCI source: $(git -C luci-app rev-parse HEAD)"
 mkdir -p "$_mtk_source_root/package/openwrt-packages"
 mtk_luci_packages=(
-    luci-app-fan luci-app-sfp-status luci-app-adguardhome
+    luci-app-fan luci-app-sfp-status luci-app-adguardhome luci-app-unifi
     luci-app-modemband luci-app-turboacc-mtk luci-app-traffic luci-app-hqos-mtk rpcd-mod-router-status
 )
 for package in "${mtk_luci_packages[@]}"; do
@@ -224,12 +262,21 @@ case "$_go_default" in
         exit 1
         ;;
 esac
-if ! grep -qxF "PKG_NAME:=golang$_go_default" "feeds/packages/lang/golang/golang$_go_default/Makefile"; then
+_go_recipe="feeds/packages/lang/golang/golang$_go_default/Makefile"
+if ! grep -qxF "PKG_NAME:=golang$_go_default" "$_go_recipe"; then
     echo "Missing native Go $_go_default toolchain in the packages feed" >&2
     exit 1
 fi
 if [ "$_go_default" != "$_go_feed_default" ]; then
     sed -i "s/^GO_DEFAULT_VERSION:=.*/GO_DEFAULT_VERSION:=$_go_default/" "$_go_values" || exit 1
+fi
+# AdGuardHome 1.0 requires Go 1.27.4. Backport openwrt/packages db68036b
+# while the ImmortalWrt feed still ships an earlier 1.27 patch release.
+if [ "$_go_default" = 1.27 ] && grep -Eq '^GO_VERSION_PATCH:=[0-3]?$' "$_go_recipe"; then
+    sed -i -e 's/^GO_VERSION_PATCH:=.*/GO_VERSION_PATCH:=4/' \
+        -e 's/^GO_VERSION_RC:=.*/GO_VERSION_RC:=/' \
+        -e 's/^PKG_HASH:=.*/PKG_HASH:=73cfb8571aec0c01177687db87163d46aa20e9779672772891aa17654d9a6099/' \
+        "$_go_recipe" || exit 1
 fi
 rm -rf feeds/packages/net/mosdns
 git clone --depth=1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
