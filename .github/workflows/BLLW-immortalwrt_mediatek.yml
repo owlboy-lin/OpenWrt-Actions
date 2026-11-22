@@ -1,9 +1,8 @@
-name: BLLW-immortalwrt_mediatek
+name: immortalwrt_mediatek_bpi-r4
 
 on:
   schedule:
-    - cron: 0 20 * * *
-    #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
+    - cron: '30 17 * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,37 +12,32 @@ permissions:
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
-  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig-test
-  DIY_P1_SH: immortalwrt/diy-part1.sh
-  DIY_P2_SH: immortalwrt/diy-part2-1.sh
-  DIR: bpi-r4
-  Firmware_Name: BLLW-immortalwrt_mediatek
-  OPENWRT_NAME: immortalwrt
-  OPENWRT_DEVICE: mediatek
+  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig
+  DIY_P1_SH: bpi-r4/immortalwrt/diy-part1.sh
+  DIY_P2_SH: bpi-r4/immortalwrt/diy-part2.sh
+  SYS_INFO_SH: bpi-r4/immortalwrt/system-Information.sh
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
-  UPLOAD_BIN_DIR: false
-  UPLOAD_BUILDINFO: true
-  UPLOAD_PACKAGE: true
   TZ: Asia/Shanghai
-  GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+  OPENWRT_NAME: immortalwrt
+  OPENWRT_DEVICE: mediatek
+  TARGET_SUB: filogic
 
 jobs:
   build:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
         with:
-          # /mnt may share /; leave space for cache archives after both allocations.
-          root-reserve-mb: 16384
-          temp-reserve-mb: 8192
+          root-reserve-mb: 10240
+          temp-reserve-mb: 6144
           swap-size-mb: 1024
-          remove-dotnet: "true"
-          remove-android: "true"
-          remove-haskell: "true"
-          remove-codeql: "true"
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
 
       - name: Check out the project branch
         uses: actions/checkout@v6.0.2
@@ -51,7 +45,6 @@ jobs:
       - name: Initialize the compilation environment
         run: |
           set -euo pipefail
-
           export DEBIAN_FRONTEND=noninteractive
           sudo -E apt-get -qq update
           sudo -E apt-get -y -qq install --no-install-recommends \
@@ -60,14 +53,13 @@ jobs:
               rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion \
               qemu-utils ccache rename libelf-dev file patch xz-utils zstd
           sudo -E apt-get -qq clean
-          sudo timedatectl set-timezone "${TZ:-Asia/Shanghai}" || true
 
       - name: Initialize Environment and Display System Info
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          chmod +x $OPENWRT_NAME/*.sh
-          $GITHUB_WORKSPACE/$OPENWRT_NAME/$DIR/system-Information.sh
+          chmod +x $SYS_INFO_SH
+          $GITHUB_WORKSPACE/$SYS_INFO_SH
 
       - name: Download firmware source code
         run: |
@@ -84,45 +76,47 @@ jobs:
       - name: Restore toolchain cache
         uses: klever1988/cachewrtbuild@54ed4fe2f7d8b5cfbc0b928c159266ee892c2d3d
         with:
-          ccache: "false"
+          ccache: 'false'
           prefix: ${{ github.workspace }}/openwrt
-          mixkey: ${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}
+          mixkey: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}
 
       - name: Restore ccache
         id: ccache-restore
         uses: actions/cache/restore@v5.0.5
         with:
           path: openwrt/.ccache
-          key: ccache-${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
+          key: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
           restore-keys: |
-            ccache-${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+            ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
 
       - name: Update base feed indexes
         working-directory: ./openwrt
         run: |
           ./scripts/feeds update -a
 
-      - name: Load feeds.conf.default
+      - name: Run diy-part1.sh
         run: |
-          chmod +x $DIR/$OPENWRT_NAME/*.sh
+          chmod +x $DIY_P1_SH
           cd openwrt
-          $GITHUB_WORKSPACE/$DIR/$DIY_P1_SH
+          $GITHUB_WORKSPACE/$DIY_P1_SH
 
-      - name: Load config
+      - name: Load config & Run diy-part2.sh
         run: |
           [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-          chmod +x $OPENWRT_NAME/*.sh && cd openwrt
-          $GITHUB_WORKSPACE/$DIR/$DIY_P2_SH
+          chmod +x $DIY_P2_SH
+          cd openwrt
+          $GITHUB_WORKSPACE/$DIY_P2_SH
 
       - name: Download the installation package
         id: package
         run: |
           cd openwrt
           make defconfig
-          grep -qx 'CONFIG_PACKAGE_rpcd-mod-router-status=y' .config || {
-            echo 'Independent router status package is missing from the resolved firmware configuration' >&2
-            exit 1
-          }
+          # 【可选】如果你不需要强制校验 rpcd-mod-router-status，注释下面这一段
+          # grep -qx 'CONFIG_PACKAGE_rpcd-mod-router-status=y' .config || {
+          #   echo 'Independent router status package is missing from the resolved firmware configuration' >&2
+          #   exit 1
+          # }
           cat .config
           make download -j$(nproc) 2>&1
           find dl -size -1024c -exec ls -l {} \;
@@ -141,7 +135,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Save ccache
-        if: steps.compile.outputs.status == 'success' && steps.ccache-restore.outputs.cache-hit != 'true'
+        if: steps.compile.outputs.status == 'success'
         uses: actions/cache/save@v5.0.5
         with:
           path: openwrt/.ccache
@@ -152,8 +146,8 @@ jobs:
         continue-on-error: true
         uses: actions/github-script@v8
         env:
-          CCACHE_PREFIX: ccache-${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
-          TOOLCHAIN_PREFIX: ${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
+          CCACHE_PREFIX: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+          TOOLCHAIN_PREFIX: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
           CURRENT_CCACHE_KEY: ${{ steps.ccache-restore.outputs.cache-primary-key }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -178,7 +172,6 @@ jobs:
             const newest = (a, b) => new Date(b.last_accessed_at || b.created_at || 0)
               - new Date(a.last_accessed_at || a.created_at || 0);
             const toolchains = caches.filter(c => (c.key || '').startsWith(toolchainPrefix)).sort(newest);
-            // A missing restore output must not evict every ccache entry.
             const staleCcache = currentKey.startsWith(ccachePrefix)
               ? caches.filter(c => (c.key || '').startsWith(ccachePrefix) && c.key !== currentKey) : [];
             const stale = [...staleCcache, ...toolchains.slice(1)];
@@ -195,7 +188,7 @@ jobs:
         continue-on-error: true
         uses: actions/github-script@v8
         env:
-          KEEP_RUNS: "15"
+          KEEP_RUNS: '15'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -231,23 +224,24 @@ jobs:
         id: organize
         if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
         run: |
-          cd openwrt/bin/targets/mediatek/filogic
-          rm -rf packages *mt798* *.config *.buildinfo *.json sha256sums
+          cd openwrt/bin/targets/mediatek/${{ env.TARGET_SUB }}
+          # 不再删除 mt798*！BPI-R4 固件就是 mt7988
+          rm -rf packages *.config *.buildinfo *.json sha256sums
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: Upload the firmware to github
+      - name: Upload the firmware to github artifact
         uses: actions/upload-artifact@v7.0.1
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: ${{env.Firmware_Name}}-${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
+          name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
           path: ${{ env.FIRMWARE }}
 
       - name: Generate release tags
         id: tag
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
-          echo "release_tag=${{env.Firmware_Name}}-${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
+          echo "release_tag=${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
           printf "Source: %s/commit/%s\n" "$REPO_URL" "$SOURCE_SHA" > release.txt
           echo "📥 固件下载" >> release.txt
           echo "status=success" >> $GITHUB_OUTPUT
@@ -256,7 +250,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         if: steps.tag.outputs.status == 'success' && !cancelled()
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
         with:
           files: ${{ env.FIRMWARE }}/*
           name: ${{ steps.tag.outputs.release_tag }}
@@ -266,10 +260,9 @@ jobs:
       - name: 删除旧的Releases
         if: steps.tag.outputs.status == 'success' && !cancelled()
         uses: MedyMa/delete-older-releases@v0.3.4
-
         with:
           keep_latest: 3
           delete_tags: true
-          delete_tag_pattern: '^.*-immortalwrt_openwrt-24\.10$'
+          delete_tag_pattern: '^\d{4}\.\d{2}\.\d{2}-immortalwrt_openwrt-24\.10$'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
