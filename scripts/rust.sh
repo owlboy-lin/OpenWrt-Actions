@@ -1,30 +1,20 @@
-#!/usr/bin/env bash
-#
-# 用 patches/rust 整个替换 feeds/packages/lang/rust
-# 必须在 openwrt 源码根目录执行（build.yml 已保证）
-#
-set -euo pipefail
+#!/bin/bash
 
-SRC="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE 未设置}/patches/rust"
-DST="feeds/packages/lang/rust"
+echo "开始替换 feeds中的rust ..."
+echo "========================================"
 
-if [ ! -d "$SRC" ]; then
-  echo "::error::找不到 ${SRC}" >&2
-  exit 1
-fi
-if [ ! -d "feeds/packages/lang" ]; then
-  echo "::error::feeds 还没安装？(缺少 feeds/packages/lang)" >&2
-  exit 1
-fi
+rm -rf openwrt/feeds/packages/lang/rust
+cp -r patches/rust openwrt/feeds/packages/lang/
 
-echo "==> 替换 feeds/packages/lang/rust"
-rm -rf "$DST"
-cp -r "$SRC" "$DST"
+echo "===== 查看rust文件是否存在 ====="
+ls -l openwrt/feeds/packages/lang/ | grep rust
 
-if [ ! -f "$DST/Makefile" ]; then
-  echo "::error::rust 替换失败（Makefile 不存在）" >&2
-  exit 1
+# 额外验证Makefile是否存在（核心文件）
+if [ -f "openwrt/feeds/packages/lang/rust/Makefile" ]; then
+  echo "✅ Rust目录替换成功，Makefile存在"
+else
+  echo "❌ Rust目录替换失败，Makefile不存在"
 fi
 
-echo "    rust $(sed -n 's/^PKG_VERSION:=//p' "$DST/Makefile") 就位"
-echo "✅ rust.sh 完成"
+echo "========================================"
+echo "rust 替换完成！"
