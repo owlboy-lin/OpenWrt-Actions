@@ -26,8 +26,8 @@ env:
   ENV_SH: scripts/environment-imm.sh
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-25.12
-  Firmware_Name: BLLW-immortalwrt-25.12-mosdns
   # 修改 REPO_BRANCH 来达到更改编译版本
+  Firmware_Name: BLLW-immortalwrt-25.12-mosdns
   PLATFORM_FILE: configs/My-Target-X86-Actions-immortalwrt.txt
   CONFIG_FILE: configs/Packages-immortalwrt-25.12.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
