@@ -59,7 +59,7 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        chmod +x $OPENWRT_NAME/bpi-r4/*.sh
+        chmod +x $OPENWRT_NAME/*.sh
         $GITHUB_WORKSPACE/$OPENWRT_NAME/bpi-r4/system-Information.sh
 
     - name: Download firmware source code
@@ -97,14 +97,14 @@ jobs:
 
     - name: Load feeds.conf.default
       run: |
-        chmod +x $OPENWRT_NAME/bpi-r4/*.sh
+        chmod +x $OPENWRT_NAME/*.sh
         cd openwrt
         $GITHUB_WORKSPACE/bpi-r4/$DIY_P1_SH
 
     - name: Load config
       run: |
         [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-        chmod +x $OPENWRT_NAME/bpi-r4/*.sh && cd openwrt
+        chmod +x $OPENWRT_NAME/*.sh && cd openwrt
         $GITHUB_WORKSPACE/bpi-r4/$DIY_P2_SH
 
     - name: Download the installation package
