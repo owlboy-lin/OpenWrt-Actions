@@ -22,7 +22,7 @@ on:
         default: false
 
   schedule:
-   - cron: 0 20 * * *
+   - cron: 0 14 * * *
    #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
   release:
     types: [published]
