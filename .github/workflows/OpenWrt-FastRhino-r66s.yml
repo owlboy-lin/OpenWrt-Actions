@@ -84,7 +84,7 @@ jobs:
           echo "硬盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l)" && df -hT
 
       - name: 释放磁盘空间
-        uses: endersonmenezes/free-disk-space@v2
+        uses: endersonmenezes/free-disk-space@v4
         with:
           remove_android: true
           remove_dotnet: true
