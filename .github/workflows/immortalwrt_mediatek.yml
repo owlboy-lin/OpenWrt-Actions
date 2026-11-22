@@ -60,7 +60,7 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        chmod +x $OPENWRT_NAME/$DIR*.sh
+        chmod +x $OPENWRT_NAME/$DIR/*.sh
         $GITHUB_WORKSPACE/$DIR/stem-Information.sh
 
     - name: Download firmware source code
