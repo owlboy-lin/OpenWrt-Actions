@@ -27,6 +27,9 @@ rm -rf ./packages
 # 2. 按平台决定保留哪些文件、去掉哪个文件名前缀
 PREFIX=""
 case "$PLATFORM" in
+  BLLW-x86-64)
+    rm -f ./*.bin
+    ;;
   x86-64)
     rm -f ./*.bin
     ;;
