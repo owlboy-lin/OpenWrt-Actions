@@ -265,4 +265,4 @@ jobs:
           delete_tags: true
           delete_tag_pattern: '^.*-immortalwrt_openwrt-24\.10$'
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
