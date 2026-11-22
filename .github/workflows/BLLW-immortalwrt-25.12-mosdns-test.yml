@@ -75,7 +75,7 @@ jobs:
 
       - name: 缓存 toolchain & ccache
         id: check-cache
-        uses: actions/cache@v5.0.5
+        uses: actions/cache@v6
         with:
           key: x86-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
           restore-keys: |

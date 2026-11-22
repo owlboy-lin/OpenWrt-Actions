@@ -84,7 +84,7 @@ jobs:
 
       - name: Restore ccache
         id: ccache-restore
-        uses: actions/cache/restore@v5.0.5
+        uses: actions/cache/restore@v6
         with:
           path: openwrt/.ccache
           key: ccache-${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
@@ -136,7 +136,7 @@ jobs:
 
       - name: Save ccache
         if: steps.compile.outputs.status == 'success' && steps.ccache-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5.0.5
+        uses: actions/cache/save@v6
         with:
           path: openwrt/.ccache
           key: ${{ steps.ccache-restore.outputs.cache-primary-key }}
