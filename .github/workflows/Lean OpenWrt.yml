@@ -23,7 +23,7 @@ env:
   DIY_P1_SH:  immortalwrt/hook-feeds.sh
   DIY_P2_SH:  immortalwrt/diy-part2.sh
   UPLOAD_FIRMWARE: true
-  UPLOAD_RELEASE: true
+  UPLOAD_RELEASE: false
   OPENWRT_NAME: immortalwrt
   OPENWRT_DEVICE: rockchip
   TZ: Asia/Shanghai

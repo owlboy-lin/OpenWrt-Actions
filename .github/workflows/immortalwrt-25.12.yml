@@ -236,32 +236,32 @@ jobs:
         name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
         path: ${{ env.FIRMWARE }}
 
-    - name: Generate release tags
-      id: tag
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-      run: |
-        echo "release_tag=${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
-        printf "Source: %s/commit/%s\n" "$REPO_URL" "$SOURCE_SHA" > release.txt
-        echo "📥 固件下载" >> release.txt
-        echo "status=success" >> $GITHUB_OUTPUT
+    # - name: Generate release tags
+    #   id: tag
+    #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #   run: |
+    #     echo "release_tag=${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
+    #     printf "Source: %s/commit/%s\n" "$REPO_URL" "$SOURCE_SHA" > release.txt
+    #     echo "📥 固件下载" >> release.txt
+    #     echo "status=success" >> $GITHUB_OUTPUT
 
-    - name: Publish to release
-      uses: softprops/action-gh-release@v3
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        files: ${{ env.FIRMWARE }}/*
-        name: ${{ steps.tag.outputs.release_tag }}
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
+    # - name: Publish to release
+    #   uses: softprops/action-gh-release@v3
+    #   if: steps.tag.outputs.status == 'success' && !cancelled()
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     files: ${{ env.FIRMWARE }}/*
+    #     name: ${{ steps.tag.outputs.release_tag }}
+    #     tag_name: ${{ steps.tag.outputs.release_tag }}
+    #     body_path: release.txt
 
-    - name: 删除旧的Releases
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      uses: MedyMa/delete-older-releases@v0.3.4
-      with:
-        keep_latest: 3
-        delete_tags: true
-        delete_tag_pattern: '^.*-immortalwrt_openwrt-25\.12$'
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+    # - name: 删除旧的Releases
+    #   if: steps.tag.outputs.status == 'success' && !cancelled()
+    #   uses: MedyMa/delete-older-releases@v0.3.4
+    #   with:
+    #     keep_latest: 3
+    #     delete_tags: true
+    #     delete_tag_pattern: '^.*-immortalwrt_openwrt-25\.12$'
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}

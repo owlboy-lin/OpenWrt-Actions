@@ -16,7 +16,7 @@ env:
   DIY_P1_SH: immortalwrt/diy-part3.sh
   DIY_P2_SH: immortalwrt/diy-part4.sh
   UPLOAD_FIRMWARE: true
-  UPLOAD_RELEASE: true
+  UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
   OPENWRT_NAME: immortalwrt
   OPENWRT_DEVICE: MT7988

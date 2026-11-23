@@ -307,23 +307,23 @@ jobs:
         echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
 
-    - name: 自动发布固件到 Releases
-      uses: softprops/action-gh-release@master
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
-      with:
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*
+    # - name: 自动发布固件到 Releases
+    #   uses: softprops/action-gh-release@master
+    #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+    #   with:
+    #     tag_name: ${{ steps.tag.outputs.release_tag }}
+    #     body_path: release.txt
+    #     files: ${{ env.FIRMWARE }}/*
 
-    - name: 删除运行记录
-      uses: Mattraks/delete-workflow-runs@main
-      if: steps.compile.outputs.status == 'success' && !cancelled()
-      continue-on-error: true
-      with:
-        retain_days: 10     #保留最后多少记录不删除
-        keep_minimum_runs: 0
+    # - name: 删除运行记录
+    #   uses: Mattraks/delete-workflow-runs@main
+    #   if: steps.compile.outputs.status == 'success' && !cancelled()
+    #   continue-on-error: true
+    #   with:
+    #     retain_days: 10     #保留最后多少记录不删除
+    #     keep_minimum_runs: 0
 
     # - name: 删除自动发布的旧固件
     #   uses: dev-drprasad/delete-older-releases@v0.3.3

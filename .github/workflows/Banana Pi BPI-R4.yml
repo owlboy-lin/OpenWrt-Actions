@@ -319,41 +319,41 @@ jobs:
           name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_package_${{ env.FILE_DATE }}
           path: openwrt/artifact/package/
 
-      - name: 生成发布标签
-        id: tag
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-        run: |
-          echo "release_tag=$(date +"%Y.%m.%d.%H.%M")-${{ env.Firmware_Name }}" >> $GITHUB_OUTPUT
-          echo "release_date=$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_OUTPUT
-          touch release.txt
-          echo "
-          ★ 源码 : ${{ env.REPO_URL }}
-          ★ 分支 : ${{ env.REPO_BRANCH }}
-          ★ 感谢源码作者无私分享！
+      # - name: 生成发布标签
+      #   id: tag
+      #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      #   run: |
+      #     echo "release_tag=$(date +"%Y.%m.%d.%H.%M")-${{ env.Firmware_Name }}" >> $GITHUB_OUTPUT
+      #     echo "release_date=$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_OUTPUT
+      #     touch release.txt
+      #     echo "
+      #     ★ 源码 : ${{ env.REPO_URL }}
+      #     ★ 分支 : ${{ env.REPO_BRANCH }}
+      #     ★ 感谢源码作者无私分享！
           
-          ⏰ 编译时间：${{ env.FILE_TIME1 }}
+      #     ⏰ 编译时间：${{ env.FILE_TIME1 }}
           
-          🎈 内核版本：${{ env.KERNEL_PATCHVER }}
+      #     🎈 内核版本：${{ env.KERNEL_PATCHVER }}
           
-          🎉 编译版本：${{ env.DISTRIB_REVISION }}
+      #     🎉 编译版本：${{ env.DISTRIB_REVISION }}
           
-          🖥 管理地址：192.168.24.1 
+      #     🖥 管理地址：192.168.24.1 
           
-          🌴 名称：root
+      #     🌴 名称：root
           
-          🛠 密码：password" >> release.txt
-          echo "status=success" >> $GITHUB_OUTPUT
+      #     🛠 密码：password" >> release.txt
+      #     echo "status=success" >> $GITHUB_OUTPUT
       
-      - name: 自动发布固件到 Releases
-        uses: softprops/action-gh-release@v2
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
-        with:
-          name: ${{ steps.tag.outputs.release_date }} ${{ env.Firmware_Name }} ${{ env.name }}
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          body_path: release.txt
-          files: openwrt/artifact/firmware/*
+      # - name: 自动发布固件到 Releases
+      #   uses: softprops/action-gh-release@v2
+      #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+      #   with:
+      #     name: ${{ steps.tag.outputs.release_date }} ${{ env.Firmware_Name }} ${{ env.name }}
+      #     tag_name: ${{ steps.tag.outputs.release_tag }}
+      #     body_path: release.txt
+      #     files: openwrt/artifact/firmware/*
 
       # - name: 删除运行记录
       #   uses: Mattraks/delete-workflow-runs@v2

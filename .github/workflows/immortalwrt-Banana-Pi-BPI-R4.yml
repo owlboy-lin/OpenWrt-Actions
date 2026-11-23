@@ -297,22 +297,22 @@ jobs:
         name: ${{ env.Firmware_Name }}_package_${{ env.date1 }}
         path: openwrt/artifact/package/
 
-    - name: Generate release tags
-      id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      run: |
-        echo "release_tag=${{ env.date2 }}" >> $GITHUB_OUTPUT
-        touch release.txt
-        echo "📥 固件下载 ${{ env.date1 }}_${{ env.Firmware_Name }}_${{ env.OPENWRT_DEVICE }}" >> release.txt
-        echo "status=success" >> $GITHUB_OUTPUT
+    # - name: Generate release tags
+    #   id: tag
+    #   if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #   run: |
+    #     echo "release_tag=${{ env.date2 }}" >> $GITHUB_OUTPUT
+    #     touch release.txt
+    #     echo "📥 固件下载 ${{ env.date1 }}_${{ env.Firmware_Name }}_${{ env.OPENWRT_DEVICE }}" >> release.txt
+    #     echo "status=success" >> $GITHUB_OUTPUT
         
-    - name: Publish to release
-      uses: softprops/action-gh-release@v3
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        files: ${{ env.FIRMWARE }}/*
-        name: ${{ env.date3 }}
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
+    # - name: Publish to release
+    #   uses: softprops/action-gh-release@v3
+    #   if: steps.tag.outputs.status == 'success' && !cancelled()
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     files: ${{ env.FIRMWARE }}/*
+    #     name: ${{ env.date3 }}
+    #     tag_name: ${{ steps.tag.outputs.release_tag }}
+    #     body_path: release.txt

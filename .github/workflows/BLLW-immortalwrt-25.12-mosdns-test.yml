@@ -171,27 +171,27 @@ jobs:
           name: OpenWrt_img_X86_${{ env.REPO_BRANCH }}_${{ github.sha }}
           path: ${{ env.FIRMWARE }}
 
-      - name: 生成Release标签和说明
-        id: tag
-        if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
-        run: |
-          VERSION1="${REPO_BRANCH#*-}"
-          FILE_DATE=$(date +"%Y.%m.%d")
-          echo "FILE_DATE=$FILE_DATE" >> $GITHUB_ENV
-          echo -e "🎉 X86-64 平台\n✅ ImmortalWrt ${VERSION1} 源码\n❗️ 默认IP : 192.168.8.1" > release.txt
-          echo "release_tag=${FILE_DATE}-${VERSION1}_X86-64" >> $GITHUB_OUTPUT
-          echo "status=success" >> $GITHUB_OUTPUT
+      # - name: 生成Release标签和说明
+      #   id: tag
+      #   if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
+      #   run: |
+      #     VERSION1="${REPO_BRANCH#*-}"
+      #     FILE_DATE=$(date +"%Y.%m.%d")
+      #     echo "FILE_DATE=$FILE_DATE" >> $GITHUB_ENV
+      #     echo -e "🎉 X86-64 平台\n✅ ImmortalWrt ${VERSION1} 源码\n❗️ 默认IP : 192.168.8.1" > release.txt
+      #     echo "release_tag=${FILE_DATE}-${VERSION1}_X86-64" >> $GITHUB_OUTPUT
+      #     echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: 发布Release
-        uses: softprops/action-gh-release@v3
-        if: steps.tag.outputs.status == 'success' && !cancelled()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          name: ${{ steps.tag.outputs.release_tag }}
-          body_path: release.txt
-          files: ${{ env.FIRMWARE }}/*
+      # - name: 发布Release
+      #   uses: softprops/action-gh-release@v3
+      #   if: steps.tag.outputs.status == 'success' && !cancelled()
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ steps.tag.outputs.release_tag }}
+      #     name: ${{ steps.tag.outputs.release_tag }}
+      #     body_path: release.txt
+      #     files: ${{ env.FIRMWARE }}/*
 
       # 可选：自动保留最近3个release，旧的删除（需要单独RELEASES_TOKEN，repo权限）
       - name: 删除旧Release
