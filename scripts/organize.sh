@@ -77,6 +77,7 @@ echo "FIRMWARE=$PWD" >> "$GITHUB_ENV"
 
 # 5. Release 说明
 case "$PLATFORM" in
+  BLLW-x86-64)    TITLE="X86-64 平台" ;;
   x86-64)    TITLE="X86-64 平台" ;;
   allwinner) TITLE="Allwinner 平台" ;;
   rockchip)  TITLE="Rockchip 平台" ;;
