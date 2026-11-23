@@ -15,9 +15,14 @@ clone() {
     local target_dir="$1"
     local repo_url="$2"
     shift 2
+    local dest="package/${target_dir}"
     echo "====================================="
-    echo "==> Clone: ${repo_url} -> package/${target_dir}"
-    git clone --depth 1 "$@" "${repo_url}" "package/${target_dir}"
+    echo "==> Clone: ${repo_url} -> ${dest}"
+    if [ -d "${dest}" ]; then
+        echo "⚠️ 目录 ${dest} 已存在，先删除旧目录"
+        rm -rf "${dest}" || true
+    fi
+    git clone --depth 1 "$@" "${repo_url}" "${dest}"
 }
 
 echo "==> 删除 feeds 中被覆盖的插件"
