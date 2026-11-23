@@ -61,7 +61,7 @@ clone OpenClash https://github.com/vernesong/OpenClash.git -b master
 # 透明代理
 clone luci-app-nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git -b main
 clone luci-app-momo https://github.com/nikkinikki-org/OpenWrt-momo.git -b main
-clone luci-app-daed https://github.com/QiuSimons/luci-app-daed.git -b main
+clone luci-app-daed https://github.com/QiuSimons/luci-app-daed.git -b kix
 
 # bandix流量监控
 clone luci-app-bandix https://github.com/timsaya/luci-app-bandix.git -b main
