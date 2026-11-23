@@ -152,6 +152,8 @@ jobs:
         chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
         chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
         chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
+        # 重复包检测脚本放在这里
+        chmod +x $GITHUB_WORKSPACE/scripts/check-duplicate-package.sh && $GITHUB_WORKSPACE/scripts/check-duplicate-package.sh
 
     - name: 下载文件
       run: |
