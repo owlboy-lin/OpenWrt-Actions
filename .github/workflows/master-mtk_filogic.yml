@@ -1,0 +1,29 @@
+#
+# master 分支 MTK Filogic（手动触发）
+#
+name: master-mtkfilogic
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: filogic
+      branch: master
+      configs: configs/Target-filogic.txt,configs/Packages-L.txt,configs/Packages-5G.txt
+      clash_core: arm64
+      rust: false
+      golang: true
+      with_5g: true
+      build_mode: staged

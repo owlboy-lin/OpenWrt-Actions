@@ -1,0 +1,30 @@
+#
+# master 分支 Rockchip（手动触发）
+# 分步编译，省磁盘
+#
+name: master-rockchip
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: rockchip
+      branch: master
+      configs: configs/Target-rockchip.txt,configs/Packages.txt,configs/Packages-5G.txt
+      clash_core: arm64
+      rust: false
+      golang: true
+      with_5g: true
+      build_mode: staged
