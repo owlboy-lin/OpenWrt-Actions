@@ -128,7 +128,7 @@ clone luci-app-mosdns https://github.com/sbwml/luci-app-mosdns.git -b v5
 clone luci-app-adguardhome https://github.com/kenzok78/luci-app-adguardhome.git -b main
 
 # 网络测速
-clone luci-app-netspeedtest https://github.com/sirpdboy/netspeedtest.git -b main
+clone luci-app-netspeedtest https://github.com/muink/luci-app-netspeedtest.git -b master
 
 # OpenClash 【⚠️ 源码方式拉取，内核下载容易超时；你yml已有CLASH_CORE_SH，建议替换为仅拉luci面板版本】
 # clone OpenClash https://github.com/vernesong/OpenClash.git -b master
