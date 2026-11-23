@@ -32,7 +32,7 @@ env:
   SETTINGS_SH: scripts/BLLW-init-settings-test.sh
   PACKAGES_SH: scripts/packages-immortalwrt-mosdns-test.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
-  RUST_SH: scripts/rust.sh
+  RUST_SH: scripts/rust-Imm-25.12.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
   UPLOAD_RELEASE: true
