@@ -49,7 +49,7 @@ clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
 clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome -b main
 # # git clone -b master --depth 1 https://github.com/rufengsuixing/luci-app-adguardhome.git
 # # 网络测速
-# clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
+clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
 # # openclash
 # # clone https://github.com/vernesong/OpenClash.git OpenClash -b master
 # # 透明代理系
