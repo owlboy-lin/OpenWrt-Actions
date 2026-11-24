@@ -36,15 +36,25 @@ clone pwpage https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git -
 # 主题
 clone luci-theme-aurora https://github.com/eamonxg/luci-theme-aurora.git -b master
 
+# 定时控制
+# clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
+
+# homeproxy（immortalwrt 版本，规则文件由 scripts/homeproxy.sh 在后面补）
+clone https://github.com/immortalwrt/homeproxy.git homeproxy -b master
+
 # lucky
-clone luci-app-lucky https://github.com/gdy666/luci-app-lucky.git -b main
+# clone luci-app-lucky https://github.com/gdy666/luci-app-lucky.git -b main
+
 # smartdns
-clone luci-app-smartdns https://github.com/pymumu/luci-app-smartdns.git -b master
+# clone luci-app-smartdns https://github.com/pymumu/luci-app-smartdns.git -b master
 
 # passwall + passwall2 双LuCI面板，共存编译（共用上面pwpage依赖）
 # ⚠️ 运行时只能启用一个代理，禁止同时开启两套透明代理
 clone luci-app-passwall https://github.com/Openwrt-Passwall/openwrt-passwall.git -b main
 clone luci-app-passwall2 https://github.com/Openwrt-Passwall/openwrt-passwall2.git -b main
+
+# ssrp
+#clone https://github.com/fw876/helloworld.git luci-app-ssr-plus -b dev
 
 # mosdns v5（自带 v2ray-geodata，全局唯一 geodata）
 clone luci-app-mosdns https://github.com/sbwml/luci-app-mosdns.git -b v5
@@ -57,12 +67,12 @@ clone luci-app-adguardhome https://github.com/kenzok78/luci-app-adguardhome.git 
 # clone librespeed-go https://github.com/muink/openwrt-librespeed-go.git -b master
 
 # OpenClash
-clone OpenClash https://github.com/vernesong/OpenClash.git -b master
+# clone OpenClash https://github.com/vernesong/OpenClash.git -b master
 
 # 透明代理
-clone luci-app-nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git -b main
-clone luci-app-momo https://github.com/nikkinikki-org/OpenWrt-momo.git -b main
-clone luci-app-daed https://github.com/QiuSimons/luci-app-daed.git -b kix
+# clone luci-app-nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git -b main
+# clone luci-app-momo https://github.com/nikkinikki-org/OpenWrt-momo.git -b main
+# clone luci-app-daed https://github.com/QiuSimons/luci-app-daed.git -b kix
 
 # bandix流量监控
 clone luci-app-bandix https://github.com/timsaya/luci-app-bandix.git -b main

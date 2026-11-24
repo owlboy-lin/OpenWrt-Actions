@@ -51,7 +51,7 @@ jobs:
 
     steps:
     - name: 检查代码
-      uses: actions/checkout@main
+      uses: actions/checkout@v4
 
     - name: 初始化环境
       env:
@@ -96,9 +96,9 @@ jobs:
           sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
         fi
 
-    - name: 检查缓存
+    - name: 加载编译缓存 ccache/toolchain
       id: check-cache
-      uses: actions/cache@main
+      uses: actions/cache@v3
       with:
         key: x86-${{env.Firmware_Name}}-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
         restore-keys: x86-${{env.Firmware_Name}}-${{env.REPO_BRANCH}}
@@ -107,12 +107,12 @@ jobs:
           ./openwrt/staging_dir/host*
           ./openwrt/staging_dir/tool*
 
-    - name: 开启CCACHE配置
+    - name: 启用 CCACHE
       run: |
         echo 'CONFIG_DEVEL=y' >> openwrt/.config
         echo 'CONFIG_CCACHE=y' >> openwrt/.config
 
-    - name: 更新缓存
+    - name: 更新stamp时间戳（缓存续命中）
       run: |
         if [ -d "./openwrt/staging_dir" ]; then
           find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
@@ -178,14 +178,14 @@ jobs:
       if: (!cancelled())
       run: df -hT
 
-    - name: 上传 bin 目录
+    - name: 上传完整bin目录
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
-    - name: 整理文件
+    - name: 整理固件、ipk、buildinfo
       id: organize
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
@@ -207,7 +207,7 @@ jobs:
         echo "status=success" >> $GITHUB_OUTPUT
 
 
-    - name: 上传固件目录
+    - name: 上传固件artifact
       uses: actions/upload-artifact@main
       if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
       with:
@@ -215,14 +215,14 @@ jobs:
         path: ${{ env.FIRMWARE }}
 
 
-    - name: 上传配置文件
+    - name: 上传编译信息
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_BUILDINFO == 'true' && !cancelled()
       uses: actions/upload-artifact@main
       with:
         name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_buildinfo${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/artifact/buildinfo/
 
-    - name: 上传插件
+    - name: 上传ipk插件包
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_PACKAGE == 'true' && !cancelled()
       uses: actions/upload-artifact@main
       with:
