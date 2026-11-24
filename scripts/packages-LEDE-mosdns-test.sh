@@ -81,7 +81,22 @@ clone luci-app-wolplus https://github.com/animegasan/luci-app-wolplus.git -b mai
 echo -e "\n==> 🧹 处理 v2ray-geodata 冲突：删除 pwpage 内置版本，复用 mosdns v5 自带"
 rm -rf package/pwpage/v2ray-geodata || true
 echo "✅ package/pwpage/v2ray-geodata 已移除"
+
+# 🩹 关键补丁：增加 PROVIDES，兼容旧依赖 v2ray-geoip / v2ray-geosite
+echo -e "\n==> 🩹 给 sbwml v2ray-geodata 增加 PROVIDES 兼容 v2ray-geoip / v2ray-geosite"
+GEO_MK="package/luci-app-mosdns/v2ray-geodata/Makefile"
+if [ -f "${GEO_MK}" ]; then
+    grep -q 'PROVIDES:=v2ray-geoip v2ray-geosite' "${GEO_MK}" || sed -i '/^define Package\/v2ray-geodata/a\
+PROVIDES:=v2ray-geoip v2ray-geosite' "${GEO_MK}"
+    echo "✅ PROVIDES 补丁写入完成"
+else
+    echo "⚠️ ${GEO_MK} 不存在，跳过补丁"
+fi
 # =================================================================
+
+# 补充 librespeed-go 依赖，修复 netspeedtest 告警
+echo -e "\n==> 📦 补充 librespeed-go 依赖包（luci-app-netspeedtest 需要）"
+clone librespeed-go https://github.com/muink/openwrt-librespeed-go.git -b master
 
 echo -e "\n==> 清理悬空软链（feeds目录残留无效链接）"
 if [ -d package/feeds ]; then
