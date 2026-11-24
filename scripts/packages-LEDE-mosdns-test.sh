@@ -53,7 +53,8 @@ clone luci-app-mosdns https://github.com/sbwml/luci-app-mosdns.git -b v5
 clone luci-app-adguardhome https://github.com/kenzok78/luci-app-adguardhome.git -b main
 
 # 网络测速：muink版本，无python依赖
-# clone luci-app-netspeedtest https://github.com/muink/luci-app-netspeedtest.git -b master
+clone luci-app-netspeedtest https://github.com/muink/luci-app-netspeedtest.git -b master
+clone librespeed-go https://github.com/muink/openwrt-librespeed-go.git -b master
 
 # OpenClash
 clone OpenClash https://github.com/vernesong/OpenClash.git -b master
