@@ -53,8 +53,8 @@ clone luci-app-mosdns https://github.com/sbwml/luci-app-mosdns.git -b v5
 clone luci-app-adguardhome https://github.com/kenzok78/luci-app-adguardhome.git -b main
 
 # 网络测速：muink版本，无python依赖
-clone luci-app-netspeedtest https://github.com/muink/luci-app-netspeedtest.git -b master
-clone librespeed-go https://github.com/muink/openwrt-librespeed-go.git -b master
+# clone luci-app-netspeedtest https://github.com/muink/luci-app-netspeedtest.git -b master
+# clone librespeed-go https://github.com/muink/openwrt-librespeed-go.git -b master
 
 # OpenClash
 clone OpenClash https://github.com/vernesong/OpenClash.git -b master
@@ -95,15 +95,10 @@ else
 fi
 # =================================================================
 
-# 补充 librespeed-go 依赖，修复 netspeedtest 告警
-echo -e "\n==> 📦 补充 librespeed-go 依赖包（luci-app-netspeedtest 需要）"
-clone librespeed-go https://github.com/muink/openwrt-librespeed-go.git -b master
-
 echo -e "\n==> 清理悬空软链（feeds目录残留无效链接）"
 if [ -d package/feeds ]; then
     find package/feeds -xtype l -delete
 fi
 echo "悬空软链清理完成，剩余无效链接数量: $(find package/feeds -xtype l 2>/dev/null | wc -l)"
-
 echo -e "\n✅ packages-LEDE-mosdns.sh 执行完成"
 echo -e "⚠️ 重要提醒：固件内置 passwall + passwall2，使用时同一时间只能开启其中一个代理透明代理！"
