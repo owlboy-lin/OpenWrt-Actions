@@ -40,7 +40,7 @@ clone luci-theme-aurora https://github.com/eamonxg/luci-theme-aurora.git -b mast
 # clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
 
 # homeproxy（immortalwrt 版本，规则文件由 scripts/homeproxy.sh 在后面补）
-clone https://github.com/immortalwrt/homeproxy.git homeproxy -b master
+# clone https://github.com/immortalwrt/homeproxy.git homeproxy -b master
 
 # lucky
 # clone luci-app-lucky https://github.com/gdy666/luci-app-lucky.git -b main
