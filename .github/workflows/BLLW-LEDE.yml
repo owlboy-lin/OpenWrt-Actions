@@ -50,8 +50,6 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_BUILDINFO: true
   UPLOAD_PACKAGE: true
-  UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: true
   GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
   TZ: Asia/Shanghai  
@@ -197,7 +195,7 @@ jobs:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
-    - name: 整理文件
+    - name: 整理固件、ipk、buildinfo
       id: organize
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
