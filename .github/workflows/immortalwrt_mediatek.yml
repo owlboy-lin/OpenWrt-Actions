@@ -62,9 +62,8 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        chmod +x $OPENWRT_NAME/*.sh
-        $GITHUB_WORKSPACE/$OPENWRT_NAME/system-Information.sh
-
+        chmod +x $SYS_INFO_SH
+        $GITHUB_WORKSPACE/$SYS_INFO_SH
     - name: Download firmware source code
       run: |
         git clone --filter=blob:none --single-branch -c core.abbrev=7 $REPO_URL -b $REPO_BRANCH openwrt
