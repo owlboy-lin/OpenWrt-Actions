@@ -53,8 +53,8 @@ clone https://github.com/kenzok78/luci-app-adguardhome.git luci-app-adguardhome 
 # sed -i 's@include ../../lang/rust/rust-package.mk@include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk@g' smartdns/package/openwrt/Makefile
 # sed -n '33p' smartdns/package/openwrt/Makefile
 # 网络测速
-# clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
-clone https://github.com/sirpdboy/netspeedtest.git luci-app-netspeedtest -b main
+clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -b master
+# clone https://github.com/sirpdboy/netspeedtest.git luci-app-netspeedtest -b main
 # openclash
 clone https://github.com/vernesong/OpenClash.git OpenClash -b master
 # 透明代理系

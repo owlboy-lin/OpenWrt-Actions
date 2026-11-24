@@ -32,7 +32,7 @@ env:
   Firmware_Name: BLLW-LEDE-mosdns-test
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/Packages-LEDE-mosdns.txt
-  SETTINGS_SH: scripts/BLLW-init-settings-test.sh
+  SETTINGS_SH: scripts/BLLW-init-settings.sh
   PACKAGES_SH: scripts/packages-LEDE-mosdns-test.sh
   CLASH_CORE_SH: scripts/preset-clash-core-amd64.sh
   VLMCSD_SH: scripts/vlmcsd.sh

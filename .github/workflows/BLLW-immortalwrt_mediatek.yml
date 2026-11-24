@@ -13,16 +13,17 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   Firmware_Name: immortalwrt_mediatek-test
-  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig
+  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig-test
   DIY_P1_SH: bpi-r4/immortalwrt/diy-part1-test.sh
   DIY_P2_SH: bpi-r4/immortalwrt/diy-part2-1.sh
   SYS_INFO_SH: bpi-r4/immortalwrt/system-Information.sh
-  UPLOAD_FIRMWARE: true
-  UPLOAD_RELEASE: true
-  TZ: Asia/Shanghai
   OPENWRT_NAME: immortalwrt
   OPENWRT_DEVICE: mediatek
   TARGET_SUB: filogic
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+
 
 jobs:
   build:
