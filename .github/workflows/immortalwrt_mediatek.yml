@@ -230,6 +230,12 @@ jobs:
       run: |
         cd openwrt/bin/targets/mediatek/filogic
         rm -rf packages *mt798* *.config *.buildinfo *.json sha256sums
+        for f in *; do
+          # 跳过目录，只处理文件
+          if [ -f "$f" ]; then
+            mv -n "$f" "${{ env.Firmware_Name }}_${{ env.date1 }}_$f"
+          fi
+        done
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 

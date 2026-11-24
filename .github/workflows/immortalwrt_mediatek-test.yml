@@ -229,6 +229,12 @@ jobs:
           cd openwrt/bin/targets/mediatek/filogic
           # 修复：删掉 *mt798* 会把BPI-R4固件删掉！
           rm -rf packages *.config *.buildinfo *.json sha256sums
+          for f in *; do
+            # 跳过目录，只处理文件
+            if [ -f "$f" ]; then
+              mv -n "$f" "${{ env.Firmware_Name }}_${{ env.date1 }}_$f"
+            fi
+          done  
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
 
