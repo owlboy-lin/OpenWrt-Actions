@@ -229,31 +229,31 @@ jobs:
         name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_package${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/artifact/package/
 
-    # - name: 生成发布标签
-    #   id: tag
-    #   if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
-    #   run: |
-    #     VERSION1="${REPO_BRANCH#*-}"
+    - name: 生成发布标签
+      id: tag
+      if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
+      run: |
+        VERSION1="${REPO_BRANCH#*-}"
 
-    #     echo -e "
-    #     ★ 源码 : ${{ env.REPO_URL }} 
-    #     ★ 分支 : ${{ env.REPO_BRANCH }} 
-    #     ★ 感谢源码作者无私分享！
+        echo -e "
+        ★ 源码 : ${{ env.REPO_URL }} 
+        ★ 分支 : ${{ env.REPO_BRANCH }} 
+        ★ 感谢源码作者无私分享！
 
-    #     ⏰ 编译时间：${{ env.FILE_TIME1 }}
-    #     🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
-    #     echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
-    #     echo "status=success" >> $GITHUB_OUTPUT
+        ⏰ 编译时间：${{ env.FILE_TIME1 }}
+        🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.24.10" >> release.txt
+        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
+        echo "status=success" >> $GITHUB_OUTPUT
 
-    # - name: 自动发布固件到 Releases
-    #   uses: softprops/action-gh-release@master
-    #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
-    #   with:
-    #     tag_name: ${{ steps.tag.outputs.release_tag }}
-    #     body_path: release.txt
-    #     files: ${{ env.FIRMWARE }}/*
+    - name: 自动发布固件到 Releases
+      uses: softprops/action-gh-release@master
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: ${{ env.FIRMWARE }}/*
 
     # - name: 删除运行记录
     #   uses: Mattraks/delete-workflow-runs@main
