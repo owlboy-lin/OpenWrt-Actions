@@ -1,0 +1,33 @@
+#
+# ramips MT7621 平台（极简，只有 homeproxy + design 主题）
+# 定时：每周一 20:00 UTC = 每周二 04:00 (Asia/Shanghai)
+#
+name: mt7621
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 20 * * 1"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: mt7621
+      branch: master
+      # 这个平台只用 Target 配置里的少量插件，不叠加 Packages-*.txt
+      configs: configs/Target-mt7621.txt
+      clash_core: none
+      # 原 workflow 没替换 vlmcsd（用的是 feed 自带版本），保持原样
+      vlmcsd: false
+      with_5g: false
+      build_mode: single

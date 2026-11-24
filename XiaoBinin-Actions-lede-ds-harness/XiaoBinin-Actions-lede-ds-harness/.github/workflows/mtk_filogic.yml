@@ -1,0 +1,34 @@
+#
+# MTK Filogic 平台
+# 定时：每周三 20:00 UTC = 每周四 04:00 (Asia/Shanghai)
+#
+name: mtk_filogic
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 20 * * 3"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: filogic
+      branch: master
+      configs: configs/Target-filogic.txt,configs/Packages-L.txt,configs/Packages-5G.txt
+      clash_core: arm64
+      vlmcsd: true
+      with_5g: true
+      # 原仓库在这里写了 WIFI_SETTINGS 却从未执行；现在改成显式开关。
+      # 打开后默认 SSID=OWRT / 密码=87654321（见 scripts/wifi-settings.sh）。
+      with_wifi_defaults: false
+      build_mode: single
