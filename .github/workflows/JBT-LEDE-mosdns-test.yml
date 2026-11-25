@@ -15,7 +15,7 @@ on:
   repository_dispatch:
   workflow_dispatch:
   schedule:
-   - cron: 0 20 * * *
+   - cron: 0 17 * * *
    #      分,时,日,月,周。每周五 20时执行一次 (UTC时间)
   release:
     types: [published]
@@ -24,12 +24,13 @@ on:
     types: [started]
       
 env:
-  FREE_DISK_SH: scripts/free_disk_space-test.sh
-  ENV_SH: scripts/environment-LEDE-test.sh
+  FREE_DISK_SH: scripts/free_disk_space.sh
+  ENV_SH: scripts/environment-LEDE.sh
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   # 修改 REPO_BRANCH 来达到更改编译版本
   Firmware_Name: JBT-LEDE-mosdns-test
+  DEVICE_NAME: X86_64
   PLATFORM_FILE: configs/My-Target-X86.txt
   CONFIG_FILE: configs/Packages-LEDE-mosdns.txt
   SETTINGS_SH: scripts/JBT-init-settings.sh
@@ -50,7 +51,7 @@ jobs:
 
     steps:
     - name: 检查代码
-      uses: actions/checkout@main
+      uses: actions/checkout@v4
 
     - name: 初始化环境
       env:
@@ -65,17 +66,17 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
-    - name: 更新时区、编译时间
-      id: date
-      run: |
-        sudo timedatectl set-timezone "$TZ"
-        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
-        echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
-        echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
-        echo "编译开始时间..."
-        START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
-        echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
+    # - name: 更新时区、编译时间
+    #   id: date
+    #   run: |
+    #     sudo timedatectl set-timezone "$TZ"
+    #     echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+    #     echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
+    #     echo "FILE_TIME1=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
+    #     echo "FILE_TIME2=$(date "+%Y%m%d-%H%M")" >> $GITHUB_ENV
+    #     echo "编译开始时间..."
+    #     START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+    #     echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
     - name: 检查空间使用情况（清理情况）
       if: (!cancelled())
@@ -89,15 +90,15 @@ jobs:
 
         cd ./openwrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
-        # GitHub Action 移除国内下载源
+        # 移除国内镜像源，防止github action下载失败
         PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
         if [ -f "$PROJECT_MIRRORS_FILE" ]; then
           sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
         fi
 
-    - name: 检查缓存
+    - name: 加载编译缓存 ccache/toolchain
       id: check-cache
-      uses: actions/cache@main
+      uses: actions/cache@v3
       with:
         key: x86-${{env.Firmware_Name}}-${{env.REPO_BRANCH}}-${{env.WRT_HASH}}
         restore-keys: x86-${{env.Firmware_Name}}-${{env.REPO_BRANCH}}
@@ -106,12 +107,12 @@ jobs:
           ./openwrt/staging_dir/host*
           ./openwrt/staging_dir/tool*
 
-    - name: 开启CCACHE配置
+    - name: 启用 CCACHE
       run: |
         echo 'CONFIG_DEVEL=y' >> openwrt/.config
         echo 'CONFIG_CCACHE=y' >> openwrt/.config
 
-    - name: 更新缓存
+    - name: 更新stamp时间戳（缓存续命中）
       run: |
         if [ -d "./openwrt/staging_dir" ]; then
           find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
@@ -120,19 +121,20 @@ jobs:
 
           mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
 
-          echo "toolchain skiped done!"
+          echo "toolchain skiped done"
         else
-          echo "caches missed!"
+          echo "cache miss, no staging_dir"
         fi
 
-        if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
-          CACHE_LIST=$(gh cache list --key "x86-$Firmware_Name-$REPO_BRANCH" | cut -f 1)
-          for CACHE_KEY in $CACHE_LIST; do
-            gh cache delete $CACHE_KEY
-          done
+    # ===== 删掉原来 gh cache delete 那段，容易报错 =====
+        # if ${{steps.check-cache.outputs.cache-hit != 'true'}}; then
+        #   CACHE_LIST=$(gh cache list --key "x86-$Firmware_Name-$REPO_BRANCH" | cut -f 1)
+        #   for CACHE_KEY in $CACHE_LIST; do
+        #     gh cache delete $CACHE_KEY
+        #   done
 
-          echo "caches cleanup done!"
-        fi
+        #   echo "caches cleanup done!"
+        # fi
 
     - name: 安装 feeds
       run: |
@@ -150,6 +152,8 @@ jobs:
         chmod +x $GITHUB_WORKSPACE/$SETTINGS_SH && $GITHUB_WORKSPACE/$SETTINGS_SH
         chmod +x $GITHUB_WORKSPACE/$PACKAGES_SH && $GITHUB_WORKSPACE/$PACKAGES_SH
         chmod +x $GITHUB_WORKSPACE/$CLASH_CORE_SH && $GITHUB_WORKSPACE/$CLASH_CORE_SH
+        # 重复包检测脚本放在这里
+        # chmod +x $GITHUB_WORKSPACE/scripts/check-duplicate-package.sh && $GITHUB_WORKSPACE/scripts/check-duplicate-package.sh
 
     - name: 下载文件
       run: |
@@ -170,20 +174,22 @@ jobs:
         make defconfig
         echo -e "$(nproc) thread compile"
         make -j$(($(nproc)+1)) || make -j1 V=s
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        echo "FILE_TIME=$(date "+%Y年%m月%d日-%H点%M分")" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: 空间使用情况（编译占用）
       if: (!cancelled())
       run: df -hT
 
-    - name: 上传 bin 目录
-      uses: actions/upload-artifact@main
+    - name: 上传完整bin目录
+      uses: actions/upload-artifact@v4
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
-    - name: 整理文件
+    - name: 整理固件、ipk、buildinfo
       id: organize
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
@@ -192,8 +198,6 @@ jobs:
         mkdir -p ./artifact/package
         mkdir -p ./artifact/buildinfo
         rm -rf $(find ./bin/targets/ -type d -name "packages")
-        # find ./bin/targets -type d -name "packages"
-        # find ./bin/targets -type d -name "packages" -delete
         cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
         cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
         cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
@@ -201,29 +205,30 @@ jobs:
         cp -f ./.config ./artifact/firmware/${{ env.Firmware_Name }}.info
         cp -f ./feeds.conf.default ./artifact/buildinfo/
         cd artifact/firmware/
-        rename "s/openwrt/${{ env.Firmware_Name }}${{ env.FILE_DATE }}/" *
+        # 改用perl-rename，稳定
+        perl-rename "s/openwrt/${{ env.Firmware_Name }}${{ env.FILE_DATE }}/" *
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
-    - name: 上传固件目录
-      uses: actions/upload-artifact@main
+    - name: 上传固件artifact
+      uses: actions/upload-artifact@v4
       if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
       with:
         name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_${{ env.DEVICE_NAME }}_firmware_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
-    - name: 上传配置文件
+    - name: 上传编译信息
+      uses: actions/upload-artifact@v4
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_BUILDINFO == 'true' && !cancelled()
-      uses: actions/upload-artifact@main
       with:
-        name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_buildinfo${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_buildinfo_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/artifact/buildinfo/
 
-    - name: 上传插件
+    - name: 上传ipk插件包
+      uses: actions/upload-artifact@v4
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_PACKAGE == 'true' && !cancelled()
-      uses: actions/upload-artifact@main
       with:
-        name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_package${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_package_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/artifact/package/
 
     - name: 生成发布标签
@@ -231,19 +236,20 @@ jobs:
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         VERSION1="${REPO_BRANCH#*-}"
+        cat > release.txt <<EOF
 
-        echo -e "
         ★ 源码 : ${{ env.REPO_URL }} 
         ★ 分支 : ${{ env.REPO_BRANCH }} 
         ★ 感谢源码作者无私分享！
 
-        ⏰ 编译时间：${{ env.FILE_TIME1 }}
-        🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.8.1" >> release.txt
-        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64"-${{ env.Firmware_Name }})" >> $GITHUB_OUTPUT
+        ⏰ 编译时间：${{ env.FILE_TIME }}
+        🎉 X86-64 平台\n✅ ${VERSION1} 源码\n❗️ ip地址 : 192.168.24.10
+        EOF
+        echo "release_tag=$(date +"%Y.%m.%d-${VERSION1}_X86-64-${{ env.Firmware_Name }}")" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
 
-    - name: 自动发布固件到 Releases
-      uses: softprops/action-gh-release@master
+    - name: 发布到 Release
+      uses: softprops/action-gh-release@v2
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_USER_TOKEN }}
@@ -251,6 +257,8 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
+        draft: false
+        prerelease: false
 
     # - name: 删除运行记录
     #   uses: Mattraks/delete-workflow-runs@main

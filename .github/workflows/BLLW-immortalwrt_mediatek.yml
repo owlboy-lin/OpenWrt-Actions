@@ -53,7 +53,7 @@ jobs:
               build-essential clang bison flex gawk gcc-multilib gettext git \
               libncurses-dev libssl-dev python3 python3-setuptools python3-pyelftools \
               rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion \
-              qemu-utils ccache rename libelf-dev file patch xz-utils zstd
+              qemu-utils ccache rename libelf-dev file patch xz-utils zstd rename
           sudo -E apt-get -qq clean
 
       - name: Initialize Environment and Display System Info
@@ -228,7 +228,13 @@ jobs:
         run: |
           cd openwrt/bin/targets/mediatek/${{ env.TARGET_SUB }}
           # 不再删除 mt798*！BPI-R4 固件就是 mt7988
-          rm -rf packages *.config *.buildinfo *.json sha256sums
+          # rm -rf packages *.config *.buildinfo *.json sha256sums
+          for f in *; do
+            # 跳过目录，只处理文件
+            if [ -f "$f" ]; then
+              mv -n "$f" "${{ env.Firmware_Name }}_${{ env.date1 }}_$f"
+            fi
+          done
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
 
@@ -236,14 +242,14 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
+          name: ${{ env.Firmware_Name }}_${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
           path: ${{ env.FIRMWARE }}
 
       # - name: Generate release tags
       #   id: tag
       #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       #   run: |
-      #     echo "release_tag=${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
+      #     echo "release_tag=${{ env.Firmware_Name }}_${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
       #     printf "Source: %s/commit/%s\n" "$REPO_URL" "$SOURCE_SHA" > release.txt
       #     echo "📥 固件下载" >> release.txt
       #     echo "status=success" >> $GITHUB_OUTPUT

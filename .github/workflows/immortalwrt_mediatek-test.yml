@@ -13,15 +13,16 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
   Firmware_Name: immortalwrt_mediatek-test
-  DIR: bpi-r4
-  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig
+  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig-test
   DIY_P1_SH: bpi-r4/immortalwrt/diy-part1-test.sh
   DIY_P2_SH: bpi-r4/immortalwrt/diy-part2-1.sh
-  UPLOAD_FIRMWARE: true
-  UPLOAD_RELEASE: true
-  TZ: Asia/Shanghai
+  SYS_INFO_SH: bpi-r4/immortalwrt/system-Information.sh
   OPENWRT_NAME: immortalwrt
   OPENWRT_DEVICE: mediatek
+  TARGET_SUB: filogic
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: false
+  TZ: Asia/Shanghai
 
 jobs:
   build:
@@ -51,7 +52,7 @@ jobs:
               build-essential clang bison flex gawk gcc-multilib gettext git \
               libncurses-dev libssl-dev python3 python3-setuptools python3-pyelftools \
               rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion \
-              qemu-utils ccache libelf-dev file patch xz-utils zstd
+              qemu-utils ccache libelf-dev file patch xz-utils zstd rename
           sudo -E apt-get -qq clean
           sudo timedatectl set-timezone "${TZ:-Asia/Shanghai}" || true
 
@@ -59,9 +60,8 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          chmod +x $DIR/$OPENWRT_NAME/*.sh
-          $GITHUB_WORKSPACE/$DIR/$OPENWRT_NAME/system-Information.sh
-
+          chmod +x $SYS_INFO_SH
+          $GITHUB_WORKSPACE/$SYS_INFO_SH
 
       - name: Download firmware source code
         run: |
@@ -98,14 +98,15 @@ jobs:
 
       - name: Load feeds.conf.default
         run: |
-          chmod +x $DIR/$OPENWRT_NAME/*.sh
+          chmod +x $DIY_P1_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P1_SH
 
       - name: Load config
         run: |
           [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-          chmod +x $DIR/$OPENWRT_NAME/*.sh && cd openwrt
+          chmod +x $DIY_P2_SH
+          cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
 
       - name: Download the installation package
@@ -227,6 +228,12 @@ jobs:
           cd openwrt/bin/targets/mediatek/filogic
           # 修复：删掉 *mt798* 会把BPI-R4固件删掉！
           rm -rf packages *.config *.buildinfo *.json sha256sums
+          for f in *; do
+            # 跳过目录，只处理文件
+            if [ -f "$f" ]; then
+              mv -n "$f" "${{ env.Firmware_Name }}_${{ env.date1 }}_$f"
+            fi
+          done  
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
 
@@ -234,28 +241,28 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
+          name: ${{ env.Firmware_Name }}_${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
           path: ${{ env.FIRMWARE }}
 
-      # - name: Generate release tags
-      #   id: tag
-      #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-      #   run: |
-      #     echo "release_tag=${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
-      #     printf "Source: %s/commit/%s\n" "$REPO_URL" "$SOURCE_SHA" > release.txt
-      #     echo "📥 固件下载" >> release.txt
-      #     echo "status=success" >> $GITHUB_OUTPUT
+      - name: Generate release tags
+        id: tag
+        if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+        run: |
+          echo "release_tag=${{ env.Firmware_Name }}_${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
+          printf "Source: %s/commit/%s\n" "$REPO_URL" "$SOURCE_SHA" > release.txt
+          echo "📥 固件下载" >> release.txt
+          echo "status=success" >> $GITHUB_OUTPUT
 
-      # - name: Publish to release
-      #   uses: softprops/action-gh-release@v3
-      #   if: steps.tag.outputs.status == 'success' && !cancelled()
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     files: ${{ env.FIRMWARE }}/*
-      #     name: ${{ steps.tag.outputs.release_tag }}
-      #     tag_name: ${{ steps.tag.outputs.release_tag }}
-      #     body_path: release.txt
+      - name: Publish to release
+        uses: softprops/action-gh-release@v3
+        if: steps.tag.outputs.status == 'success' && !cancelled()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: ${{ env.FIRMWARE }}/*
+          name: ${{ steps.tag.outputs.release_tag }}
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          body_path: release.txt
 
       # - name: 删除旧的Releases
       #   if: steps.tag.outputs.status == 'success' && !cancelled()

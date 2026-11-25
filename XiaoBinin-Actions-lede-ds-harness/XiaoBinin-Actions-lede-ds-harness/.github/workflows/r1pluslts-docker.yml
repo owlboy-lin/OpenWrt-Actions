@@ -1,0 +1,35 @@
+#
+# 香橙派 R1 Plus / R1 Plus LTS（带 Docker）
+# 定时：每周二 22:00 UTC = 每周三 06:00 (Asia/Shanghai)
+#
+# 修复：原文件复用 rockchip 的缓存 key（cache-key 是 rockchip-...），
+#       两个平台会互相覆盖、并且在 miss 时把对方的缓存一起删掉。
+#       现在 platform 用 r1pluslts，缓存 key 自然分开。
+#
+name: r1pluslts-docker
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 22 * * 2"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: r1pluslts
+      branch: master
+      configs: configs/Target-r1-docker.txt,configs/Packages.txt,configs/Packages-5G.txt
+      clash_core: arm64
+      vlmcsd: true
+      with_5g: true
+      build_mode: single

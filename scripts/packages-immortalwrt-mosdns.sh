@@ -29,7 +29,7 @@ clone https://github.com/eamonxg/luci-theme-aurora.git luci-theme-aurora -b mast
 # 定时控制
 # clone https://github.com/gaobin89/luci-app-timecontrol.git luci-app-timecontrol -b js
 # homeproxy（immortalwrt 版本，规则文件由 scripts/homeproxy.sh 在后面补）
-# clone https://github.com/immortalwrt/homeproxy.git homeproxy -b master
+clone https://github.com/immortalwrt/homeproxy.git homeproxy -b master
 # lucky
 clone https://github.com/gdy666/luci-app-lucky.git luci-app-lucky -b main
 # smartdns
@@ -40,7 +40,7 @@ clone https://github.com/pymumu/luci-app-smartdns.git luci-app-smartdns -b maste
 clone https://github.com/Openwrt-Passwall/openwrt-passwall.git luci-app-passwall -b main
 clone https://github.com/Openwrt-Passwall/openwrt-passwall2.git luci-app-passwall2 -b main
 # ssrp
-clone https://github.com/fw876/helloworld.git luci-app-ssr-plus -b dev
+#clone https://github.com/fw876/helloworld.git luci-app-ssr-plus -b dev
 # find ./ | grep Makefile | grep mosdns | xargs rm -f
 # mosdns
 clone https://github.com/sbwml/luci-app-mosdns.git luci-app-mosdns -b v5
@@ -55,9 +55,9 @@ clone https://github.com/muink/luci-app-netspeedtest.git luci-app-netspeedtest -
 # openclash
 # clone https://github.com/vernesong/OpenClash.git OpenClash -b master
 # 透明代理系
-clone https://github.com/nikkinikki-org/OpenWrt-nikki.git luci-app-nikki -b main
-clone https://github.com/nikkinikki-org/OpenWrt-momo.git luci-app-momo -b main
-clone https://github.com/QiuSimons/luci-app-daed.git luci-app-daed -b master
+# clone https://github.com/nikkinikki-org/OpenWrt-nikki.git luci-app-nikki -b main
+# clone https://github.com/nikkinikki-org/OpenWrt-momo.git luci-app-momo -b main
+# clone https://github.com/QiuSimons/luci-app-daed.git luci-app-daed -b master
 # 流量监控（luci 前端 + bandix 核心包；核心是预编译二进制，按架构从 release 下载）
 clone https://github.com/timsaya/luci-app-bandix.git luci-app-bandix -b main
 clone https://github.com/timsaya/openwrt-bandix.git openwrt-bandix -b main
@@ -66,7 +66,7 @@ clone https://github.com/sbwml/luci-app-openlist2.git luci-app-openlist2 -b main
 #luci-app-wolplus
 clone https://github.com/animegasan/luci-app-wolplus.git luci-app-wolplus -b main
 # 温度显示（状态页）
-clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
+# clone https://github.com/gSpotx2f/luci-app-temp-status.git luci-app-temp-status -b master
 
 popd > /dev/null
 

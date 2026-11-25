@@ -1,0 +1,31 @@
+#
+# Allwinner 平台
+# 定时：每周日 20:00 UTC = 每周一 04:00 (Asia/Shanghai)
+#
+name: allwinner
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 20 * * 0"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: allwinner
+      branch: master
+      configs: configs/Target-allwinner.txt,configs/Packages-L.txt,configs/Packages-5G.txt
+      clash_core: arm64
+      vlmcsd: true
+      with_5g: true
+      build_mode: single
