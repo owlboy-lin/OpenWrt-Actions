@@ -13,7 +13,7 @@ env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-25.12
   Firmware_Name: BLLW-BPI-R4-immortalwrt-25.12
-  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig-test
+  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig-25.12-test
   DIY_P1_SH: bpi-r4/immortalwrt/diy-part5.sh
   DIY_P2_SH: bpi-r4/immortalwrt/diy-part6.sh
   SYS_INFO_SH: bpi-r4/immortalwrt/system-Information.sh
