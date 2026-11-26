@@ -54,7 +54,7 @@ jobs:
             build-essential clang bison flex gawk gcc-multilib gettext git \
             libncurses-dev libssl-dev python3 python3-setuptools python3-pyelftools \
             rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion \
-            qemu-utils ccache rename libelf-dev file patch xz-utils zstd
+            qemu-utils ccache rename libelf-dev file patch xz-utils zstd rename
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "${TZ:-Asia/Shanghai}" || true
 
@@ -89,9 +89,9 @@ jobs:
       uses: actions/cache/restore@v5.0.5
       with:
         path: openwrt/.ccache
-        key: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
+        key: ccache-${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
         restore-keys: |
-          ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+          ccache-${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
 
     - name: Update base feed indexes
       working-directory: ./openwrt
@@ -149,8 +149,8 @@ jobs:
       continue-on-error: true
       uses: actions/github-script@v8
       env:
-        CCACHE_PREFIX: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
-        TOOLCHAIN_PREFIX: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
+        CCACHE_PREFIX: ccache-${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+        TOOLCHAIN_PREFIX: ${{ env.FIRMWARE_NAME }}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
         CURRENT_CCACHE_KEY: ${{ steps.ccache-restore.outputs.cache-primary-key }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -274,4 +274,4 @@ jobs:
     #     delete_tags: true
     #     delete_tag_pattern: '^.*-immortalwrt_openwrt-25\.12$'
     #   env:
-    #     GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
