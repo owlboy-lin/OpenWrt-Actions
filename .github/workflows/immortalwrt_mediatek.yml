@@ -12,7 +12,7 @@ permissions:
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
-  Firmware_Name: immortalwrt_mediatek-test
+  Firmware_Name: immortalwrt_mediatek
   CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig-test
   DIY_P1_SH: bpi-r4/immortalwrt/diy-part1-test.sh
   DIY_P2_SH: bpi-r4/immortalwrt/diy-part2-1.sh
