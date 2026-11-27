@@ -115,7 +115,7 @@ merge_package "-b main https://github.com/linkease/ddnsto-openwrt-package" ddnst
 merge_package "-b main https://github.com/linkease/ddnsto-openwrt-package" ddnsto-openwrt-package/luci-app-ddnsto
 popd
 
-sh "$GITHUB_WORKSPACE/scripts/fix-mihomo-source.sh" || exit 1
+sh "$GITHUB_WORKSPACE/bpi-r4/scripts/fix-mihomo-source.sh" || exit 1
 
 _go_values="feeds/packages/lang/golang/golang-values.mk"
 _go_feed_default="$(sed -n 's/^GO_DEFAULT_VERSION:=[[:space:]]*//p' "$_go_values" 2>/dev/null)"
@@ -254,16 +254,16 @@ patch_makefile_dep \
     'CONFIG_BOOTDELAY=30' \
     'CONFIG_BOOTDELAY=10'
 
-apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1005-luci-dockerman-docker-menu.patch" || exit 1
-apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1006-luci-argon-docker-menu-layout.patch" || exit 1
+apply_workspace_patch "$GITHUB_WORKSPACE/bpi-r4/patches/filogic/25.12/1005-luci-dockerman-docker-menu.patch" || exit 1
+apply_workspace_patch "$GITHUB_WORKSPACE/bpi-r4/patches/filogic/25.12/1006-luci-argon-docker-menu-layout.patch" || exit 1
 
-apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1007-luci-dhcpv4-hide-empty-identifiers.patch" || exit 1
+apply_workspace_patch "$GITHUB_WORKSPACE/bpi-r4/patches/filogic/25.12/1007-luci-dhcpv4-hide-empty-identifiers.patch" || exit 1
 
 [ -f feeds/luci/modules/luci-base/root/usr/share/rpcd/ucode/luci ] && \
-    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1000-luci-rpcd-getWifiStationHints-master.patch" || true
+    apply_workspace_patch "$GITHUB_WORKSPACE/bpi-r4/patches/filogic/25.12/1000-luci-rpcd-getWifiStationHints-master.patch" || true
 
 [ -f feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js ] && \
-    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1000-luci-status-60wifi-master.patch" || true
+    apply_workspace_patch "$GITHUB_WORKSPACE/bpi-r4/patches/filogic/25.12/1000-luci-status-60wifi-master.patch" || true
 
 [ -f feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js ] && \
-    apply_workspace_patch "$GITHUB_WORKSPACE/patches/filogic/25.12/1001-luci-wireless-combined-master.patch" || true
+    apply_workspace_patch "$GITHUB_WORKSPACE/bpi-r4/patches/filogic/25.12/1001-luci-wireless-combined-master.patch" || true
