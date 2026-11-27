@@ -58,4 +58,4 @@ validate_and_apply_mt76_patch() {
 MT76_PATCH="1007-mt76-makefile-wed-enable.patch"
 
 validate_and_apply_mt76_patch \
-  "$GITHUB_WORKSPACE/patches/filogic/mt76/$MT76_PATCH"
+  "$GITHUB_WORKSPACE/bpi-r4/patches/filogic/mt76/$MT76_PATCH"

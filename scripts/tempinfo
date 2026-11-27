@@ -1,0 +1,197 @@
+#!/bin/sh
+
+. /etc/openwrt_release
+
+IEEE_PATH="/sys/class/ieee80211"
+THERMAL_PATH="/sys/class/thermal"
+NET_PATH="/sys/class/net"
+
+get_standard_wifi_temp() {
+	case "$DISTRIB_TARGET" in
+	ipq40xx/*|ipq806x/*)
+		awk '{printf("%.1f°C ", $0 / 1000)}' "$IEEE_PATH"/phy*/device/hwmon/hwmon*/temp1_input 2>"/dev/null" | awk '$1=$1'
+		;;
+	mediatek/mt7622)
+		awk '{printf("%.1f°C ", $0 / 1000)}' "$IEEE_PATH"/wl*/hwmon*/temp1_input 2>"/dev/null" | awk '$1=$1'
+		;;
+	*)
+		local _temps
+		_temps="$(awk '{printf("%.1f°C ", $0 / 1000)}' "$IEEE_PATH"/phy*/hwmon*/temp1_input 2>/dev/null | awk '$1=$1')"
+		if [ -n "$_temps" ]; then
+			printf '%s' "$_temps"
+		else
+			awk '{printf("%.1f°C ", $0 / 1000)}' "$IEEE_PATH"/phy*/device/hwmon/hwmon*/temp1_input 2>/dev/null | awk '$1=$1'
+		fi
+		;;
+	esac
+}
+
+get_mt_wifi7_iface_list() {
+	local _iw_ifaces=""
+	local _iface _flags _found=""
+
+	# Query primary interfaces only, in the same band order as the overview.
+	# Do not wake or reconfigure an inactive radio to obtain its temperature.
+	for _iface in ra0 rai0 rax0 rae0; do
+		[ -r "$NET_PATH/$_iface/flags" ] || continue
+		read -r _flags < "$NET_PATH/$_iface/flags" || continue
+		[ "$((_flags & 1))" -eq 1 ] || continue
+		printf '%s\n' "$_iface"
+		_found=1
+	done
+	[ -z "$_found" ] || return 0
+
+	if command -v iw >/dev/null 2>&1; then
+		_iw_ifaces="$(timeout -s KILL 1 iw dev 2>/dev/null | awk '
+			$1 ~ /^phy#/ { phy = $1; next }
+			$1 == "Interface" && !seen[phy]++ { print $2 }
+		')"
+
+		if [ -n "$_iw_ifaces" ]; then
+			printf '%s\n' "$_iw_ifaces"
+			return
+		fi
+	fi
+
+}
+
+get_mt_wifi7_band_label() {
+	_mt_iface="$1"
+	_mt_freq=""
+
+	# MTK vendor WiFi7 interface names are more reliable than iwinfo on
+	# some 6 GHz builds, where iwinfo may still report a 5.x GHz channel.
+	case "$_mt_iface" in
+	rai*)
+		echo "5G"
+		return
+		;;
+	rax*)
+		echo "6G"
+		return
+		;;
+	ra[0-9]*)
+		echo "2.4G"
+		return
+		;;
+	esac
+
+	if command -v iwinfo >/dev/null 2>&1; then
+		_mt_freq="$(timeout -s KILL 1 iwinfo "$_mt_iface" info 2>/dev/null | sed -n 's/.*Channel:[[:space:]]*[0-9]\+[[:space:]]*(\([0-9.]\+\)[[:space:]]GHz).*/\1/p' | sed -n '1p')"
+
+		case "$_mt_freq" in
+		2.*)
+			echo "2.4G"
+			return
+			;;
+		5.*)
+			echo "5G"
+			return
+			;;
+		6.*)
+			echo "6G"
+			return
+			;;
+		esac
+	fi
+
+	echo "$_mt_iface"
+}
+
+get_mt_wifi7_temp() {
+	_mt_seen=""
+	_mt_wifi=""
+	_mt_wifi_24g=""
+	_mt_wifi_5g=""
+	_mt_wifi_6g=""
+	_mt_wifi_other=""
+
+	for _mt_iface in $(get_mt_wifi7_iface_list); do
+		[ -r "$NET_PATH/$_mt_iface/flags" ] || continue
+		read -r _mt_flags < "$NET_PATH/$_mt_iface/flags" || continue
+		[ "$((_mt_flags & 1))" -eq 1 ] || continue
+		case " $_mt_seen " in
+		*" $_mt_iface "*)
+			continue
+			;;
+		esac
+		_mt_seen="$_mt_seen $_mt_iface"
+
+		_mt_temp=""
+		# CFG80211 builds disable WEXT private ioctls. mwctl returns the
+		# driver's statistics string through its native vendor command.
+		if command -v mwctl >/dev/null 2>&1; then
+			_mt_output="$(timeout -s KILL 1 mwctl "$_mt_iface" stat 2>/dev/null)"
+			_mt_temp="$(printf '%s\n' "$_mt_output" | sed -n 's/.*CurrentTemperature[[:space:]]*=[[:space:]]*\(-\{0,1\}[0-9]\+\).*/\1/p' | sed -n '1p')"
+		fi
+
+		if [ -z "$_mt_temp" ] && command -v iwpriv >/dev/null 2>&1; then
+			_mt_output="$(timeout -s KILL 1 iwpriv "$_mt_iface" stat 2>/dev/null)"
+			_mt_temp="$(printf '%s\n' "$_mt_output" | sed -n 's/.*CurrentTemperature[[:space:]]*=[[:space:]]*\(-\{0,1\}[0-9]\+\).*/\1/p' | sed -n '1p')"
+		fi
+
+		[ -n "$_mt_temp" ] || continue
+		[ "$_mt_temp" -ge -50 ] && [ "$_mt_temp" -le 200 ] || continue
+		_mt_label="$(get_mt_wifi7_band_label "$_mt_iface")"
+		_mt_entry="${_mt_label}:${_mt_temp}°C"
+
+		case "$_mt_label" in
+		2.4G)
+			_mt_wifi_24g="${_mt_wifi_24g:+$_mt_wifi_24g }$_mt_entry"
+			;;
+		5G)
+			_mt_wifi_5g="${_mt_wifi_5g:+$_mt_wifi_5g }$_mt_entry"
+			;;
+		6G)
+			_mt_wifi_6g="${_mt_wifi_6g:+$_mt_wifi_6g }$_mt_entry"
+			;;
+		*)
+			_mt_wifi_other="${_mt_wifi_other:+$_mt_wifi_other }$_mt_entry"
+			;;
+		esac
+	done
+
+	for _mt_group in "$_mt_wifi_24g" "$_mt_wifi_5g" "$_mt_wifi_6g" "$_mt_wifi_other"; do
+		[ -n "$_mt_group" ] || continue
+		_mt_wifi="${_mt_wifi:+$_mt_wifi }$_mt_group"
+	done
+
+	[ -n "$_mt_wifi" ] || return 1
+	printf '%s' "$_mt_wifi"
+}
+
+if [ "$1" = "--wifi" ]; then
+	get_mt_wifi7_temp
+	exit $?
+fi
+
+wifi_temp="$(get_standard_wifi_temp)"
+
+# MediaTek vendor WiFi 7 does not expose the standard phy*/hwmon temp path.
+if [ -z "$wifi_temp" ] && command -v timeout >/dev/null 2>&1 &&
+   { command -v mwctl >/dev/null 2>&1 || command -v iwpriv >/dev/null 2>&1; }; then
+	# Bound the complete vendor query as well as each individual ioctl.
+	wifi_temp="$(timeout -s KILL 4 "$0" --wifi 2>/dev/null)"
+fi
+
+case "$DISTRIB_TARGET" in
+	ipq40xx/*)
+		if [ -e "$IEEE_PATH/phy0/hwmon0/temp1_input" ]; then
+			mt76_temp="$(awk -F ': ' '{print $2}' "$IEEE_PATH/phy0/hwmon0/temp1_input" 2>"/dev/null")°C"
+		fi
+		[ -z "$mt76_temp" ] || wifi_temp="${wifi_temp:+$wifi_temp }$mt76_temp"
+		;;
+	*)
+		cpu_temp="$(awk '{printf("%.1f°C", $0 / 1000)}' "$THERMAL_PATH/thermal_zone0/temp" 2>"/dev/null")"
+		;;
+esac
+
+if [ -n "$cpu_temp" ] && [ -z "$wifi_temp" ]; then
+	echo -n "CPU: $cpu_temp"
+elif [ -z "$cpu_temp" ] && [ -n "$wifi_temp" ]; then
+	echo -n "WiFi: $wifi_temp"
+elif [ -n "$cpu_temp" ] && [ -n "$wifi_temp" ]; then
+	echo -n "CPU: $cpu_temp, WiFi: $wifi_temp"
+else
+	echo -n "No temperature info"
+fi
