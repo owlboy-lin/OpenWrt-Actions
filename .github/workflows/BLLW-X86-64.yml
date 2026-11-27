@@ -25,7 +25,7 @@ jobs:
     with:
       platform: BLLW-X86-64
       branch: openwrt-25.12
-      configs: configs/My-Target-X86-Actions-immortalwrt.txt,configs/Packages-immortalwrt-mosdns.txt,configs/Packages-5G.txt
+      configs: configs/My-Target-X86-Actions-immortalwrt.txt,configs/Packages-immortalwrt-25.12-mosdns.txt,configs/Packages-5G.txt
       clash_core: amd64
       rust: true
       golang: true
