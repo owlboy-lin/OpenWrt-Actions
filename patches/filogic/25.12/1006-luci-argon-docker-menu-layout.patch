@@ -1,0 +1,16 @@
+From: MedyMa <75345465+MedyMa@users.noreply.github.com>
+Subject: [PATCH] argon: retain Dockerman action layout under the Docker menu
+
+Share the container action rules between the original Dockerman route and
+the top-level Docker menu. Build the shipped stylesheets from this LESS.
+
+diff --git a/package/community/luci-theme-argon/less/pages/dockerman.less b/package/community/luci-theme-argon/less/pages/dockerman.less
+--- a/package/community/luci-theme-argon/less/pages/dockerman.less
++++ b/package/community/luci-theme-argon/less/pages/dockerman.less
+@@ -23,5 +23,6 @@
+ // The JS app returns a plain td for its action group, without LuCI's usual
+ // cbi-section-actions class. Reserve space for several icons before wrapping.
++[data-page="admin-docker-containers"],
+ [data-page="admin-services-dockerman-containers"] {
+     .td:last-child:has(> div > .cbi-button + .cbi-button) {
+         width: 16rem;

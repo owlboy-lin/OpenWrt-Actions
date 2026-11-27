@@ -12,17 +12,14 @@ permissions:
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-24.10
-  Firmware_Name: immortalwrt_mediatek
-  CONFIG_FILE: bpi-r4/immortalwrt/mediatek/defconfig-test
-  DIY_P1_SH: bpi-r4/immortalwrt/diy-part1-test.sh
-  DIY_P2_SH: bpi-r4/immortalwrt/diy-part2-1.sh
-  SYS_INFO_SH: bpi-r4/immortalwrt/system-Information.sh
+  CONFIG_FILE: immortalwrt/mediatek/defconfig
+  DIY_P1_SH: immortalwrt/diy-part1.sh
+  DIY_P2_SH: immortalwrt/diy-part2.sh
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
   OPENWRT_NAME: immortalwrt
   OPENWRT_DEVICE: mediatek
-  TARGET_SUB: filogic
-  UPLOAD_FIRMWARE: true
-  UPLOAD_RELEASE: false
-  TZ: Asia/Shanghai
 
 jobs:
   build:
@@ -54,7 +51,7 @@ jobs:
             build-essential clang bison flex gawk gcc-multilib gettext git \
             libncurses-dev libssl-dev python3 python3-setuptools python3-pyelftools \
             rsync unzip zlib1g-dev swig libpython3-dev aria2 jq subversion \
-            qemu-utils ccache rename libelf-dev file patch xz-utils zstd rename
+            qemu-utils ccache rename libelf-dev file patch xz-utils zstd
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "${TZ:-Asia/Shanghai}" || true
 
@@ -62,8 +59,9 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        chmod +x $SYS_INFO_SH
-        $GITHUB_WORKSPACE/$SYS_INFO_SH
+        chmod +x $OPENWRT_NAME/*.sh
+        $GITHUB_WORKSPACE/$OPENWRT_NAME/system-Information.sh
+
     - name: Download firmware source code
       run: |
         git clone --filter=blob:none --single-branch -c core.abbrev=7 $REPO_URL -b $REPO_BRANCH openwrt
@@ -88,9 +86,9 @@ jobs:
       uses: actions/cache/restore@v5.0.5
       with:
         path: openwrt/.ccache
-        key: ccache-${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
+        key: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-${{ steps.cache-key.outputs.ccache_period }}
         restore-keys: |
-          ccache-${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+          ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
 
     - name: Update base feed indexes
       working-directory: ./openwrt
@@ -99,15 +97,14 @@ jobs:
 
     - name: Load feeds.conf.default
       run: |
-        chmod +x $DIY_P1_SH
+        chmod +x $OPENWRT_NAME/*.sh
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Load config
       run: |
         [ -e "$CONFIG_FILE" ] && cat "$CONFIG_FILE" > openwrt/.config
-        chmod +x $DIY_P2_SH
-        cd openwrt
+        chmod +x $OPENWRT_NAME/*.sh && cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
     - name: Download the installation package
@@ -148,8 +145,8 @@ jobs:
       continue-on-error: true
       uses: actions/github-script@v8
       env:
-        CCACHE_PREFIX: ccache-${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
-        TOOLCHAIN_PREFIX: ${{env.Firmware_Name}}-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
+        CCACHE_PREFIX: ccache-${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-
+        TOOLCHAIN_PREFIX: ${{ env.OPENWRT_NAME }}-${{ env.OPENWRT_DEVICE }}-${{ env.REPO_BRANCH }}-cache-openwrt-
         CURRENT_CCACHE_KEY: ${{ steps.ccache-restore.outputs.cache-primary-key }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -229,12 +226,6 @@ jobs:
       run: |
         cd openwrt/bin/targets/mediatek/filogic
         rm -rf packages *mt798* *.config *.buildinfo *.json sha256sums
-        for f in *; do
-          # 跳过目录，只处理文件
-          if [ -f "$f" ]; then
-            mv -n "$f" "${{ env.Firmware_Name }}_${{ env.date1 }}_$f"
-          fi
-        done
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
@@ -242,36 +233,36 @@ jobs:
       uses: actions/upload-artifact@v7.0.1
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: ${{ env.Firmware_Name }}_${{env.Firmware_Name}}-${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
+        name: ${{ env.date1 }}_${{ env.OPENWRT_NAME }}_${{ env.OPENWRT_DEVICE }}_${{ env.REPO_BRANCH }}
         path: ${{ env.FIRMWARE }}
 
-    # - name: Generate release tags
-    #   id: tag
-    #   if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-    #   run: |
-    #     echo "release_tag=${{ env.Firmware_Name }}_${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
-    #     printf "Source: %s/commit/%s\n" "$REPO_URL" "$SOURCE_SHA" > release.txt
-    #     echo "📥 固件下载" >> release.txt
-    #     echo "status=success" >> $GITHUB_OUTPUT
+    - name: Generate release tags
+      id: tag
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        echo "release_tag=${{ env.date1 }}-${{ env.OPENWRT_NAME }}_${{ env.REPO_BRANCH }}" >> $GITHUB_OUTPUT
+        printf "Source: %s/commit/%s\n" "$REPO_URL" "$SOURCE_SHA" > release.txt
+        echo "📥 固件下载" >> release.txt
+        echo "status=success" >> $GITHUB_OUTPUT
 
-    # - name: Publish to release
-    #   uses: softprops/action-gh-release@v3
-    #   if: steps.tag.outputs.status == 'success' && !cancelled()
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     files: ${{ env.FIRMWARE }}/*
-    #     name: ${{ steps.tag.outputs.release_tag }}
-    #     tag_name: ${{ steps.tag.outputs.release_tag }}
-    #     body_path: release.txt
+    - name: Publish to release
+      uses: softprops/action-gh-release@v3
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: ${{ env.FIRMWARE }}/*
+        name: ${{ steps.tag.outputs.release_tag }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
 
-    # - name: 删除旧的Releases
-    #   if: steps.tag.outputs.status == 'success' && !cancelled()
-    #   uses: MedyMa/delete-older-releases@v0.3.4
+    - name: 删除旧的Releases
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      uses: MedyMa/delete-older-releases@v0.3.4
 
-    #   with:
-    #     keep_latest: 3
-    #     delete_tags: true
-    #     delete_tag_pattern: '^.*-immortalwrt_openwrt-24\.10$'
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        keep_latest: 3
+        delete_tags: true
+        delete_tag_pattern: '^.*-immortalwrt_openwrt-24\.10$'
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
