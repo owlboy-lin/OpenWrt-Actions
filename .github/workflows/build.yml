@@ -268,6 +268,13 @@ jobs:
       - name: 整理产物
         run: bash "$GITHUB_WORKSPACE/scripts/organize.sh" "${{ inputs.platform }}"
 
+      - name: 上传固件目录
+        uses: actions/upload-artifact@v7.0.1
+        if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
+        with:
+          name: ${{ env.Firmware_Name }}_${{ env.REPO_BRANCH }}_${{ env.DEVICE_NAME }}_firmware_${{ env.FILE_DATE }}
+          path: ${{ env.FIRMWARE }}
+
       - name: 发布 Release
         uses: softprops/action-gh-release@v2
         with:
